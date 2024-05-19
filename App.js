@@ -1,7 +1,8 @@
 import { useFonts } from "expo-font";
-import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import { DefaultTheme, PaperProvider } from "react-native-paper";
+import Router from "./src/routes/Router";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 export default function App() {
 	const [fontsLoaded, fontError] = useFonts({
@@ -23,31 +24,20 @@ export default function App() {
 		...DefaultTheme,
 		colors: {
 			...DefaultTheme.colors,
-			primary: "#387ADF",
-			secondary: "#FBA834",
+			primary: "#FBA834",
+			secondary: "#387ADF",
 			accent: "#50C4ED",
 			dark: "#2f2d2d",
-			primaryDark: "#333A73"
-		}
-	}
+			primaryDark: "#333A73",
+		},
+		roundness: 15,
+	};
 
 	return (
-		<PaperProvider theme={theme}>
-			<View style={styles.container}>
-				<Text style={{ fontFamily: "MontserratBold", color: theme.colors.secondary }}>
-					Open up App.js to start working on your app!
-				</Text>
-				<StatusBar style="auto" />
-			</View>
-		</PaperProvider>
+		<SafeAreaProvider>
+			<PaperProvider theme={theme}>
+				<Router />
+			</PaperProvider>
+		</SafeAreaProvider>
 	);
 }
-
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		backgroundColor: "#fff",
-		alignItems: "center",
-		justifyContent: "center",
-	},
-});
