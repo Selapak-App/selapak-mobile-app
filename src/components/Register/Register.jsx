@@ -11,7 +11,7 @@ import { Feather } from "@expo/vector-icons";
 import images from "../../../assets/images";
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const loginFormSchema = yup
+const registerFormSchema = yup
 	.object({
 		name: yup.string().required("Nama lengkap tidak boleh kosong"),
 		email: yup
@@ -45,7 +45,7 @@ const Register = () => {
 			email: "",
 			password: "",
 		},
-		resolver: yupResolver(loginFormSchema),
+		resolver: yupResolver(registerFormSchema),
 	});
 
 	const onSubmit = async () => {
