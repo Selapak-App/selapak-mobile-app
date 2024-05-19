@@ -14,11 +14,11 @@ import { useForm, Controller } from "react-hook-form";
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const loginFormSchema = yup
 	.object({
-		email: yup.string().matches(emailRegex, "Format email tidak valid").required("Email wajib diisi"),
+		email: yup.string().matches(emailRegex, "Format email tidak valid").required("Email tidak boleh kosong"),
 		password: yup
 			.string()
 			.min(8, "Password minimal 8 karakter")
-			.required("Password wajib diisi"),
+			.required("Password tidak boleh kosong"),
 	})
 	.required();
 
