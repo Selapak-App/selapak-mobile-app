@@ -8,6 +8,7 @@ export default function App() {
 	const [fontsLoaded, fontError] = useFonts({
 		Poppins: require("./assets/fonts/Poppins-Regular.ttf"),
 		PoppinsMedium: require("./assets/fonts/Poppins-Medium.ttf"),
+		PoppinsSemiBold: require("./assets/fonts/Poppins-SemiBold.ttf"),
 		PoppinsBold: require("./assets/fonts/Poppins-Bold.ttf"),
 		Inter: require("./assets/fonts/Inter-Regular.otf"),
 		InterBold: require("./assets/fonts/Inter-Bold.otf"),
@@ -30,7 +31,7 @@ export default function App() {
 			dark: "#2f2d2d",
 			primaryDark: "#333A73",
 		},
-		roundness: 15,
+		roundness: 20,
 	};
 
 	return (
