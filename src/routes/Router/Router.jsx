@@ -11,6 +11,7 @@ import Transaction from "../../components/Transaction";
 import Profile from "../../components/Profile";
 import { Button, useTheme } from "react-native-paper";
 import { Octicons } from "@expo/vector-icons";
+import ForgetPassword from "../../components/ForgetPassword";
 
 const Stack = createNativeStackNavigator();
 const Tab = AnimatedTabBarNavigator();
@@ -93,11 +94,12 @@ const Router = () => {
 				screenOptions={{
 					headerShown: false,
 				}}
-				initialRouteName="Register"
+				initialRouteName="ForgetPassword"
 			>
 				<Stack.Screen name="Login" component={Login} />
 				<Stack.Screen name="Register" component={Register} />
 				<Stack.Screen name="App" component={BottomTab} />
+				<Stack.Screen name="ForgetPassword" component={ForgetPassword} />
 			</Stack.Navigator>
 		</NavigationContainer>
 	);

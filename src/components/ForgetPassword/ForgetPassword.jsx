@@ -1,31 +1,26 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
-import React, { useState } from "react";
-import { StatusBar } from "expo-status-bar";
+import * as yup from "yup";
 import { TextInput, useTheme } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import images from "../../../assets/images";
-import { Feather } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-import { useForm, Controller } from "react-hook-form";
-
+import { StatusBar } from "expo-status-bar";
+import images from "../../../assets/images";
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const loginFormSchema = yup
 	.object({
-		email: yup.string().matches(emailRegex, "Format email tidak valid").required("Email tidak boleh kosong"),
-		password: yup
+		email: yup
 			.string()
-			.min(8, "Password minimal 8 karakter")
-			.required("Password tidak boleh kosong"),
+			.matches(emailRegex, "Format email tidak valid")
+			.required("Email tidak boleh kosong"),
 	})
 	.required();
 
-const Login = () => {
+const ForgetPassword = () => {
 	const theme = useTheme();
 	const insets = useSafeAreaInsets();
-	const [showPassword, setShowPassword] = useState(false);
 	const navigation = useNavigation();
 	const {
 		control,
@@ -41,7 +36,7 @@ const Login = () => {
 	});
 
 	const onSubmit = async () => {
-		if (!errors.email && !errors.password) {
+		if (!errors.email) {
 			const data = getValues();
 			console.log(data);
 		}
@@ -76,7 +71,7 @@ const Login = () => {
 			borderTopRightRadius: theme.roundness * 2,
 			borderTopLeftRadius: theme.roundness * 2,
 			alignItems: "center",
-			gap: 40,
+			gap: 20,
 			...shadowPropStyle,
 		},
 		thumbnail: {
@@ -106,13 +101,6 @@ const Login = () => {
 			width: "100%",
 			paddingHorizontal: 20,
 		},
-		forgetPass: { color: theme.colors.dark, fontFamily: "Poppins" },
-		flexEnd: { alignSelf: "flex-end" },
-		showPassword: {
-			position: "absolute",
-			right: 20,
-			paddingTop: 5,
-		},
 		textError: { fontFamily: "Poppins", color: theme.colors.error },
 		buttonWraper: { width: "100%", paddingHorizontal: 20, gap: 14 },
 		buttonContainer: {
@@ -137,10 +125,10 @@ const Login = () => {
 				<View style={styles.thumbnail}>
 					<Image source={images.icon} style={styles.imgThumbnail} />
 				</View>
-				<View style={{ marginTop: -40 }}>
-					<Text style={styles.h1}>Awali langkahmu</Text>
+				<View style={{ marginTop: -20 }}>
+					<Text style={styles.h1}>Lupa Password</Text>
 					<Text style={styles.tagline}>
-						Isi datamu dan mulai petualangan
+                    Jangan khawatir, isi emailmu untuk menerima password baru
 					</Text>
 				</View>
 				<View style={styles.form}>
@@ -156,89 +144,33 @@ const Login = () => {
 								outlineColor={theme.colors.secondary}
 								onBlur={onBlur}
 								value={value}
-								onChangeText={(event) => onChange(event)}									
+								onChangeText={(event) => onChange(event)}
 								error={errors.email}
-
 							/>
 						)}
 						name="email"
 					/>
-
 					{errors.email && (
 						<Text style={styles.textError}>
 							* {errors.email.message}
 						</Text>
 					)}
-					<View
-						style={{
-							justifyContent: "center",
-						}}
-					>
-						<Controller
-							control={control}
-							rules={{
-								required: true,
-							}}
-							render={({
-								field,
-								field: { onChange, onBlur, value },
-							}) => (
-								<TextInput
-									label="Password"
-									mode="outlined"
-									outlineColor={theme.colors.secondary}
-									left="#000"
-									secureTextEntry={!showPassword}
-									onBlur={onBlur}
-									onChangeText={(event) => onChange(event)}
-									value={value}
-									error={errors.password}
-								/>
-							)}
-							name="password"
-						/>
-
-						<TouchableOpacity
-							activeOpacity={0.8}
-							onPress={() => setShowPassword(!showPassword)}
-							style={styles.showPassword}
-						>
-							<Feather
-								name={showPassword ? "eye-off" : "eye"}
-								size={24}
-								color={theme.colors.dark}
-							/>
-						</TouchableOpacity>
-					</View>
-					{errors.password && (
-						<Text style={styles.textError}>
-							* {errors.password.message}
-						</Text>
-					)}
-					<TouchableOpacity
-					onPress={() => navigation.navigate("ForgetPassword")}
-						style={styles.flexEnd}
-						activeOpacity={0.8}
-					>
-						<Text style={styles.forgetPass}>Lupa Password</Text>
-					</TouchableOpacity>
 				</View>
-
 				<View style={styles.buttonWraper}>
 					<TouchableOpacity
 						activeOpacity={0.8}
 						style={styles.buttonContainer}
 						onPress={handleSubmit(onSubmit)}
 					>
-						<Text style={styles.buttonText}>Masuk</Text>
+						<Text style={styles.buttonText}>Kirim</Text>
 					</TouchableOpacity>
 					<Text style={styles.textWrapper}>
-						Belum punya akun?{" "}
+						Sudah ingat password kamu?{" "}
 						<Text
-							onPress={() => navigation.navigate("Register")}
+							onPress={() => navigation.navigate("Login")}
 							style={styles.textToRegister}
 						>
-							Buat akun
+							Masuk
 						</Text>
 					</Text>
 				</View>
@@ -247,4 +179,4 @@ const Login = () => {
 	);
 };
 
-export default Login;
+export default ForgetPassword;
