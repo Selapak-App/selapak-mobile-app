@@ -7,8 +7,10 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 export default function App() {
 	const [fontsLoaded, fontError] = useFonts({
 		Poppins: require("./assets/fonts/Poppins-Regular.ttf"),
+		PoppinsItalic: require("./assets/fonts/Poppins-Italic.ttf"),
 		PoppinsMedium: require("./assets/fonts/Poppins-Medium.ttf"),
 		PoppinsSemiBold: require("./assets/fonts/Poppins-SemiBold.ttf"),
+		PoppinsSemiBoldItalic: require("./assets/fonts/Poppins-SemiBoldItalic.ttf"),
 		PoppinsBold: require("./assets/fonts/Poppins-Bold.ttf"),
 		Inter: require("./assets/fonts/Inter-Regular.otf"),
 		InterBold: require("./assets/fonts/Inter-Bold.otf"),

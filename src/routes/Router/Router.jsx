@@ -1,4 +1,3 @@
-import { View, Text } from "react-native";
 import React from "react";
 import { AnimatedTabBarNavigator } from "react-native-animated-nav-tab-bar";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -12,6 +11,7 @@ import Profile from "../../components/Profile";
 import { Button, useTheme } from "react-native-paper";
 import { Octicons } from "@expo/vector-icons";
 import ForgetPassword from "../../components/ForgetPassword";
+import LandDetail from "../../components/LandDetail";
 
 const Stack = createNativeStackNavigator();
 const Tab = AnimatedTabBarNavigator();
@@ -100,7 +100,7 @@ const Router = () => {
 				<Stack.Screen name="Register" component={Register} />
 				<Stack.Screen name="App" component={BottomTab} />
 				<Stack.Screen name="ForgetPassword" component={ForgetPassword} />
-				<Stack.Screen name="LandDetail" component={ForgetPassword} />
+				<Stack.Screen name="LandDetail" component={LandDetail} />
 			</Stack.Navigator>
 		</NavigationContainer>
 	);

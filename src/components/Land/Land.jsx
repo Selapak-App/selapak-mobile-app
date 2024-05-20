@@ -35,7 +35,7 @@ const Land = () => {
 		return (
 			<TouchableOpacity
             onPress={() => navigation.navigate("LandDetail", item)}
-            activeOpacity={0.8}
+            activeOpacity={0.9}
 				style={{
 					borderWidth: 1,
 					borderColor: theme.colors.primary,
@@ -170,6 +170,8 @@ const dummyData = [
 		id: 1,
 		district: "Lowokwaru",
 		address: "Jl. aja dulu No. 66, Tlogomas, Lowokwaru, Malang",
+        postalCode: "62282",
+        availableSlot: 25,
 		description: [
 			"Dekat SPBU",
 			"Dekat Jalan Raya",
@@ -189,6 +191,8 @@ const dummyData = [
 		id: 2,
 		district: "Tlogomas",
 		address: "Jl. aja dulu No. 66, Tlogomas, Lowokwaru, Malang",
+        postalCode: "62282",
+        availableSlot: 25,
 		description: [
 			"Dekat SPBU",
 			"Dekat Jalan Raya",
@@ -208,6 +212,8 @@ const dummyData = [
 		id: 3,
 		district: "Karang Binangun",
 		address: "Jl. aja dulu No. 66, Tlogomas, Lowokwaru, Malang",
+        postalCode: "62282",
+        availableSlot: 25,
 		description: [
 			"Dekat SPBU",
 			"Dekat Jalan Raya",
@@ -227,6 +233,8 @@ const dummyData = [
 		id: 4,
 		district: "Lowokwaru",
 		address: "Jl. aja dulu No. 66, Tlogomas, Lowokwaru, Malang",
+        postalCode: "62282",
+        availableSlot: 25,
 		description: [
 			"Dekat SPBU",
 			"Dekat Jalan Raya",
@@ -246,6 +254,8 @@ const dummyData = [
 		id: 5,
 		district: "Lowokwaru",
 		address: "Jl. aja dulu No. 66, Tlogomas, Lowokwaru, Malang",
+        postalCode: "62282",
+        availableSlot: 25,
 		description: [
 			"Dekat SPBU",
 			"Dekat Jalan Raya",
@@ -265,6 +275,8 @@ const dummyData = [
 		id: 6,
 		district: "Lowokwaru",
 		address: "Jl. aja dulu No. 66, Tlogomas, Lowokwaru, Malang",
+        postalCode: "62282",
+        availableSlot: 25,
 		description: [
 			"Dekat SPBU",
 			"Dekat Jalan Raya",
@@ -284,6 +296,8 @@ const dummyData = [
 		id: 7,
 		district: "Lowokwaru",
 		address: "Jl. aja dulu No. 66, Tlogomas, Lowokwaru, Malang",
+        postalCode: "62282",
+        availableSlot: 25,
 		description: [
 			"Dekat SPBU",
 			"Dekat Jalan Raya",
@@ -303,6 +317,8 @@ const dummyData = [
 		id: 8,
 		district: "Lowokwaru",
 		address: "Jl. aja dulu No. 66, Tlogomas, Lowokwaru, Malang",
+        postalCode: "62282",
+        availableSlot: 25,
 		description: [
 			"Dekat SPBU",
 			"Dekat Jalan Raya",
@@ -322,6 +338,8 @@ const dummyData = [
 		id: 9,
 		district: "Lowokwaru",
 		address: "Jl. aja dulu No. 66, Tlogomas, Lowokwaru, Malang",
+        postalCode: "62282",
+        availableSlot: 25,
 		description: [
 			"Dekat SPBU",
 			"Dekat Jalan Raya",
@@ -341,6 +359,8 @@ const dummyData = [
 		id: 10,
 		district: "Lowokwaru",
 		address: "Jl. aja dulu No. 66, Tlogomas, Lowokwaru, Malang",
+        postalCode: "62282",
+        availableSlot: 25,
 		description: [
 			"Dekat SPBU",
 			"Dekat Jalan Raya",
@@ -360,6 +380,8 @@ const dummyData = [
 		id: 11,
 		district: "Lowokwaru",
 		address: "Jl. aja dulu No. 66, Tlogomas, Lowokwaru, Malang",
+        postalCode: "62282",
+        availableSlot: 25,
 		description: [
 			"Dekat SPBU",
 			"Dekat Jalan Raya",

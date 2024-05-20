@@ -200,7 +200,7 @@ const Login = () => {
 						/>
 
 						<TouchableOpacity
-							activeOpacity={0.8}
+							activeOpacity={0.9}
 							onPress={() => setShowPassword(!showPassword)}
 							style={styles.showPassword}
 						>
@@ -219,7 +219,7 @@ const Login = () => {
 					<TouchableOpacity
 					onPress={() => navigation.navigate("ForgetPassword")}
 						style={styles.flexEnd}
-						activeOpacity={0.8}
+						activeOpacity={0.9}
 					>
 						<Text style={styles.forgetPass}>Lupa Password</Text>
 					</TouchableOpacity>
@@ -227,7 +227,7 @@ const Login = () => {
 
 				<View style={styles.buttonWraper}>
 					<TouchableOpacity
-						activeOpacity={0.8}
+						activeOpacity={0.9}
 						style={styles.buttonContainer}
 						onPress={handleSubmit(onSubmit)}
 					>
