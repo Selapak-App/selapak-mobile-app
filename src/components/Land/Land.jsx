@@ -11,6 +11,7 @@ import { useTheme } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { FontAwesome6, Octicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { StatusBar } from "expo-status-bar";
 const Land = () => {
 	const theme = useTheme();
 	const insets = useSafeAreaInsets();
@@ -44,8 +45,6 @@ const Land = () => {
 			marginBottom: 20,
 		},
 		cardCover: {
-			borderWidth: 1,
-			borderColor: theme.colors.primary,
 			objectFit: "cover",
 			aspectRatio: 1,
 			borderRadius: theme.roundness,
@@ -66,6 +65,7 @@ const Land = () => {
 		district: {
 			fontSize: 18,
 			fontFamily: "PoppinsSemiBold",
+            color: theme.colors.dark,
 		},
 		cardContent: {
 			justifyContent: "space-between",
@@ -75,6 +75,7 @@ const Land = () => {
 		price: {
 			fontSize: 16,
 			fontFamily: "PoppinsSemiBold",
+            color: theme.colors.dark,
 		},
 		normalText: { fontFamily: "Poppins", fontSize: 14 },
 		spaceBetween: { justifyContent: "space-between" },
@@ -103,7 +104,7 @@ const Land = () => {
 							<FontAwesome6
 								name="location-dot"
 								size={18}
-								color="black"
+								color={theme.colors.primary}
 							/>
 						</View>
 						<Text style={styles.district}>{item.district}</Text>
@@ -131,6 +132,7 @@ const Land = () => {
 	const ComponentLayout = () => {
 		return (
 			<>
+                <StatusBar style="white" backgroundColor="white" />
 				<View style={styles.head}>
 					<Text style={styles.h1}>Temukan Lapakmu!</Text>
 					<Text style={styles.tagline}>

@@ -10,6 +10,7 @@ import React from "react";
 import { useRoute } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Surface, useTheme } from "react-native-paper";
+import { StatusBar } from "expo-status-bar";
 
 const LandDetail = () => {
 	const route = useRoute();
@@ -67,7 +68,7 @@ const LandDetail = () => {
 			borderRadius: theme.roundness,
 			borderColor: theme.colors.primary,
 			borderWidth: 1,
-			padding: 10,
+			padding: 15,
 			flexDirection: "row",
 			flexWrap: "wrap",
 			gap: 10,
@@ -101,6 +102,12 @@ const LandDetail = () => {
 			fontFamily: "PoppinsSemiBold",
 			fontSize: 18,
 		},
+		dividerWrapper: { flexDirection: "row", alignItems: "center", gap: 10 },
+		divider: {
+			backgroundColor: theme.colors.primary,
+			width: 30,
+			height: 1,
+		},
 	});
 
 	const ImageComponent = ({ item }) => {
@@ -133,9 +140,12 @@ const LandDetail = () => {
 				</View>
 
 				<View style={{ paddingHorizontal: 20 }}>
-					<Text style={styles.textItalic}>
-						{route.params.availableSlot} Slot tersedia
-					</Text>
+					<View style={styles.dividerWrapper}>
+						<View style={styles.divider} />
+						<Text style={styles.textItalic}>
+							{route.params.availableSlot} Slot tersedia
+						</Text>
+					</View>
 					<Text style={styles.price}>
 						Rp.{" "}
 						{new Intl.NumberFormat("ID").format(route.params.price)}
@@ -147,7 +157,12 @@ const LandDetail = () => {
 				</View>
 
 				<View style={styles.paddingH20}>
-					<Text style={styles.textBoldItalic}>Rekomendasi usaha</Text>
+					<View style={styles.dividerWrapper}>
+						<View style={styles.divider} />
+						<Text style={styles.textBoldItalic}>
+							Rekomendasi usaha
+						</Text>
+					</View>
 					<View style={styles.boxContainer}>
 						{route.params.types.map((type) => (
 							<View key={type} style={styles.typeItem}>
@@ -165,7 +180,10 @@ const LandDetail = () => {
 				</View>
 
 				<View style={styles.paddingH20}>
-					<Text style={styles.textBoldItalic}>Deskripsi</Text>
+					<View style={styles.dividerWrapper}>
+						<View style={styles.divider} />
+						<Text style={styles.textBoldItalic}>Deskripsi</Text>
+					</View>
 					<View style={styles.boxContainer}>
 						<Text>
 							{route.params.description.map((desc, index) => {
@@ -191,6 +209,7 @@ const LandDetail = () => {
 
 	return (
 		<View style={{ flex: 1 }}>
+			<StatusBar style="white" backgroundColor="white" />
 			<FlatList data={[{}]} renderItem={ComponentLayout} />
 
 			<View style={styles.buttonContainer}>
