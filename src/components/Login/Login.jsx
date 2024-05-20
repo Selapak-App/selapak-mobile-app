@@ -44,6 +44,7 @@ const Login = () => {
 		if (!errors.email && !errors.password) {
 			const data = getValues();
 			console.log(data);
+			navigation.navigate("App")
 		}
 	};
 

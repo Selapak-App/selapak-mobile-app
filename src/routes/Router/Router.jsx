@@ -21,7 +21,7 @@ const BottomTab = () => {
     
 	return (
 		<Tab.Navigator
-			initialRouteName="Home"
+			initialRouteName="Land"
 			tabBarOptions={{
 				activeTintColor: "white",
 				inactiveTintColor: theme.colors.secondary,
@@ -94,12 +94,13 @@ const Router = () => {
 				screenOptions={{
 					headerShown: false,
 				}}
-				initialRouteName="ForgetPassword"
+				initialRouteName="App"
 			>
 				<Stack.Screen name="Login" component={Login} />
 				<Stack.Screen name="Register" component={Register} />
 				<Stack.Screen name="App" component={BottomTab} />
 				<Stack.Screen name="ForgetPassword" component={ForgetPassword} />
+				<Stack.Screen name="LandDetail" component={ForgetPassword} />
 			</Stack.Navigator>
 		</NavigationContainer>
 	);
