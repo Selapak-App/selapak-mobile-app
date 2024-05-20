@@ -1,13 +1,20 @@
-import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity } from "react-native";
+import {
+	View,
+	Text,
+	StyleSheet,
+	FlatList,
+	Image,
+	TouchableOpacity,
+} from "react-native";
 import React from "react";
-import { Card, useTheme } from "react-native-paper";
+import { useTheme } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { FontAwesome6, Octicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 const Land = () => {
 	const theme = useTheme();
 	const insets = useSafeAreaInsets();
-    const navigation = useNavigation();
+	const navigation = useNavigation();
 
 	const styles = StyleSheet.create({
 		wrapper: {
@@ -29,78 +36,79 @@ const Land = () => {
 			fontFamily: "Poppins",
 			fontSize: 16,
 		},
+		card: {
+			borderWidth: 1,
+			borderColor: theme.colors.primary,
+			width: "48%",
+			borderRadius: theme.roundness + 2,
+			marginBottom: 20,
+		},
+		cardCover: {
+			borderWidth: 1,
+			borderColor: theme.colors.primary,
+			objectFit: "cover",
+			aspectRatio: 1,
+			borderRadius: theme.roundness,
+		},
+		slotArea: {
+			backgroundColor: theme.colors.primary,
+			borderRadius: theme.roundness,
+			paddingTop: 2,
+			paddingHorizontal: 15,
+			position: "absolute",
+			bottom: 12,
+			right: 12,
+		},
+		slotAreaItem: { fontFamily: "PoppinsSemiBold", color: "white" },
+		cardBody: { padding: 15, flex: 1, gap: 5 },
+		cardBodyContainer: { flexDirection: "row", gap: 10 },
+		dot: { paddingTop: 5 },
+		district: {
+			fontSize: 18,
+			fontFamily: "PoppinsSemiBold",
+		},
+		cardContent: {
+			justifyContent: "space-between",
+			flex: 1,
+			gap: 30,
+		},
+		price: {
+			fontSize: 16,
+			fontFamily: "PoppinsSemiBold",
+		},
+		normalText: { fontFamily: "Poppins", fontSize: 14 },
+		spaceBetween: { justifyContent: "space-between" },
+		flex1: { flex: 1 },
 	});
 
 	const CardComponent = ({ item }) => {
 		return (
 			<TouchableOpacity
-            onPress={() => navigation.navigate("LandDetail", item)}
-            activeOpacity={0.9}
-				style={{
-					borderWidth: 1,
-					borderColor: theme.colors.primary,
-					width: "48%",
-					borderRadius: theme.roundness + 2,
-					marginBottom: 20,
-				}}
+				onPress={() => navigation.navigate("LandDetail", item)}
+				activeOpacity={0.9}
+				style={styles.card}
 			>
 				<View>
 					<Image
 						source={{ uri: item.uri[0] }}
-						style={{
-							borderWidth: 1,
-							borderColor: theme.colors.primary,
-							objectFit: "cover",
-							aspectRatio: 1,
-							borderRadius: theme.roundness,
-						}}
+						style={styles.cardCover}
 					/>
-					<View
-						style={{
-							backgroundColor: theme.colors.primary,
-							borderRadius: theme.roundness,
-							paddingTop: 2,
-							paddingHorizontal: 15,
-							position: "absolute",
-							bottom: 12,
-							right: 12,
-						}}
-					>
-						<Text style={{fontFamily: "PoppinsSemiBold", color: "white"}}>{item.slotArea}</Text>
+					<View style={styles.slotArea}>
+						<Text style={styles.slotAreaItem}>{item.slotArea}</Text>
 					</View>
-					{/* <View style={{flexDirection: "row", gap: 5, flexWrap: "wrap"}}>
-                        {item.types.map(type => (
-                            <View key={type} style={{backgroundColor: theme.colors.primary, borderRadius: theme.roundness, paddingVertical: 5, paddingHorizontal: 15}}>
-                                <Text>{type}</Text>
-                            </View>
-                        ))}
-                    </View> */}
 				</View>
-				<View style={{ padding: 15, flex: 1, gap: 5 }}>
-					<View style={{ flexDirection: "row", gap: 10 }}>
-						<View style={{ paddingTop: 5 }}>
+				<View style={styles.cardBody}>
+					<View style={styles.cardBodyContainer}>
+						<View style={styles.dot}>
 							<FontAwesome6
 								name="location-dot"
 								size={18}
 								color="black"
 							/>
 						</View>
-						<Text
-							style={{
-								fontSize: 18,
-								fontFamily: "PoppinsSemiBold",
-							}}
-						>
-							{item.district}
-						</Text>
+						<Text style={styles.district}>{item.district}</Text>
 					</View>
-					<View
-						style={{
-							justifyContent: "space-between",
-							flex: 1,
-							gap: 30,
-						}}
-					>
+					<View style={styles.cardContent}>
 						<Text numberOfLines={2}>
 							{item.description.map((desc) => (
 								<Text key={desc}>
@@ -110,19 +118,9 @@ const Land = () => {
 							))}
 						</Text>
 
-						<Text
-							style={{
-								fontSize: 16,
-								fontFamily: "PoppinsSemiBold",
-							}}
-						>
+						<Text style={styles.price}>
 							Rp. {new Intl.NumberFormat("ID").format(item.price)}
-							<Text
-								style={{ fontFamily: "Poppins", fontSize: 14 }}
-							>
-								{" "}
-								/bln
-							</Text>
+							<Text style={styles.normalText}> /bln</Text>
 						</Text>
 					</View>
 				</View>
@@ -144,8 +142,8 @@ const Land = () => {
 					keyExtractor={(item) => item.id}
 					renderItem={CardComponent}
 					numColumns={2}
-					columnWrapperStyle={{ justifyContent: "space-between" }}
-					style={{ flex: 1 }}
+					columnWrapperStyle={styles.spaceBetween}
+					style={styles.flex1}
 				/>
 			</>
 		);
@@ -170,8 +168,8 @@ const dummyData = [
 		id: 1,
 		district: "Lowokwaru",
 		address: "Jl. aja dulu No. 66, Tlogomas, Lowokwaru, Malang",
-        postalCode: "62282",
-        availableSlot: 25,
+		postalCode: "62282",
+		availableSlot: 25,
 		description: [
 			"Dekat SPBU",
 			"Dekat Jalan Raya",
@@ -191,8 +189,8 @@ const dummyData = [
 		id: 2,
 		district: "Tlogomas",
 		address: "Jl. aja dulu No. 66, Tlogomas, Lowokwaru, Malang",
-        postalCode: "62282",
-        availableSlot: 25,
+		postalCode: "62282",
+		availableSlot: 25,
 		description: [
 			"Dekat SPBU",
 			"Dekat Jalan Raya",
@@ -212,8 +210,8 @@ const dummyData = [
 		id: 3,
 		district: "Karang Binangun",
 		address: "Jl. aja dulu No. 66, Tlogomas, Lowokwaru, Malang",
-        postalCode: "62282",
-        availableSlot: 25,
+		postalCode: "62282",
+		availableSlot: 25,
 		description: [
 			"Dekat SPBU",
 			"Dekat Jalan Raya",
@@ -233,8 +231,8 @@ const dummyData = [
 		id: 4,
 		district: "Lowokwaru",
 		address: "Jl. aja dulu No. 66, Tlogomas, Lowokwaru, Malang",
-        postalCode: "62282",
-        availableSlot: 25,
+		postalCode: "62282",
+		availableSlot: 25,
 		description: [
 			"Dekat SPBU",
 			"Dekat Jalan Raya",
@@ -254,8 +252,8 @@ const dummyData = [
 		id: 5,
 		district: "Lowokwaru",
 		address: "Jl. aja dulu No. 66, Tlogomas, Lowokwaru, Malang",
-        postalCode: "62282",
-        availableSlot: 25,
+		postalCode: "62282",
+		availableSlot: 25,
 		description: [
 			"Dekat SPBU",
 			"Dekat Jalan Raya",
@@ -275,8 +273,8 @@ const dummyData = [
 		id: 6,
 		district: "Lowokwaru",
 		address: "Jl. aja dulu No. 66, Tlogomas, Lowokwaru, Malang",
-        postalCode: "62282",
-        availableSlot: 25,
+		postalCode: "62282",
+		availableSlot: 25,
 		description: [
 			"Dekat SPBU",
 			"Dekat Jalan Raya",
@@ -296,8 +294,8 @@ const dummyData = [
 		id: 7,
 		district: "Lowokwaru",
 		address: "Jl. aja dulu No. 66, Tlogomas, Lowokwaru, Malang",
-        postalCode: "62282",
-        availableSlot: 25,
+		postalCode: "62282",
+		availableSlot: 25,
 		description: [
 			"Dekat SPBU",
 			"Dekat Jalan Raya",
@@ -317,8 +315,8 @@ const dummyData = [
 		id: 8,
 		district: "Lowokwaru",
 		address: "Jl. aja dulu No. 66, Tlogomas, Lowokwaru, Malang",
-        postalCode: "62282",
-        availableSlot: 25,
+		postalCode: "62282",
+		availableSlot: 25,
 		description: [
 			"Dekat SPBU",
 			"Dekat Jalan Raya",
@@ -338,8 +336,8 @@ const dummyData = [
 		id: 9,
 		district: "Lowokwaru",
 		address: "Jl. aja dulu No. 66, Tlogomas, Lowokwaru, Malang",
-        postalCode: "62282",
-        availableSlot: 25,
+		postalCode: "62282",
+		availableSlot: 25,
 		description: [
 			"Dekat SPBU",
 			"Dekat Jalan Raya",
@@ -359,8 +357,8 @@ const dummyData = [
 		id: 10,
 		district: "Lowokwaru",
 		address: "Jl. aja dulu No. 66, Tlogomas, Lowokwaru, Malang",
-        postalCode: "62282",
-        availableSlot: 25,
+		postalCode: "62282",
+		availableSlot: 25,
 		description: [
 			"Dekat SPBU",
 			"Dekat Jalan Raya",
@@ -380,8 +378,8 @@ const dummyData = [
 		id: 11,
 		district: "Lowokwaru",
 		address: "Jl. aja dulu No. 66, Tlogomas, Lowokwaru, Malang",
-        postalCode: "62282",
-        availableSlot: 25,
+		postalCode: "62282",
+		availableSlot: 25,
 		description: [
 			"Dekat SPBU",
 			"Dekat Jalan Raya",

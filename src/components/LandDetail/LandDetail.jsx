@@ -9,7 +9,7 @@ import {
 import React from "react";
 import { useRoute } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Button, useTheme } from "react-native-paper";
+import { Surface, useTheme } from "react-native-paper";
 
 const LandDetail = () => {
 	const route = useRoute();
@@ -37,19 +37,76 @@ const LandDetail = () => {
 			fontFamily: "Poppins",
 			fontSize: 16,
 		},
+		image: {
+			height: 250,
+			width: 350,
+			borderRadius: theme.roundness,
+		},
+		contentContainer: {
+			paddingHorizontal: 20,
+			gap: 20,
+		},
+		textItalic: {
+			fontFamily: "PoppinsItalic",
+			fontSize: 16,
+		},
+		price: {
+			fontSize: 24,
+			fontFamily: "PoppinsSemiBold",
+		},
+		normalText: {
+			fontSize: 16,
+			fontFamily: "Poppins",
+		},
+		paddingH20: { paddingHorizontal: 20 },
+		textBoldItalic: {
+			fontSize: 16,
+			fontFamily: "PoppinsSemiBoldItalic",
+		},
+		boxContainer: {
+			borderRadius: theme.roundness,
+			borderColor: theme.colors.primary,
+			borderWidth: 1,
+			padding: 10,
+			flexDirection: "row",
+			flexWrap: "wrap",
+			gap: 10,
+		},
+		typeItem: {
+			backgroundColor: theme.colors.primary,
+			borderRadius: theme.roundness,
+			paddingBottom: 5,
+			paddingTop: 7,
+			paddingHorizontal: 15,
+		},
+		buttonContainer: {
+			position: "absolute",
+			bottom: 20,
+			left: 0,
+			width: "100%",
+			paddingHorizontal: 20,
+		},
+		buttonBg: {
+			backgroundColor: "white",
+			borderRadius: theme.roundness,
+		},
+		button: {
+			backgroundColor: theme.colors.secondary,
+			borderRadius: theme.roundness,
+			padding: 15,
+			alignItems: "center",
+		},
+		buttonText: {
+			color: "white",
+			fontFamily: "PoppinsSemiBold",
+			fontSize: 18,
+		},
 	});
 
 	const ImageComponent = ({ item }) => {
 		return (
 			<View>
-				<Image
-					source={{ uri: item }}
-					style={{
-						height: 250,
-						width: 350,
-						borderRadius: theme.roundness,
-					}}
-				/>
+				<Image source={{ uri: item }} style={styles.image} />
 			</View>
 		);
 	};
@@ -70,81 +127,33 @@ const LandDetail = () => {
 						horizontal={true}
 						renderItem={ImageComponent}
 						key={(item) => item}
-						contentContainerStyle={{
-							paddingHorizontal: 20,
-							gap: 20,
-						}}
+						contentContainerStyle={styles.contentContainer}
 						showsHorizontalScrollIndicator={false}
 					/>
 				</View>
 
 				<View style={{ paddingHorizontal: 20 }}>
-					<Text
-						style={{
-							fontFamily: "PoppinsItalic",
-							fontSize: 16,
-						}}
-					>
+					<Text style={styles.textItalic}>
 						{route.params.availableSlot} Slot tersedia
 					</Text>
-					<Text
-						style={{
-							fontSize: 24,
-							fontFamily: "PoppinsSemiBold",
-						}}
-					>
+					<Text style={styles.price}>
 						Rp.{" "}
 						{new Intl.NumberFormat("ID").format(route.params.price)}
-						<Text style={{ fontFamily: "Poppins", fontSize: 16 }}>
-							{" "}
-							/bulan
-						</Text>
+						<Text style={styles.normalText}> /bulan</Text>
 					</Text>
-					<Text
-						style={{
-							fontFamily: "Poppins",
-							fontSize: 16,
-						}}
-					>
+					<Text style={styles.normalText}>
 						{route.params.address + " " + route.params.postalCode}
 					</Text>
 				</View>
 
-				<View style={{ paddingHorizontal: 20 }}>
-					<Text
-						style={{
-							fontSize: 16,
-							fontFamily: "PoppinsSemiBoldItalic",
-						}}
-					>
-						Rekomendasi usaha
-					</Text>
-					<View
-						style={{
-							borderRadius: theme.roundness,
-							borderColor: theme.colors.primary,
-							borderWidth: 1,
-							padding: 10,
-							flexDirection: "row",
-							flexWrap: "wrap",
-							gap: 10,
-						}}
-					>
+				<View style={styles.paddingH20}>
+					<Text style={styles.textBoldItalic}>Rekomendasi usaha</Text>
+					<View style={styles.boxContainer}>
 						{route.params.types.map((type) => (
-							<View
-								key={type}
-								style={{
-									backgroundColor: theme.colors.primary,
-									borderRadius: theme.roundness,
-									paddingBottom: 5,
-									paddingTop: 7,
-									paddingHorizontal: 15,
-								}}
-							>
+							<View key={type} style={styles.typeItem}>
 								<Text
 									style={{
-										fontFamily: "Poppins",
-										fontSize: 16,
+										...styles.normalText,
 										color: "white",
 									}}
 								>
@@ -155,23 +164,9 @@ const LandDetail = () => {
 					</View>
 				</View>
 
-				<View style={{ paddingHorizontal: 20 }}>
-					<Text
-						style={{
-							fontSize: 16,
-							fontFamily: "PoppinsSemiBoldItalic",
-						}}
-					>
-						Deskripsi
-					</Text>
-					<View
-						style={{
-							borderRadius: theme.roundness,
-							borderColor: theme.colors.primary,
-							borderWidth: 1,
-							padding: 10,
-						}}
-					>
+				<View style={styles.paddingH20}>
+					<Text style={styles.textBoldItalic}>Deskripsi</Text>
+					<View style={styles.boxContainer}>
 						<Text>
 							{route.params.description.map((desc, index) => {
 								if (
@@ -182,13 +177,7 @@ const LandDetail = () => {
 								}
 
 								return (
-									<Text
-										key={desc}
-										style={{
-											fontFamily: "Poppins",
-											fontSize: 16,
-										}}
-									>
+									<Text key={desc} style={styles.normalText}>
 										{"-  " + desc}
 									</Text>
 								);
@@ -204,41 +193,12 @@ const LandDetail = () => {
 		<View style={{ flex: 1 }}>
 			<FlatList data={[{}]} renderItem={ComponentLayout} />
 
-			<View
-				style={{
-					position: "absolute",
-					bottom: 20,
-					left: 0,
-					width: "100%",
-					paddingHorizontal: 20,
-				}}
-			>
-				<View
-					style={{
-						backgroundColor: "white",
-						borderRadius: theme.roundness,
-					}}
-				>
-					<TouchableOpacity
-						activeOpacity={0.9}
-						style={{
-							backgroundColor: theme.colors.secondary,
-							borderRadius: theme.roundness,
-							padding: 15,
-							alignItems: "center",
-						}}
-					>
-						<Text
-							style={{
-								color: "white",
-								fontFamily: "PoppinsSemiBold",
-								fontSize: 18,
-							}}
-						>
-							Ajukan Sewa
-						</Text>
+			<View style={styles.buttonContainer}>
+				<Surface style={styles.buttonBg} elevation={3}>
+					<TouchableOpacity activeOpacity={0.9} style={styles.button}>
+						<Text style={styles.buttonText}>Ajukan Sewa</Text>
 					</TouchableOpacity>
-				</View>
+				</Surface>
 			</View>
 		</View>
 	);
