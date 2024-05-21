@@ -22,7 +22,6 @@ const Land = () => {
 		container: {
 			paddingHorizontal: 20,
 			paddingTop: insets.top,
-			paddingBottom: 100,
 			backgroundColor: "white",
 			flexGrow: 1,
 		},

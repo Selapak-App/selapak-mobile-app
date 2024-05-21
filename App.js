@@ -2,7 +2,10 @@ import { useFonts } from "expo-font";
 import { StyleSheet, Text, View } from "react-native";
 import { DefaultTheme, PaperProvider } from "react-native-paper";
 import Router from "./src/routes/Router";
-import { SafeAreaProvider } from "react-native-safe-area-context";
+import {
+	SafeAreaProvider,
+	useSafeAreaInsets,
+} from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 
 export default function App() {
@@ -41,7 +44,7 @@ export default function App() {
 	return (
 		<SafeAreaProvider>
 			<PaperProvider theme={theme}>
-				<StatusBar style="white" />
+				<StatusBar style="white" backgroundColor="transparent" />
 				<Router />
 			</PaperProvider>
 		</SafeAreaProvider>

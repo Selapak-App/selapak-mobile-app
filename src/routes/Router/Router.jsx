@@ -1,5 +1,4 @@
-import React from "react";
-import { AnimatedTabBarNavigator } from "react-native-animated-nav-tab-bar";
+import React, { useState } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer, useRoute } from "@react-navigation/native";
 import Login from "../../components/Login";
@@ -8,104 +7,107 @@ import Home from "../../components/Home";
 import Land from "../../components/Land";
 import Transaction from "../../components/Transaction";
 import Profile from "../../components/Profile";
-import { Button, useTheme } from "react-native-paper";
-import { Octicons } from "@expo/vector-icons";
+import { BottomNavigation, useTheme } from "react-native-paper";
 import ForgetPassword from "../../components/ForgetPassword";
 import LandDetail from "../../components/LandDetail";
+import { Text } from "react-native";
+import { Octicons } from "@expo/vector-icons";
 
 const Stack = createNativeStackNavigator();
-const Tab = AnimatedTabBarNavigator();
 
-const BottomTab = () => {
-    const theme = useTheme();
-    
+const MyComponent = () => {
+	const [index, setIndex] = useState(0);
+	// const a = () => (<Text>"""</Text>);
+	const [routes] = useState([
+		{
+			key: "home",
+			title: "Home",
+			focusedIcon: "home",
+		},
+		{ key: "land", title: "Land", focusedIcon: "apps" },
+		{
+			key: "transaction",
+			title: "Transaction",
+			focusedIcon: "code-of-conduct",
+		},
+		{
+			key: "profile",
+			title: "Profile",
+			focusedIcon: "person",
+		},
+	]);
+	const theme = useTheme();
+
+	const renderScene = BottomNavigation.SceneMap({
+		home: Home,
+		land: Land,
+		transaction: Transaction,
+		profile: Profile,
+	});
+
+	const renderIcon = ({ route, color }) => {
+		return <Octicons name={route.focusedIcon} color={color} size={24} />;
+	};
+
+	const renderLabel = ({route, color}) => {
+		return (
+			<Text style={{fontFamily: "PoppinsMedium", textAlign: "center", color: color}}>{route.title}</Text>
+		)
+	}
+
 	return (
-		<Tab.Navigator
-			initialRouteName="Home"
-			tabBarOptions={{
-				activeTintColor: "white",
-				inactiveTintColor: theme.colors.secondary,
-				activeBackgroundColor: theme.colors.secondary,
-			}}
-            // appearance={{
-            //     floating: true,
-            // }}
-		>
-			<Tab.Screen
-				name="Home"
-				component={Home}
-				options={{
-					tabBarIcon: ({ focused, color, size }) => (
-						<Octicons
-							name="home"
-							size={size ? size : 24}
-							color={focused ? color : theme.colors.secondary}
-						/>
-					),
+		<>
+			<BottomNavigation
+				navigationState={{ index, routes }}
+				onIndexChange={setIndex}
+				renderScene={renderScene}
+				renderIcon={renderIcon}
+				renderLabel={renderLabel}
+				shifting={true}
+				compact={true}
+				activeColor={theme.colors.secondary}
+				inactiveColor={theme.colors.dark}
+				activeIndicatorStyle={{
+					backgroundColor: "transparent",
+				}}
+				sceneAnimationEnabled={true}
+				sceneAnimationType="shifting"
+				barStyle={{
+					backgroundColor: "white",
+					paddingBottom: 10,
+					paddingHorizontal: 30,
+					borderTopColor: theme.colors.lightGray,
+					borderTopWidth: 3,
 				}}
 			/>
-			<Tab.Screen
-				name="Land"
-				component={Land}
-				options={{
-					tabBarIcon: ({ focused, color, size }) => (
-						<Octicons
-							name="apps"
-							size={size ? size : 24}
-							color={focused ? color : theme.colors.secondary}
-						/>
-					),
-				}}
-			/>
-			<Tab.Screen
-				name="Transaction"
-				component={Transaction}
-				options={{
-					tabBarIcon: ({ focused, color, size }) => (
-						<Octicons
-							name="code-of-conduct"
-							size={size ? size : 24}
-							color={focused ? color : theme.colors.secondary}
-						/>
-					),
-				}}
-			/>
-			<Tab.Screen
-				name="Profile"
-				component={Profile}
-				options={{
-					tabBarIcon: ({ focused, color, size }) => (
-						<Octicons
-							name="person"
-							size={size ? size : 24}
-							color={focused ? color : theme.colors.secondary}
-						/>
-					),
-				}}
-			/>
-		</Tab.Navigator>
+		</>
 	);
 };
 
 const Router = () => {
 	return (
-		<NavigationContainer>
-			<Stack.Navigator
-				screenOptions={{
-					headerShown: false,
-					animation: "ios",
-					gestureDirection: "horizontal",
-					gestureEnabled: true,
-				}}
-				initialRouteName="App"
-			>
-				<Stack.Screen name="Login" component={Login} />
-				<Stack.Screen name="Register" component={Register} />
-				<Stack.Screen name="App" component={BottomTab} />
-				<Stack.Screen name="ForgetPassword" component={ForgetPassword} />
-				<Stack.Screen name="LandDetail" component={LandDetail} />
-			</Stack.Navigator>
-		</NavigationContainer>
+		<>
+			<NavigationContainer>
+				<Stack.Navigator
+					screenOptions={{
+						headerShown: false,
+						animation: "ios",
+						gestureDirection: "horizontal",
+						gestureEnabled: true,
+					}}
+					initialRouteName="App"
+				>
+					<Stack.Screen name="Login" component={Login} />
+					<Stack.Screen name="Register" component={Register} />
+					<Stack.Screen name="App" component={MyComponent} />
+					<Stack.Screen
+						name="ForgetPassword"
+						component={ForgetPassword}
+					/>
+					<Stack.Screen name="LandDetail" component={LandDetail} />
+				</Stack.Navigator>
+			</NavigationContainer>
+		</>
 	);
 };
 

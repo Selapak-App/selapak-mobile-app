@@ -46,7 +46,6 @@ const Home = () => {
 		flex1: { flex: 1 },
 		contentContainerWrapper: {
 			paddingTop: insets.top,
-			paddingBottom: 100,
 			backgroundColor: theme.colors.primary,
 			flexGrow: 1,
 		},
@@ -92,10 +91,10 @@ const Home = () => {
 		},
 		cardImage: {
 			position: "absolute",
-			bottom: 0,
+			top: 0,
 			right: -20,
-			width: 120,
-			height: 120,
+			width: 107,
+			height: 131,
 		},
 		landCardContainer: {
 			backgroundColor: theme.colors.lightGray,
