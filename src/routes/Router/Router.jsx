@@ -95,7 +95,7 @@ const Router = () => {
 						gestureDirection: "horizontal",
 						gestureEnabled: true,
 					}}
-					initialRouteName="App"
+					initialRouteName="Login"
 				>
 					<Stack.Screen name="Login" component={Login} />
 					<Stack.Screen name="Register" component={Register} />

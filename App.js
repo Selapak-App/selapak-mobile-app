@@ -1,12 +1,10 @@
 import { useFonts } from "expo-font";
-import { StyleSheet, Text, View } from "react-native";
 import { DefaultTheme, PaperProvider } from "react-native-paper";
 import Router from "./src/routes/Router";
-import {
-	SafeAreaProvider,
-	useSafeAreaInsets,
-} from "react-native-safe-area-context";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
+import { Provider } from "react-redux";
+import store from "./src/app/store";
 
 export default function App() {
 	const [fontsLoaded, fontError] = useFonts({
@@ -42,11 +40,13 @@ export default function App() {
 	};
 
 	return (
-		<SafeAreaProvider>
-			<PaperProvider theme={theme}>
-				<StatusBar style="white" backgroundColor="transparent" />
-				<Router />
-			</PaperProvider>
-		</SafeAreaProvider>
+		<Provider store={store}>
+			<SafeAreaProvider>
+				<PaperProvider theme={theme}>
+					<StatusBar style="white" backgroundColor="transparent" />
+					<Router />
+				</PaperProvider>
+			</SafeAreaProvider>
+		</Provider>
 	);
 }
