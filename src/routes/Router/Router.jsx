@@ -21,15 +21,15 @@ const BottomTab = () => {
     
 	return (
 		<Tab.Navigator
-			initialRouteName="Land"
+			initialRouteName="Home"
 			tabBarOptions={{
 				activeTintColor: "white",
 				inactiveTintColor: theme.colors.secondary,
 				activeBackgroundColor: theme.colors.secondary,
 			}}
-            appearance={{
-                floating: true,
-            }}
+            // appearance={{
+            //     floating: true,
+            // }}
 		>
 			<Tab.Screen
 				name="Home"
@@ -93,6 +93,9 @@ const Router = () => {
 			<Stack.Navigator
 				screenOptions={{
 					headerShown: false,
+					animation: "ios",
+					gestureDirection: "horizontal",
+					gestureEnabled: true,
 				}}
 				initialRouteName="App"
 			>

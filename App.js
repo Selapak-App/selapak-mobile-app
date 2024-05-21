@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { DefaultTheme, PaperProvider } from "react-native-paper";
 import Router from "./src/routes/Router";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { StatusBar } from "expo-status-bar";
 
 export default function App() {
 	const [fontsLoaded, fontError] = useFonts({
@@ -31,6 +32,7 @@ export default function App() {
 			secondary: "#387ADF",
 			accent: "#50C4ED",
 			dark: "#2f2d2d",
+			lightGray: "#fbfbfb",
 			primaryDark: "#333A73",
 		},
 		roundness: 20,
@@ -39,6 +41,7 @@ export default function App() {
 	return (
 		<SafeAreaProvider>
 			<PaperProvider theme={theme}>
+				<StatusBar style="white" />
 				<Router />
 			</PaperProvider>
 		</SafeAreaProvider>
