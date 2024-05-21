@@ -1,6 +1,15 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
+import {
+	View,
+	Text,
+	StyleSheet,
+	Image,
+	TouchableOpacity,
+	ScrollView,
+	FlatList,
+	Dimensions,
+} from "react-native";
 import React, { useState } from "react";
-import { TextInput, useTheme } from "react-native-paper";
+import { RadioButton, TextInput, useTheme } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import * as yup from "yup";
@@ -9,11 +18,16 @@ import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Feather } from "@expo/vector-icons";
 import images from "../../../assets/images";
+import { useDispatch, useSelector } from "react-redux";
+import Popup from "../reusables/Popup";
+import { registerAction } from "../../app/feature/auth/authSlice";
+import ThreeDotLoading from "../reusables/ThreeDotLoading/ThreeDotLoading";
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const registerFormSchema = yup
 	.object({
 		name: yup.string().required("Nama lengkap tidak boleh kosong"),
+		gender: yup.string().default("MALE"),
 		email: yup
 			.string()
 			.matches(emailRegex, "Format email tidak valid")
@@ -47,11 +61,40 @@ const Register = () => {
 		},
 		resolver: yupResolver(registerFormSchema),
 	});
+	const dispatch = useDispatch();
+	const { isLoading } = useSelector((state) => state.auth);
+	const [visibility, setVisibility] = useState(false);
+	const [message, setMessage] = useState(null);
+	const [isError, setIsError] = useState(false);
+
+	const window = Dimensions.get("window");
 
 	const onSubmit = async () => {
 		if (!errors.email && !errors.password) {
-			const data = getValues();
-			console.log(data);
+			try {
+				const data = getValues();
+				const reqData = {
+					fullName: data.name,
+					email: data.email,
+					gender: data.gender ? data.gender : "MALE",
+					password: data.password,
+				};
+
+				const res = await dispatch(registerAction(reqData));
+				if (!res.payload.error) {
+					setMessage("Berhasil membuat akun");
+					setVisibility(true);
+					setTimeout(() => {
+						navigation.navigate("Login");
+					}, 3000);
+				} else {
+					throw new Error(res.payload.message);
+				}
+			} catch (error) {
+				setIsError(true);
+				setMessage(error.message);
+				setVisibility(true);
+			}
 		}
 	};
 
@@ -72,11 +115,12 @@ const Register = () => {
 		page: {
 			backgroundColor: theme.colors.primary,
 			flex: 1,
-			paddingTop: insets.top + 20,
 			justifyContent: "flex-end",
 		},
 		wrapper: {
-			flex: 0.9,
+			marginTop: insets.top + window.height * 0.1,
+			minHeight: window.height * 0.9,
+			flex: 1,
 			backgroundColor: "white",
 			paddingBottom: insets.bottom + 20,
 			paddingHorizontal: 20,
@@ -121,11 +165,14 @@ const Register = () => {
 			right: 20,
 			paddingTop: 5,
 		},
-		textError: { fontFamily: "Poppins", color: theme.colors.error },
+		textError: {
+			fontFamily: "Poppins",
+			color: theme.colors.error,
+			marginTop: 5,
+		},
 		buttonWraper: { width: "100%", paddingHorizontal: 20, gap: 14 },
 		buttonContainer: {
 			backgroundColor: theme.colors.secondary,
-			padding: 12,
 			borderRadius: theme.roundness,
 			alignItems: "center",
 		},
@@ -136,11 +183,16 @@ const Register = () => {
 		},
 		textWrapper: { fontFamily: "Poppins", textAlign: "center" },
 		textToLogin: { fontFamily: "PoppinsSemiBold" },
+		radioGroup: { flexDirection: "row", gap: 10 },
+		radioButton: {
+			flexDirection: "row",
+			justifyContent: "center",
+			alignItems: "center",
+		},
 	});
 
-	return (
-		<View style={styles.page}>
-			<StatusBar style="dark" />
+	const LayoutComponent = () => {
+		return (
 			<View style={styles.wrapper}>
 				<View style={styles.thumbnail}>
 					<Image source={images.icon} style={styles.imgThumbnail} />
@@ -152,159 +204,240 @@ const Register = () => {
 					</Text>
 				</View>
 				<View style={styles.form}>
-					<Controller
-						control={control}
-						rules={{
-							required: true,
-						}}
-						render={({ field: { onChange, onBlur, value } }) => (
-							<TextInput
-								label="Nama Lengkap"
-								mode="outlined"
-								outlineColor={theme.colors.secondary}
-								onBlur={onBlur}
-								value={value}
-								onChangeText={(event) => onChange(event)}
-								error={errors.name}
-							/>
-						)}
-						name="name"
-					/>
-
-					{errors.name && (
-						<Text style={styles.textError}>
-							* {errors.name.message}
-						</Text>
-					)}
-					<Controller
-						control={control}
-						rules={{
-							required: true,
-						}}
-						render={({ field: { onChange, onBlur, value } }) => (
-							<TextInput
-								label="Email"
-								mode="outlined"
-								outlineColor={theme.colors.secondary}
-								onBlur={onBlur}
-								value={value}
-								onChangeText={(event) => onChange(event)}
-								error={errors.email}
-							/>
-						)}
-						name="email"
-					/>
-
-					{errors.email && (
-						<Text style={styles.textError}>
-							* {errors.email.message}
-						</Text>
-					)}
-
-					<View
-						style={{
-							justifyContent: "center",
-						}}
-					>
+					<View>
 						<Controller
 							control={control}
 							rules={{
 								required: true,
 							}}
 							render={({
-								field,
 								field: { onChange, onBlur, value },
 							}) => (
 								<TextInput
-									label="Password"
+									label="Nama Lengkap"
 									mode="outlined"
 									outlineColor={theme.colors.secondary}
-									left="#000"
-									secureTextEntry={!showPassword}
 									onBlur={onBlur}
-									onChangeText={(event) => onChange(event)}
 									value={value}
-									error={errors.password}
+									onChangeText={(event) => onChange(event)}
+									error={errors.name}
 								/>
 							)}
-							name="password"
+							name="name"
 						/>
 
-						<TouchableOpacity
-							activeOpacity={0.9}
-							onPress={() => setShowPassword(!showPassword)}
-							style={styles.showPassword}
-						>
-							<Feather
-								name={showPassword ? "eye-off" : "eye"}
-								size={24}
-								color={theme.colors.dark}
-							/>
-						</TouchableOpacity>
+						{errors.name && (
+							<Text style={styles.textError}>
+								* {errors.name.message}
+							</Text>
+						)}
 					</View>
-					{errors.password && (
-						<Text style={styles.textError}>
-							* {errors.password.message}
-						</Text>
-					)}
-
 					<View
 						style={{
-							justifyContent: "center",
+							borderRadius: theme.roundness,
+							borderWidth: 1,
+							borderColor: theme.colors.secondary,
+							padding: 10,
 						}}
 					>
+						<Text
+							style={{
+								fontFamily: "PoppinsMedium",
+								fontSize: 16,
+							}}
+						>
+							Jenis Kelamin
+						</Text>
 						<Controller
 							control={control}
 							rules={{
 								required: true,
 							}}
 							render={({
-								field,
+								field: { onChange, onBlur, value },
+							}) => (
+								<RadioButton.Group
+									onValueChange={(newValue) =>
+										onChange(newValue)
+									}
+									value={value}
+								>
+									<View style={styles.radioGroup}>
+										<View style={styles.radioButton}>
+											<RadioButton
+												value="MALE"
+												status="checked"
+											/>
+											<Text style={styles.textWrapper}>
+												Male
+											</Text>
+										</View>
+										<View style={styles.radioButton}>
+											<RadioButton value="FEMALE" />
+											<Text style={styles.textWrapper}>
+												Female
+											</Text>
+										</View>
+									</View>
+								</RadioButton.Group>
+							)}
+							name="gender"
+						/>
+
+						{errors.gender && (
+							<Text style={styles.textError}>
+								* {errors.gender.message}
+							</Text>
+						)}
+					</View>
+
+					<View>
+						<Controller
+							control={control}
+							rules={{
+								required: true,
+							}}
+							render={({
 								field: { onChange, onBlur, value },
 							}) => (
 								<TextInput
-									label="Confirm Password"
+									label="Email"
 									mode="outlined"
 									outlineColor={theme.colors.secondary}
-									left="#000"
-									secureTextEntry={!showPassword}
 									onBlur={onBlur}
-									onChangeText={(event) => onChange(event)}
 									value={value}
-									error={errors.password}
+									onChangeText={(event) => onChange(event)}
+									error={errors.email}
 								/>
 							)}
-							name="confirmPassword"
+							name="email"
 						/>
 
-						<TouchableOpacity
-							activeOpacity={0.9}
-							onPress={() =>
-								setShowConfPassword(!showConfPassword)
-							}
-							style={styles.showPassword}
-						>
-							<Feather
-								name={showConfPassword ? "eye-off" : "eye"}
-								size={24}
-								color={theme.colors.dark}
-							/>
-						</TouchableOpacity>
+						{errors.email && (
+							<Text style={styles.textError}>
+								* {errors.email.message}
+							</Text>
+						)}
 					</View>
-					{errors.confirmPassword && (
-						<Text style={styles.textError}>
-							* {errors.confirmPassword.message}
-						</Text>
-					)}
+
+					<View>
+						<View
+							style={{
+								justifyContent: "center",
+							}}
+						>
+							<Controller
+								control={control}
+								rules={{
+									required: true,
+								}}
+								render={({
+									field,
+									field: { onChange, onBlur, value },
+								}) => (
+									<TextInput
+										label="Password"
+										mode="outlined"
+										outlineColor={theme.colors.secondary}
+										left="#000"
+										secureTextEntry={!showPassword}
+										onBlur={onBlur}
+										onChangeText={(event) =>
+											onChange(event)
+										}
+										value={value}
+										error={errors.password}
+									/>
+								)}
+								name="password"
+							/>
+
+							<TouchableOpacity
+								activeOpacity={0.9}
+								onPress={() => setShowPassword(!showPassword)}
+								style={styles.showPassword}
+							>
+								<Feather
+									name={showPassword ? "eye-off" : "eye"}
+									size={24}
+									color={theme.colors.dark}
+								/>
+							</TouchableOpacity>
+						</View>
+						{errors.password && (
+							<Text style={styles.textError}>
+								* {errors.password.message}
+							</Text>
+						)}
+					</View>
+					<View>
+						<View
+							style={{
+								justifyContent: "center",
+							}}
+						>
+							<Controller
+								control={control}
+								rules={{
+									required: true,
+								}}
+								render={({
+									field,
+									field: { onChange, onBlur, value },
+								}) => (
+									<TextInput
+										label="Confirm Password"
+										mode="outlined"
+										outlineColor={theme.colors.secondary}
+										left="#000"
+										secureTextEntry={!showConfPassword}
+										onBlur={onBlur}
+										onChangeText={(event) =>
+											onChange(event)
+										}
+										value={value}
+										error={errors.password}
+									/>
+								)}
+								name="confirmPassword"
+							/>
+
+							<TouchableOpacity
+								activeOpacity={0.9}
+								onPress={() =>
+									setShowConfPassword(!showConfPassword)
+								}
+								style={styles.showPassword}
+							>
+								<Feather
+									name={showConfPassword ? "eye-off" : "eye"}
+									size={24}
+									color={theme.colors.dark}
+								/>
+							</TouchableOpacity>
+						</View>
+						{errors.confirmPassword && (
+							<Text style={styles.textError}>
+								* {errors.confirmPassword.message}
+							</Text>
+						)}
+					</View>
 				</View>
 
 				<View style={styles.buttonWraper}>
 					<TouchableOpacity
 						activeOpacity={0.9}
-						style={styles.buttonContainer}
+						style={{
+							...styles.buttonContainer,
+							padding: isLoading ? 6 : 12,
+						}}
 						onPress={handleSubmit(onSubmit)}
 					>
-						<Text style={styles.buttonText}>Daftar</Text>
+						{!isLoading ? (
+							<Text style={styles.buttonText}>Daftar</Text>
+						) : (
+							<ThreeDotLoading width={40} height={40} />
+						)}
 					</TouchableOpacity>
 					<Text style={styles.textWrapper}>
 						Sudah punya akun?{" "}
@@ -316,7 +449,27 @@ const Register = () => {
 						</Text>
 					</Text>
 				</View>
+				<Popup
+					message={message}
+					visibility={visibility}
+					setVisibility={setVisibility}
+					bgColor={
+						isError ? theme.colors.error : theme.colors.secondary
+					}
+				/>
 			</View>
+		);
+	};
+
+	return (
+		<View style={styles.page}>
+			<StatusBar style="dark" />
+			<FlatList
+				data={[{}]}
+				renderItem={LayoutComponent}
+				contentContainerStyle={{ flexGrow: 1 }}
+				style={{ flex: 1 }}
+			/>
 		</View>
 	);
 };

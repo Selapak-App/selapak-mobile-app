@@ -9,11 +9,12 @@ import { useNavigation } from "@react-navigation/native";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm, Controller } from "react-hook-form";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { loginAction } from "../../app/feature/auth/authSlice";
 import LottieView from "lottie-react-native";
 import animations from "../../../assets/animations";
 import Popup from "../reusables/Popup";
+import ThreeDotLoading from "../reusables/ThreeDotLoading/ThreeDotLoading";
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const loginFormSchema = yup
@@ -47,14 +48,13 @@ const Login = () => {
 		resolver: yupResolver(loginFormSchema),
 	});
 	const dispatch = useDispatch();
-	const [isLoading, setIsLoading] = useState(false);
-	const [errorVisibility, setErrorVisibility] = useState(true);
+	const { isLoading } = useSelector((state) => state.auth);
+	const [errorVisibility, setErrorVisibility] = useState(false);
 	const [errorMessage, setErrorMessage] = useState("Network Error");
 
 	const onSubmit = async () => {
 		if (!errors.email && !errors.password) {
 			try {
-				setIsLoading(true);
 				const data = await getValues();
 				const res = await dispatch(loginAction(data));
 				if (!res.payload.error) {
@@ -65,8 +65,6 @@ const Login = () => {
 			} catch (error) {
 				setErrorMessage(error.message);
 				setErrorVisibility(true);
-			} finally {
-				setIsLoading(false);
 			}
 		}
 	};
@@ -260,14 +258,7 @@ const Login = () => {
 						{!isLoading ? (
 							<Text style={styles.buttonText}>Masuk</Text>
 						) : (
-							<LottieView
-								autoPlay
-								style={{
-									width: 40,
-									height: 40,
-								}}
-								source={animations.threeDots}
-							/>
+							<ThreeDotLoading width={40} height={40} />
 						)}
 					</TouchableOpacity>
 					<Text style={styles.textWrapper}>
@@ -281,7 +272,12 @@ const Login = () => {
 					</Text>
 				</View>
 			</View>
-			<Popup errorMessage={errorMessage} errorVisibility={errorVisibility} setErrorVisibility={setErrorVisibility} />
+			<Popup
+				message={errorMessage}
+				visibility={errorVisibility}
+				setVisibility={setErrorVisibility}
+				bgColor={theme.colors.error}
+			/>
 		</View>
 	);
 };

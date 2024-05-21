@@ -6,8 +6,10 @@ export const AuthService = () => {
 		try {
 			const res = await axiosInstance.post("/login", payload);
 			if (res.status == 200) {
-				const token = res.data.data.token;
-				await AsyncStorage.setItem("token", token);
+				const resData = res.data.data;
+				await AsyncStorage.setItem("token", resData.token);
+                await AsyncStorage.setItem("customerId", resData.id);
+                await AsyncStorage.setItem("email", resData.email);
 				return res.data.data;
 			} else {
 				throw new Error("Unexpected response status: " + res.status);
@@ -16,5 +18,19 @@ export const AuthService = () => {
 			throw e;
 		}
 	};
-	return { login };
+
+    const register = async (payload) => {
+        try {
+            const res = await axiosInstance.post("/register", payload);
+            if (res.status == 201) {
+                return res.data.data;
+            } else {
+                throw new Error("Unexpected response status: ", res.status);
+            }
+        } catch (e) {
+            throw e;
+        }
+    }
+
+	return { login, register };
 };

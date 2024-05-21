@@ -1,21 +1,24 @@
 import { View, Text } from "react-native";
 import React from "react";
-import { Snackbar } from "react-native-paper";
+import { Snackbar, useTheme } from "react-native-paper";
 
-const Popup = ({errorVisibility, setErrorVisibility, errorMessage}) => {
+const Popup = ({visibility, setVisibility, message, bgColor}) => {
 	return (
 		<Snackbar
-			visible={errorVisibility}
-			onDismiss={() => setErrorVisibility(false)}
-			style={{ marginBottom: 30, marginHorizontal: 20 }}
+			visible={visibility}
+			onDismiss={() => setVisibility(false)}
+			style={{ marginBottom: 30, marginHorizontal: 20, backgroundColor: bgColor || "black"  }}
 			action={{
 				label: "Close",
+				style: {
+					backgroundColor: "rgba(255,255,255,0.1)",
+				},
 				onPress: () => {
-					setErrorVisibility(false);
+					setVisibility(false);
 				},
 			}}
 		>
-			{errorMessage}
+			{message}
 		</Snackbar>
 	);
 };
