@@ -10,14 +10,14 @@ import Profile from "../../components/Profile";
 import { BottomNavigation, useTheme } from "react-native-paper";
 import ForgetPassword from "../../components/ForgetPassword";
 import LandDetail from "../../components/LandDetail";
-import { Text } from "react-native";
+import { Dimensions, Text } from "react-native";
 import { Octicons } from "@expo/vector-icons";
 
 const Stack = createNativeStackNavigator();
 
+
 const MyComponent = () => {
 	const [index, setIndex] = useState(0);
-	// const a = () => (<Text>"""</Text>);
 	const [routes] = useState([
 		{
 			key: "home",
@@ -38,22 +38,35 @@ const MyComponent = () => {
 	]);
 	const theme = useTheme();
 
+	const handleTabChange = (newIndex) => setIndex(newIndex);
+
+	const { height } = Dimensions.get("window");
+
+	const HomeComp = () => <Home onTabChange={handleTabChange} />
 	const renderScene = BottomNavigation.SceneMap({
-		home: Home,
+		home: HomeComp,
 		land: Land,
 		transaction: Transaction,
 		profile: Profile,
 	});
-
+	
 	const renderIcon = ({ route, color }) => {
 		return <Octicons name={route.focusedIcon} color={color} size={24} />;
 	};
 
-	const renderLabel = ({route, color}) => {
+	const renderLabel = ({ route, color }) => {
 		return (
-			<Text style={{fontFamily: "PoppinsMedium", textAlign: "center", color: color}}>{route.title}</Text>
-		)
-	}
+			<Text
+				style={{
+					fontFamily: "PoppinsMedium",
+					textAlign: "center",
+					color: color,
+				}}
+			>
+				{route.title}
+			</Text>
+		);
+	};
 
 	return (
 		<>
@@ -74,10 +87,11 @@ const MyComponent = () => {
 				sceneAnimationType="shifting"
 				barStyle={{
 					backgroundColor: "white",
-					paddingBottom: 10,
+					paddingBottom: 5,
 					paddingHorizontal: 30,
 					borderTopColor: theme.colors.lightGray,
 					borderTopWidth: 3,
+					height: height * 0.09,
 				}}
 			/>
 		</>

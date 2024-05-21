@@ -11,11 +11,11 @@ import { StatusBar } from "expo-status-bar";
 import dummyData from "../../data/dummyData";
 import { Paragraph, useTheme } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import images from "../../../assets/images";
 import { FontAwesome5 } from "@expo/vector-icons";
 
-const Home = () => {
+const Home = ({ onTabChange }) => {
 	const theme = useTheme();
 	const insets = useSafeAreaInsets();
 	const navigation = useNavigation();
@@ -289,9 +289,7 @@ const Home = () => {
 										Lapak Terbaru
 									</Text>
 									<Text
-										onPress={() =>
-											navigation.navigate("Land")
-										}
+										onPress={() => onTabChange(1)}
 										style={{
 											...styles.textItalic,
 											marginLeft: "auto",
