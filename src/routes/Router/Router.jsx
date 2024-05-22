@@ -12,6 +12,7 @@ import ForgetPassword from "../../components/ForgetPassword";
 import LandDetail from "../../components/LandDetail";
 import { Dimensions, Text } from "react-native";
 import { Octicons } from "@expo/vector-icons";
+import CreateTrxForm from "../../components/Transaction/CreateTrxForm";
 
 const Stack = createNativeStackNavigator();
 
@@ -109,7 +110,7 @@ const Router = () => {
 						gestureDirection: "horizontal",
 						gestureEnabled: true,
 					}}
-					initialRouteName="Register"
+					initialRouteName="Login"
 				>
 					<Stack.Screen name="Login" component={Login} />
 					<Stack.Screen name="Register" component={Register} />
@@ -119,6 +120,7 @@ const Router = () => {
 						component={ForgetPassword}
 					/>
 					<Stack.Screen name="LandDetail" component={LandDetail} />
+					<Stack.Screen name="CreateTrxForm" component={CreateTrxForm} />
 				</Stack.Navigator>
 			</NavigationContainer>
 		</>

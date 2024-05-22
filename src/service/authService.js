@@ -4,7 +4,7 @@ import axiosInstance from "./axiosInstance";
 export const AuthService = () => {
 	const login = async (payload) => {
 		try {
-			const res = await axiosInstance.post("/login", payload);
+			const res = await axiosInstance.post("/auth/login", payload);
 			if (res.status == 200) {
 				const resData = res.data.data;
 				await AsyncStorage.setItem("token", resData.token);
@@ -21,7 +21,7 @@ export const AuthService = () => {
 
     const register = async (payload) => {
         try {
-            const res = await axiosInstance.post("/register", payload);
+            const res = await axiosInstance.post("/auth/register", payload);
             if (res.status == 201) {
                 return res.data.data;
             } else {

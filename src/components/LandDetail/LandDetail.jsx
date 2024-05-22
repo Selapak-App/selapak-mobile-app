@@ -7,7 +7,7 @@ import {
 	Image,
 } from "react-native";
 import React from "react";
-import { useRoute } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Surface, useTheme } from "react-native-paper";
 import { StatusBar } from "expo-status-bar";
@@ -16,6 +16,7 @@ const LandDetail = () => {
 	const route = useRoute();
 	const insets = useSafeAreaInsets();
 	const theme = useTheme();
+	const navigation = useNavigation();
 
 	const styles = StyleSheet.create({
 		wrapper: {
@@ -214,7 +215,7 @@ const LandDetail = () => {
 
 			<View style={styles.buttonContainer}>
 				<Surface style={styles.buttonBg} elevation={3}>
-					<TouchableOpacity activeOpacity={0.9} style={styles.button}>
+					<TouchableOpacity activeOpacity={0.9} style={styles.button} onPress={() => navigation.navigate("CreateTrxForm")}>
 						<Text style={styles.buttonText}>Ajukan Sewa</Text>
 					</TouchableOpacity>
 				</Surface>
