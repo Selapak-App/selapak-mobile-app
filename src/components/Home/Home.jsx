@@ -5,8 +5,9 @@ import {
 	StyleSheet,
 	Image,
 	TouchableOpacity,
+	RefreshControl,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import dummyData from "../../data/dummyData";
 import { Paragraph, useTheme } from "react-native-paper";
@@ -14,11 +15,34 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import images from "../../../assets/images";
 import { FontAwesome5 } from "@expo/vector-icons";
+import { useDispatch, useSelector } from "react-redux";
+import { getLandAction } from "../../app/feature/land/landSlice";
+
+const refactorDesc = (lands) => {
+	return lands.map((item) => ({
+		...item,
+		description: item.description.split("\n"),
+	}));
+};
 
 const Home = ({ onTabChange }) => {
 	const theme = useTheme();
 	const insets = useSafeAreaInsets();
 	const navigation = useNavigation();
+	const { lands } = useSelector((state) => state.land);
+	const dispatch = useDispatch();
+	const [isRefreshing, setIsrefreshing] = useState(false);
+
+	useEffect(() => {
+		refresh();
+		console.log("HEYWOOOO ", lands);
+	}, [dispatch]);
+
+	const refresh = async () => {
+		// setIsrefreshing(true);
+		dispatch(getLandAction());
+		// setIsrefreshing(false);
+	};
 
 	const styles = StyleSheet.create({
 		wrapper: {
@@ -177,7 +201,7 @@ const Home = ({ onTabChange }) => {
 				onPress={() => navigation.navigate("LandDetail", item)}
 				style={styles.landCardContainer}
 			>
-				<Image source={{ uri: item.uri[0] }} style={styles.landImage} />
+				<Image source={{ uri: "https://asset-2.tstatic.net/medan/foto/bank/images/lapak-narkoba-Jalan-Namo-Salak-Desa-Lama.jpg" }} style={styles.landImage} />
 				<View style={styles.cardContent}>
 					<Text style={styles.landCardTitle}>{item.district}</Text>
 					<View style={styles.landCardBottom}>
@@ -188,7 +212,7 @@ const Home = ({ onTabChange }) => {
 						</View>
 						<View style={styles.slotCountContainer}>
 							<Text style={styles.slotCount}>
-								{item.availableSlot} slots
+								{item.slotAvailable} slots
 							</Text>
 						</View>
 					</View>
@@ -299,12 +323,23 @@ const Home = ({ onTabChange }) => {
 									</Text>
 								</View>
 							</View>
-							<FlatList
-								data={dummyData.slice(0, 5)}
-								keyExtractor={(item) => item.id}
-								renderItem={LandCardComponent}
-								style={{ gap: 10, marginTop: 10 }}
-							/>
+							{lands.length === 0 ? (
+								<Text>No Data</Text>
+							) : (
+								<FlatList
+									data={
+										lands.length > 5
+											? refactorDesc(
+													lands.slice(0, 5)
+											  )
+											: refactorDesc(lands)
+									}
+									// data={dummyData}
+									keyExtractor={(item) => item.id}
+									renderItem={LandCardComponent}
+									style={{ gap: 10, marginTop: 10 }}
+								/>
+							)}
 						</View>
 					</View>
 				</View>
@@ -319,6 +354,12 @@ const Home = ({ onTabChange }) => {
 				renderItem={ComponentLayout}
 				contentContainerStyle={styles.contentContainerWrapper}
 				style={styles.flex1}
+				refreshControl={
+					<RefreshControl
+						refreshing={isRefreshing}
+						onRefresh={refresh}
+					/>
+				}
 			/>
 		</>
 	);

@@ -18,6 +18,9 @@ const LandDetail = () => {
 	const theme = useTheme();
 	const navigation = useNavigation();
 
+	// const descriptions = route.params.description.split("\n");
+	// console.log(route.params.description);
+
 	const styles = StyleSheet.create({
 		wrapper: {
 			backgroundColor: "white",
@@ -131,7 +134,12 @@ const LandDetail = () => {
 
 				<View>
 					<FlatList
-						data={route.params.uri}
+						// data={route.params.uri}
+						data={[
+							"https://asset-2.tstatic.net/medan/foto/bank/images/lapak-narkoba-Jalan-Namo-Salak-Desa-Lama.jpg",
+							"https://asset.kompas.com/crops/lVOBF4HNJRh6gCaCXSYYKkvFSMA=/0x0:0x0/375x240/data/photo/2022/11/30/63874cdf365bb.jpg",
+							"https://awsimages.detik.net.id/community/media/visual/2023/05/29/polisi-saat-menggerebek-lokasi-judi-di-kota-binjai-foto-dok-polda-sumut_169.jpeg?w=1200",
+						]}
 						horizontal={true}
 						renderItem={ImageComponent}
 						key={(item) => item}
@@ -149,7 +157,7 @@ const LandDetail = () => {
 					</View>
 					<Text style={styles.price}>
 						Rp.{" "}
-						{new Intl.NumberFormat("ID").format(route.params.price)}
+						{new Intl.NumberFormat("ID").format(route.params.landPrice.price)}
 						<Text style={styles.normalText}> /bulan</Text>
 					</Text>
 					<Text style={styles.normalText}>
@@ -165,15 +173,15 @@ const LandDetail = () => {
 						</Text>
 					</View>
 					<View style={styles.boxContainer}>
-						{route.params.types.map((type) => (
-							<View key={type} style={styles.typeItem}>
+						{route.params.businessTypes.map((type) => (
+							<View key={type.id} style={styles.typeItem}>
 								<Text
 									style={{
 										...styles.normalText,
 										color: "white",
 									}}
 								>
-									{type}
+									{type.name}
 								</Text>
 							</View>
 						))}

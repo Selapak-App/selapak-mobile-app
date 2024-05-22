@@ -6,17 +6,27 @@ import {
 	Image,
 	TouchableOpacity,
 } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { useTheme } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { FontAwesome6, Octicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import dummyData from "../../data/dummyData";
+import { useDispatch, useSelector } from "react-redux";
+import { getLandAction } from "../../app/feature/land/landSlice";
+
 const Land = () => {
 	const theme = useTheme();
 	const insets = useSafeAreaInsets();
 	const navigation = useNavigation();
+	const { lands } = useSelector((state) => state.land);
+	const dispatch = useDispatch();
+
+	useEffect(() => {
+		dispatch(getLandAction());
+		console.log(lands);
+	}, []);
 
 	const styles = StyleSheet.create({
 		container: {
@@ -90,6 +100,7 @@ const Land = () => {
 	});
 
 	const CardComponent = ({ item }) => {
+		console.log("ITEM _____: ", item);
 		return (
 			<TouchableOpacity
 				onPress={() => navigation.navigate("LandDetail", item)}
@@ -98,7 +109,7 @@ const Land = () => {
 			>
 				<View>
 					<Image
-						source={{ uri: item.uri[0] }}
+						source={{ uri: "https://asset-2.tstatic.net/medan/foto/bank/images/lapak-narkoba-Jalan-Namo-Salak-Desa-Lama.jpg" }}
 						style={styles.cardCover}
 					/>
 					<View style={styles.slotArea}>
@@ -127,7 +138,7 @@ const Land = () => {
 						</Text>
 
 						<Text style={styles.price}>
-							Rp. {new Intl.NumberFormat("ID").format(item.price)}
+							Rp. {new Intl.NumberFormat("ID").format(item.landPrice.price)}
 							<Text style={styles.normalText}> /bln</Text>
 						</Text>
 					</View>
@@ -145,14 +156,18 @@ const Land = () => {
 						Sewa lahan sesuai kebutuhanmu dengan mudah
 					</Text>
 				</View>
-				<FlatList
-					data={dummyData}
-					keyExtractor={(item) => item.id}
-					renderItem={CardComponent}
-					numColumns={2}
-					columnWrapperStyle={styles.spaceBetween}
-					style={styles.flex1}
-				/>
+				{lands.length === 0 ? (
+					<Text>No Data</Text>
+				) : (
+					<FlatList
+						data={lands.map(item => ({...item, description: item.description.split("\n")}))}
+						keyExtractor={(item) => item.id}
+						renderItem={CardComponent}
+						numColumns={2}
+						columnWrapperStyle={styles.spaceBetween}
+						style={styles.flex1}
+					/>
+				)}
 			</>
 		);
 	};
