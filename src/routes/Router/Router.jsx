@@ -16,21 +16,20 @@ import CreateTrxForm from "../../components/Transaction/CreateTrxForm";
 
 const Stack = createNativeStackNavigator();
 
-
 const AppManager = () => {
 	const [index, setIndex] = useState(0);
 	const [routes] = useState([
-		{
-			key: "transaction",
-			title: "Transaction",
-			focusedIcon: "code-of-conduct",
-		},
 		{
 			key: "home",
 			title: "Home",
 			focusedIcon: "home",
 		},
 		{ key: "land", title: "Land", focusedIcon: "apps" },
+		{
+			key: "transaction",
+			title: "Transaction",
+			focusedIcon: "code-of-conduct",
+		},
 		{
 			key: "profile",
 			title: "Profile",
@@ -43,14 +42,14 @@ const AppManager = () => {
 
 	const { height } = Dimensions.get("window");
 
-	const HomeComp = () => <Home onTabChange={handleTabChange} />
+	const HomeComp = () => <Home onTabChange={handleTabChange} />;
 	const renderScene = BottomNavigation.SceneMap({
 		home: HomeComp,
 		land: Land,
 		transaction: Transaction,
 		profile: Profile,
 	});
-	
+
 	const renderIcon = ({ route, color }) => {
 		return <Octicons name={route.focusedIcon} color={color} size={24} />;
 	};
@@ -72,12 +71,13 @@ const AppManager = () => {
 	return (
 		<>
 			<BottomNavigation
+				
 				navigationState={{ index, routes }}
 				onIndexChange={setIndex}
 				renderScene={renderScene}
 				renderIcon={renderIcon}
 				renderLabel={renderLabel}
-				shifting={true}
+				shifting={false}
 				compact={true}
 				activeColor={theme.colors.secondary}
 				inactiveColor={theme.colors.dark}
@@ -110,7 +110,7 @@ const Router = () => {
 						gestureDirection: "horizontal",
 						gestureEnabled: true,
 					}}
-					initialRouteName="App"
+					initialRouteName="Login"
 				>
 					<Stack.Screen name="Login" component={Login} />
 					<Stack.Screen name="Register" component={Register} />
@@ -120,7 +120,10 @@ const Router = () => {
 						component={ForgetPassword}
 					/>
 					<Stack.Screen name="LandDetail" component={LandDetail} />
-					<Stack.Screen name="CreateTrxForm" component={CreateTrxForm} />
+					<Stack.Screen
+						name="CreateTrxForm"
+						component={CreateTrxForm}
+					/>
 				</Stack.Navigator>
 			</NavigationContainer>
 		</>

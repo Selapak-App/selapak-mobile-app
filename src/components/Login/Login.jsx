@@ -15,6 +15,7 @@ import LottieView from "lottie-react-native";
 import animations from "../../../assets/animations";
 import Popup from "../reusables/Popup";
 import ThreeDotLoading from "../reusables/ThreeDotLoading/ThreeDotLoading";
+import Header from "../reusables/Header";
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const loginFormSchema = yup
@@ -80,6 +81,11 @@ const Login = () => {
 	const fontPoppins = {
 		fontFamily: "Poppins",
 		fontSize: 14,
+	};
+
+	const toForgetPassword = () => {
+		console.log("to forget pass");
+		navigation.navigate("ForgetPassword");
 	};
 
 	const styles = StyleSheet.create({
@@ -236,8 +242,7 @@ const Login = () => {
 						</Text>
 					)}
 					<TouchableOpacity
-						disabled={!isLoading}
-						onPress={() => navigation.navigate("ForgetPassword")}
+						onPress={toForgetPassword}
 						style={styles.flexEnd}
 						activeOpacity={0.9}
 					>

@@ -15,6 +15,8 @@ import { StatusBar } from "expo-status-bar";
 import dummyData from "../../data/dummyData";
 import { useDispatch, useSelector } from "react-redux";
 import { getLandAction, selectedLand } from "../../app/feature/land/landSlice";
+import Tag from "../reusables/Tag";
+import Header from "../reusables/Header";
 
 const Land = () => {
 	const theme = useTheme();
@@ -31,7 +33,7 @@ const Land = () => {
 	const openDetail = async (data) => {
 		dispatch(selectedLand(data));
 		navigation.navigate("LandDetail");
-	}
+	};
 
 	const styles = StyleSheet.create({
 		container: {
@@ -46,19 +48,6 @@ const Land = () => {
 			paddingTop: insets.top,
 			paddingHorizontal: 20,
 		},
-		head: {
-			marginVertical: 30,
-			flexDirection: "column",
-		},
-		h1: {
-			fontSize: 28,
-			fontFamily: "PoppinsSemiBold",
-			marginBottom: -5,
-		},
-		tagline: {
-			fontFamily: "Poppins",
-			fontSize: 16,
-		},
 		card: {
 			borderWidth: 1,
 			borderColor: theme.colors.primary,
@@ -72,15 +61,10 @@ const Land = () => {
 			borderRadius: theme.roundness,
 		},
 		slotArea: {
-			backgroundColor: theme.colors.primary,
-			borderRadius: theme.roundness,
-			paddingTop: 2,
-			paddingHorizontal: 15,
 			position: "absolute",
 			bottom: 12,
 			right: 12,
 		},
-		slotAreaItem: { fontFamily: "PoppinsSemiBold", color: "white" },
 		cardBody: { padding: 15, flex: 1, gap: 5 },
 		cardBodyContainer: { flexDirection: "row", gap: 10 },
 		dot: { paddingTop: 5 },
@@ -118,7 +102,7 @@ const Land = () => {
 						style={styles.cardCover}
 					/>
 					<View style={styles.slotArea}>
-						<Text style={styles.slotAreaItem}>{item.slotArea}</Text>
+						<Tag text={item.slotArea} />
 					</View>
 				</View>
 				<View style={styles.cardBody}>
@@ -143,7 +127,10 @@ const Land = () => {
 						</Text>
 
 						<Text style={styles.price}>
-							Rp. {new Intl.NumberFormat("ID").format(item.landPrice.price)}
+							Rp.{" "}
+							{new Intl.NumberFormat("ID").format(
+								item.landPrice.price
+							)}
 							<Text style={styles.normalText}> /bln</Text>
 						</Text>
 					</View>
@@ -155,17 +142,21 @@ const Land = () => {
 	const ComponentLayout = () => {
 		return (
 			<>
-				<View style={styles.head}>
+				<Header header={"Temukan Lapakmu!"} tagline={"Sewa lahan sesuai kebutuhanmu dengan mudah"} />
+				{/* <View style={styles.head}>
 					<Text style={styles.h1}>Temukan Lapakmu!</Text>
 					<Text style={styles.tagline}>
 						Sewa lahan sesuai kebutuhanmu dengan mudah
 					</Text>
-				</View>
+				</View> */}
 				{lands.length === 0 ? (
 					<Text>No Data</Text>
 				) : (
 					<FlatList
-						data={lands.map(item => ({...item, description: item.description.split("\n")}))}
+						data={lands.map((item) => ({
+							...item,
+							description: item.description.split("\n"),
+						}))}
 						keyExtractor={(item) => item.id}
 						renderItem={CardComponent}
 						numColumns={2}

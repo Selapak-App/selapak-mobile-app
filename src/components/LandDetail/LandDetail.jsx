@@ -12,6 +12,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Surface, useTheme } from "react-native-paper";
 import { StatusBar } from "expo-status-bar";
 import { useDispatch, useSelector } from "react-redux";
+import Tag from "../reusables/Tag";
 
 const LandDetail = () => {
 	const route = useRoute();
@@ -77,13 +78,6 @@ const LandDetail = () => {
 			flexWrap: "wrap",
 			gap: 10,
 		},
-		typeItem: {
-			backgroundColor: theme.colors.primary,
-			borderRadius: theme.roundness,
-			paddingBottom: 5,
-			paddingTop: 7,
-			paddingHorizontal: 15,
-		},
 		buttonContainer: {
 			position: "absolute",
 			bottom: 20,
@@ -113,19 +107,14 @@ const LandDetail = () => {
 			height: 1,
 		},
 		slotArea: {
-			backgroundColor: theme.colors.primary,
-			borderRadius: theme.roundness,
-			paddingTop: 2,
-			paddingHorizontal: 15,
 			marginStart: "auto"
 		},
-		slotAreaItem: { fontFamily: "PoppinsSemiBold", color: "white" },
 	});
 
 	const ImageComponent = ({ item }) => {
 		return (
 			<Surface
-				style={{ borderRadius: theme.roundness, marginVertical: 10 }}
+				style={{ borderRadius: theme.roundness, marginVertical: 10, backgroundColor: "white" }}
 			>
 				<Image source={{ uri: item.imageURL }} style={styles.image} />
 			</Surface>
@@ -160,7 +149,7 @@ const LandDetail = () => {
 							{land.slotAvailable} Slot tersedia
 						</Text>
 						<View style={styles.slotArea}>
-							<Text style={styles.slotAreaItem}>{land.slotArea} m2</Text>
+							<Tag text={`${land.slotArea} m2`} />
 						</View>
 					</View>
 					<Text style={styles.price}>
@@ -184,16 +173,7 @@ const LandDetail = () => {
 					</View>
 					<View style={styles.boxContainer}>
 						{land.businessTypes.map((type) => (
-							<View key={type.id} style={styles.typeItem}>
-								<Text
-									style={{
-										...styles.normalText,
-										color: "white",
-									}}
-								>
-									{type.name}
-								</Text>
-							</View>
+							<Tag key={type.id} text={`${type.name}`} />
 						))}
 					</View>
 				</View>

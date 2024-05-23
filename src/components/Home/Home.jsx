@@ -15,6 +15,8 @@ import images from "../../../assets/images";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { getLandAction, selectedLand } from "../../app/feature/land/landSlice";
+import Tag from "../reusables/Tag";
+import Header from "../reusables/Header";
 
 const refactorDesc = (lands) => {
 	return lands.map((item) => ({
@@ -53,20 +55,7 @@ const Home = ({ onTabChange }) => {
 			paddingHorizontal: 20,
 		},
 		head: {
-			marginVertical: insets.top,
 			marginHorizontal: 20,
-			flexDirection: "column",
-		},
-		h1: {
-			fontSize: 28,
-			fontFamily: "PoppinsSemiBold",
-			marginBottom: -5,
-			color: "white",
-		},
-		tagline: {
-			fontFamily: "Poppins",
-			fontSize: 16,
-			color: "white",
 		},
 		flex1: { flex: 1 },
 		contentContainerWrapper: {
@@ -89,15 +78,6 @@ const Home = ({ onTabChange }) => {
 			width: 30,
 			height: 2,
 		},
-		slotArea: {
-			backgroundColor: theme.colors.primary,
-			borderRadius: theme.roundness,
-			height: 25,
-			justifyContent: "center",
-			paddingTop: 2,
-			paddingHorizontal: 15,
-		},
-		slotAreaItem: { fontFamily: "PoppinsMedium", color: "white" },
 		slotCountContainer: {
 			justifyContent: "flex-end",
 			paddingTop: 2,
@@ -147,7 +127,7 @@ const Home = ({ onTabChange }) => {
 			flexDirection: "row",
 			justifyContent: "space-between",
 		},
-		main: { padding: 20, marginTop: 20 },
+		main: { padding: 20, marginTop: 10 },
 		mainContainer: {
 			backgroundColor: "white",
 			borderRadius: theme.roundness,
@@ -158,7 +138,6 @@ const Home = ({ onTabChange }) => {
 			flexDirection: "row",
 			justifyContent: "space-around",
 			alignItems: "flex-start",
-			marginVertical: 10,
 		},
 		mainButton: {
 			justifyContent: "center",
@@ -206,11 +185,7 @@ const Home = ({ onTabChange }) => {
 				<View style={styles.cardContent}>
 					<Text style={styles.landCardTitle}>{item.district}</Text>
 					<View style={styles.landCardBottom}>
-						<View style={styles.slotArea}>
-							<Text style={styles.slotAreaItem}>
-								{item.slotArea}
-							</Text>
-						</View>
+						<Tag text={`${item.slotArea}`} />
 						<View style={styles.slotCountContainer}>
 							<Text style={styles.slotCount}>
 								{item.slotAvailable} slots
@@ -226,12 +201,9 @@ const Home = ({ onTabChange }) => {
 		return (
 			<View>
 				<View style={styles.head}>
-					<Text style={styles.h1}>Selamat Datang</Text>
-					<Text style={styles.tagline}>
-						Dapatkan pengalaman baik di setiap langkah
-					</Text>
+					<Header header="Selamat Datang" tagline="Dapatkan pengalaman baik di setiap langkah" textColor="white" />
 				</View>
-
+				
 				<FlatList
 					data={[
 						{
@@ -312,15 +284,6 @@ const Home = ({ onTabChange }) => {
 									<View style={styles.divider} />
 									<Text style={styles.textItalic}>
 										Lapak Terbaru
-									</Text>
-									<Text
-										onPress={() => onTabChange(1)}
-										style={{
-											...styles.textItalic,
-											marginLeft: "auto",
-										}}
-									>
-										Selengkapnya
 									</Text>
 								</View>
 							</View>
