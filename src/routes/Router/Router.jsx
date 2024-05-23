@@ -17,20 +17,20 @@ import CreateTrxForm from "../../components/Transaction/CreateTrxForm";
 const Stack = createNativeStackNavigator();
 
 
-const MyComponent = () => {
+const AppManager = () => {
 	const [index, setIndex] = useState(0);
 	const [routes] = useState([
+		{
+			key: "transaction",
+			title: "Transaction",
+			focusedIcon: "code-of-conduct",
+		},
 		{
 			key: "home",
 			title: "Home",
 			focusedIcon: "home",
 		},
 		{ key: "land", title: "Land", focusedIcon: "apps" },
-		{
-			key: "transaction",
-			title: "Transaction",
-			focusedIcon: "code-of-conduct",
-		},
 		{
 			key: "profile",
 			title: "Profile",
@@ -110,11 +110,11 @@ const Router = () => {
 						gestureDirection: "horizontal",
 						gestureEnabled: true,
 					}}
-					initialRouteName="Login"
+					initialRouteName="App"
 				>
 					<Stack.Screen name="Login" component={Login} />
 					<Stack.Screen name="Register" component={Register} />
-					<Stack.Screen name="App" component={MyComponent} />
+					<Stack.Screen name="App" component={AppManager} />
 					<Stack.Screen
 						name="ForgetPassword"
 						component={ForgetPassword}

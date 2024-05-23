@@ -8,8 +8,6 @@ import {
 	RefreshControl,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { StatusBar } from "expo-status-bar";
-import dummyData from "../../data/dummyData";
 import { Paragraph, useTheme } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation, useRoute } from "@react-navigation/native";
