@@ -35,18 +35,18 @@ const createTrxSchema = yup
 			.required("Deskripsi tidak boleh kosong"),
 		period: yup.string().required("Harus memilih salah satu period"),
 		businessType: yup.string().required("Harus memilih satu business type"),
-		qty: yup.number().min(1, "Qty Minimal 1"),
+		qty: yup
+			.number()
+			.typeError("Slot qty harus berupa angka")
+			.min(1, "Qty Minimal 1"),
 	})
 	.required();
 
 const CreateTrxForm = () => {
 	const periodData = dummyPeriod;
 	const businessTypeData = dummyBusinessType;
-	// const [isLoading, setIsLoading] = useState(false);
 	const theme = useTheme();
 	const insets = useSafeAreaInsets();
-	const [showPassword, setShowPassword] = useState(false);
-	const [showConfPassword, setShowConfPassword] = useState(false);
 	const navigation = useNavigation();
 	const [message, setMessage] = useState(null);
 	const [visibility, setVisibility] = useState(false);
@@ -61,8 +61,8 @@ const CreateTrxForm = () => {
 		defaultValues: {
 			name: "",
 			description: "",
-			period: periodData[0].id,
-			businessType: businessTypeData[0].id,
+			period: "",
+			businessType: "",
 			qty: 0,
 		},
 		resolver: yupResolver(createTrxSchema),
@@ -75,14 +75,14 @@ const CreateTrxForm = () => {
 
 	useEffect(() => {
 		dispatch(getTypeAction());
-        dispatch(getPeriodAction());
+		dispatch(getPeriodAction());
 	}, [dispatch]);
 
 	const window = Dimensions.get("window");
 
 	const onSubmit = async () => {
-        console.log(periods);
-        console.log(types);
+		console.log(periods);
+		console.log(types);
 		console.log(getValues());
 		// if (!errors.email && !errors.password) {
 		// 	try {
@@ -278,6 +278,10 @@ const CreateTrxForm = () => {
 										isTypeFocus && {
 											borderColor: theme.colors.primary,
 										},
+										errors.period && {
+											borderColor: theme.colors.error,
+											borderWidth: 2,
+										},
 									]}
 									placeholderStyle={styles.placeholderStyle}
 									selectedTextStyle={styles.selectedTextStyle}
@@ -299,7 +303,9 @@ const CreateTrxForm = () => {
 										<Ionicons
 											style={styles.icon}
 											color={
-												isTypeFocus ? "blue" : "black"
+												isTypeFocus
+													? theme.colors.secondary
+													: theme.colors.dark
 											}
 											name="business-outline"
 											size={20}
@@ -356,10 +362,10 @@ const CreateTrxForm = () => {
 									: theme.colors.secondary,
 							}}
 						>
-							Pilih periode sewa (bulan)
+							Pilih periode sewa
 						</Text>
 						<View style={{ flexDirection: "row", gap: 20 }}>
-							<View style={{ flex: 0.7 }}>
+							<View style={{ flex: 0.7, marginTop: 6 }}>
 								<Controller
 									control={control}
 									rules={{
@@ -375,6 +381,11 @@ const CreateTrxForm = () => {
 													borderColor:
 														theme.colors.primary,
 												},
+												errors.period && {
+													borderColor:
+														theme.colors.error,
+													borderWidth: 2,
+												},
 											]}
 											placeholderStyle={
 												styles.placeholderStyle
@@ -386,7 +397,12 @@ const CreateTrxForm = () => {
 												styles.inputSearchStyle
 											}
 											iconStyle={styles.iconStyle}
-											data={periods.map(item => ({...item, period: item.period.toString()}))}
+											data={periods.map((item) => ({
+												...item,
+												period:
+													item.period.toString() +
+													" bulan",
+											}))}
 											maxHeight={300}
 											labelField="period"
 											valueField="id"
@@ -406,9 +422,10 @@ const CreateTrxForm = () => {
 												<Ionicons
 													style={styles.icon}
 													color={
-														isPeriodFocus
-															? "blue"
-															: "black"
+														isTypeFocus
+															? theme.colors
+																	.secondary
+															: theme.colors.dark
 													}
 													name="time-outline"
 													size={20}
@@ -435,7 +452,11 @@ const CreateTrxForm = () => {
 												theme.colors.secondary
 											}
 											onBlur={onBlur}
-											value={value || 1}
+											value={
+												value > 0 || value == ""
+													? value
+													: 1
+											}
 											onChangeText={(event) =>
 												onChange(event)
 											}

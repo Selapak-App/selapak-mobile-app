@@ -11,15 +11,15 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Surface, useTheme } from "react-native-paper";
 import { StatusBar } from "expo-status-bar";
+import { useDispatch, useSelector } from "react-redux";
 
 const LandDetail = () => {
 	const route = useRoute();
 	const insets = useSafeAreaInsets();
 	const theme = useTheme();
 	const navigation = useNavigation();
-
-	// const descriptions = route.params.description.split("\n");
-	// console.log(route.params.description);
+	const { land } = useSelector((state) => state.land);
+	console.log(land);
 
 	const styles = StyleSheet.create({
 		wrapper: {
@@ -112,13 +112,23 @@ const LandDetail = () => {
 			width: 30,
 			height: 1,
 		},
+		slotArea: {
+			backgroundColor: theme.colors.primary,
+			borderRadius: theme.roundness,
+			paddingTop: 2,
+			paddingHorizontal: 15,
+			marginStart: "auto"
+		},
+		slotAreaItem: { fontFamily: "PoppinsSemiBold", color: "white" },
 	});
 
 	const ImageComponent = ({ item }) => {
 		return (
-			<View>
-				<Image source={{ uri: item }} style={styles.image} />
-			</View>
+			<Surface
+				style={{ borderRadius: theme.roundness, marginVertical: 10 }}
+			>
+				<Image source={{ uri: item.imageURL }} style={styles.image} />
+			</Surface>
 		);
 	};
 
@@ -134,15 +144,10 @@ const LandDetail = () => {
 
 				<View>
 					<FlatList
-						// data={route.params.uri}
-						data={[
-							"https://asset-2.tstatic.net/medan/foto/bank/images/lapak-narkoba-Jalan-Namo-Salak-Desa-Lama.jpg",
-							"https://asset.kompas.com/crops/lVOBF4HNJRh6gCaCXSYYKkvFSMA=/0x0:0x0/375x240/data/photo/2022/11/30/63874cdf365bb.jpg",
-							"https://awsimages.detik.net.id/community/media/visual/2023/05/29/polisi-saat-menggerebek-lokasi-judi-di-kota-binjai-foto-dok-polda-sumut_169.jpeg?w=1200",
-						]}
+						data={land.landPhotos}
 						horizontal={true}
 						renderItem={ImageComponent}
-						key={(item) => item}
+						key={(item) => item.id}
 						contentContainerStyle={styles.contentContainer}
 						showsHorizontalScrollIndicator={false}
 					/>
@@ -152,16 +157,21 @@ const LandDetail = () => {
 					<View style={styles.dividerWrapper}>
 						<View style={styles.divider} />
 						<Text style={styles.textItalic}>
-							{route.params.availableSlot} Slot tersedia
+							{land.slotAvailable} Slot tersedia
 						</Text>
+						<View style={styles.slotArea}>
+							<Text style={styles.slotAreaItem}>{land.slotArea} m2</Text>
+						</View>
 					</View>
 					<Text style={styles.price}>
 						Rp.{" "}
-						{new Intl.NumberFormat("ID").format(route.params.landPrice.price)}
+						{new Intl.NumberFormat("ID").format(
+							land.landPrice.price
+						)}
 						<Text style={styles.normalText}> /bulan</Text>
 					</Text>
 					<Text style={styles.normalText}>
-						{route.params.address + " " + route.params.postalCode}
+						{`${land.address}, ${land.village}, ${land.district}, ${land.postalCode}`}
 					</Text>
 				</View>
 
@@ -173,7 +183,7 @@ const LandDetail = () => {
 						</Text>
 					</View>
 					<View style={styles.boxContainer}>
-						{route.params.businessTypes.map((type) => (
+						{land.businessTypes.map((type) => (
 							<View key={type.id} style={styles.typeItem}>
 								<Text
 									style={{
@@ -195,11 +205,8 @@ const LandDetail = () => {
 					</View>
 					<View style={styles.boxContainer}>
 						<Text>
-							{route.params.description.map((desc, index) => {
-								if (
-									index !==
-									route.params.description.length - 1
-								) {
+							{land.description.map((desc, index) => {
+								if (index !== land.description.length - 1) {
 									desc += "\n";
 								}
 
@@ -223,7 +230,11 @@ const LandDetail = () => {
 
 			<View style={styles.buttonContainer}>
 				<Surface style={styles.buttonBg} elevation={3}>
-					<TouchableOpacity activeOpacity={0.9} style={styles.button} onPress={() => navigation.navigate("CreateTrxForm")}>
+					<TouchableOpacity
+						activeOpacity={0.9}
+						style={styles.button}
+						onPress={() => navigation.navigate("CreateTrxForm")}
+					>
 						<Text style={styles.buttonText}>Ajukan Sewa</Text>
 					</TouchableOpacity>
 				</Surface>

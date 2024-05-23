@@ -16,7 +16,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import images from "../../../assets/images";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
-import { getLandAction } from "../../app/feature/land/landSlice";
+import { getLandAction, selectedLand } from "../../app/feature/land/landSlice";
 
 const refactorDesc = (lands) => {
 	return lands.map((item) => ({
@@ -39,10 +39,13 @@ const Home = ({ onTabChange }) => {
 	}, [dispatch]);
 
 	const refresh = async () => {
-		// setIsrefreshing(true);
-		dispatch(getLandAction());
-		// setIsrefreshing(false);
+		await dispatch(getLandAction());
 	};
+
+	const openDetail = async (data) => {
+		dispatch(selectedLand(data));
+		navigation.navigate("LandDetail");
+	}
 
 	const styles = StyleSheet.create({
 		wrapper: {
@@ -198,10 +201,10 @@ const Home = ({ onTabChange }) => {
 		return (
 			<TouchableOpacity
 				activeOpacity={0.9}
-				onPress={() => navigation.navigate("LandDetail", item)}
+				onPress={() => openDetail(item)}
 				style={styles.landCardContainer}
 			>
-				<Image source={{ uri: "https://asset-2.tstatic.net/medan/foto/bank/images/lapak-narkoba-Jalan-Namo-Salak-Desa-Lama.jpg" }} style={styles.landImage} />
+				<Image source={{ uri: item.landPhotos[0].imageURL }} style={styles.landImage} />
 				<View style={styles.cardContent}>
 					<Text style={styles.landCardTitle}>{item.district}</Text>
 					<View style={styles.landCardBottom}>

@@ -14,7 +14,7 @@ import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import dummyData from "../../data/dummyData";
 import { useDispatch, useSelector } from "react-redux";
-import { getLandAction } from "../../app/feature/land/landSlice";
+import { getLandAction, selectedLand } from "../../app/feature/land/landSlice";
 
 const Land = () => {
 	const theme = useTheme();
@@ -26,7 +26,12 @@ const Land = () => {
 	useEffect(() => {
 		dispatch(getLandAction());
 		console.log(lands);
-	}, []);
+	}, [dispatch]);
+
+	const openDetail = async (data) => {
+		dispatch(selectedLand(data));
+		navigation.navigate("LandDetail");
+	}
 
 	const styles = StyleSheet.create({
 		container: {
@@ -103,13 +108,13 @@ const Land = () => {
 		console.log("ITEM _____: ", item);
 		return (
 			<TouchableOpacity
-				onPress={() => navigation.navigate("LandDetail", item)}
+				onPress={() => openDetail(item)}
 				activeOpacity={0.9}
 				style={styles.card}
 			>
 				<View>
 					<Image
-						source={{ uri: "https://asset-2.tstatic.net/medan/foto/bank/images/lapak-narkoba-Jalan-Namo-Salak-Desa-Lama.jpg" }}
+						source={{ uri: item.landPhotos[0].imageURL }}
 						style={styles.cardCover}
 					/>
 					<View style={styles.slotArea}>
