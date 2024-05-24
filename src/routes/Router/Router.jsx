@@ -14,12 +14,18 @@ import { Dimensions, Text } from "react-native";
 import { Octicons } from "@expo/vector-icons";
 import CreateTrxForm from "../../components/Transaction/CreateTrxForm";
 import UpdateProfile from "../../components/Profile/UpdateProfile";
+import TransactionDetail from "../../components/TransactionDetail/TransactionDetail";
 
 const Stack = createNativeStackNavigator();
 
 const AppManager = () => {
 	const [index, setIndex] = useState(0);
 	const [routes] = useState([
+		{
+			key: "profile",
+			title: "Profile",
+			focusedIcon: "person",
+		},
 		{
 			key: "home",
 			title: "Home",
@@ -30,11 +36,6 @@ const AppManager = () => {
 			key: "transaction",
 			title: "Transaction",
 			focusedIcon: "code-of-conduct",
-		},
-		{
-			key: "profile",
-			title: "Profile",
-			focusedIcon: "person",
 		},
 	]);
 	const theme = useTheme();
@@ -111,7 +112,7 @@ const Router = () => {
 						gestureDirection: "horizontal",
 						gestureEnabled: true,
 					}}
-					initialRouteName="Login"
+					initialRouteName="TransactionDetail"
 				>
 					<Stack.Screen name="Login" component={Login} />
 					<Stack.Screen name="Register" component={Register} />
@@ -126,6 +127,7 @@ const Router = () => {
 						component={CreateTrxForm}
 					/>
 					<Stack.Screen name="UpdateProfile" component={UpdateProfile} />
+					<Stack.Screen name="TransactionDetail" component={TransactionDetail} />
 				</Stack.Navigator>
 			</NavigationContainer>
 		</>
