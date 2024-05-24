@@ -19,8 +19,8 @@ const Tab = createMaterialTopTabNavigator();
 
 const OnProcessComp = () => {
 	const navigation = useNavigation();
+
 	const CardComponent = ({ item }) => {
-		console.log("ITEM _____: ", item);
 		const color =
 			item.status === "VERIFY"
 				? colors.accent
@@ -53,6 +53,27 @@ const OnProcessComp = () => {
 			},
 			spaceBetween: { justifyContent: "space-between" },
 			flex1: { flex: 1 },
+			cardContent: {
+				flexDirection: "row",
+				padding: 10,
+				gap: 20,
+				backgroundColor: "white",
+				borderRadius: 20,
+			},
+			cardContainer: {
+				justifyContent: "space-between",
+				flex: 1,
+				gap: 20,
+			},
+			cardTitle: {
+				fontFamily: "PoppinsSemiBold",
+				fontSize: 20,
+			},
+			cardFooter: {
+				justifyContent: "center",
+				padding: 5,
+				alignItems: "center",
+			},
 		});
 
 		return (
@@ -67,15 +88,7 @@ const OnProcessComp = () => {
 						borderColor: color,
 					}}
 				>
-					<View
-						style={{
-							flexDirection: "row",
-							padding: 10,
-							gap: 20,
-							backgroundColor: "white",
-							borderRadius: 20,
-						}}
-					>
+					<View style={styles.cardContent}>
 						<Surface
 							style={{
 								width: 100,
@@ -88,34 +101,14 @@ const OnProcessComp = () => {
 								style={styles.cardCover}
 							/>
 						</Surface>
-						<View
-							style={{
-								justifyContent: "space-between",
-								flex: 1,
-								gap: 20,
-							}}
-						>
-							{/* <View style={{justifyContent: "space-between", flexDirection: "row"}}> */}
-							<Text
-								style={{
-									fontFamily: "PoppinsSemiBold",
-									fontSize: 20,
-								}}
-							>
+						<View style={styles.cardContainer}>
+							<Text style={styles.cardTitle}>
 								{item.businessName}
 							</Text>
-							{/* <Tag text={item.status} /> */}
-							{/* </View> */}
 							<Text style={styles.text}>{item.address}</Text>
 						</View>
 					</View>
-					<View
-						style={{
-							justifyContent: "center",
-							padding: 5,
-							alignItems: "center",
-						}}
-					>
+					<View style={styles.cardFooter}>
 						<Text style={{ ...styles.textMedWhite, marginTop: 2 }}>
 							{item.status}
 						</Text>
@@ -191,7 +184,10 @@ const Transaction = () => {
 		return (
 			<>
 				<View style={styles.head}>
-					<Header header="Transaksi Anda" tagline="Lihat daftar transaksi dan beri action untuk proses selanjutnya" />
+					<Header
+						header="Transaksi Anda"
+						tagline="Lihat daftar transaksi dan beri action untuk proses selanjutnya"
+					/>
 				</View>
 				<Tab.Navigator
 					screenOptions={{
