@@ -13,6 +13,7 @@ import LandDetail from "../../components/LandDetail";
 import { Dimensions, Text } from "react-native";
 import { Octicons } from "@expo/vector-icons";
 import CreateTrxForm from "../../components/Transaction/CreateTrxForm";
+import UpdateProfile from "../../components/Profile/UpdateProfile";
 
 const Stack = createNativeStackNavigator();
 
@@ -124,6 +125,7 @@ const Router = () => {
 						name="CreateTrxForm"
 						component={CreateTrxForm}
 					/>
+					<Stack.Screen name="UpdateProfile" component={UpdateProfile} />
 				</Stack.Navigator>
 			</NavigationContainer>
 		</>

@@ -18,11 +18,13 @@ import {
 	MaterialIcons,
 	MaterialCommunityIcons,
 } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 
 const Profile = () => {
 	const theme = useTheme();
 	const insets = useSafeAreaInsets();
 	const { width, height } = Dimensions.get("window");
+	const navigation = useNavigation();
 
 	const data = [
 		{
@@ -125,7 +127,7 @@ const Profile = () => {
 		marginL30: { marginLeft: 30 },
 		menuContainer: { gap: 20, padding: 10, paddingBottom: 50 },
 		mainDivider: {
-			width: width * 0.75,
+			width: "100%",
 			height: 1,
 			backgroundColor: theme.colors.accent,
 			marginHorizontal: "auto",
@@ -324,6 +326,27 @@ const Profile = () => {
 
 						<View style={styles.mainDivider} />
 
+						<TouchableOpacity
+							activeOpacity={0.6}
+							onPress={() => navigation.navigate("UpdateProfile")}
+						>
+							<View style={styles.menu}>
+								<Octicons
+									name="file-symlink-file"
+									size={22}
+									color="black"
+								/>
+								<Text style={{ ...styles.text, fontSize: 16 }}>
+									Update Profil
+								</Text>
+								<MaterialIcons
+									name="keyboard-arrow-right"
+									size={22}
+									color="black"
+									style={styles.marginLAuto}
+								/>
+							</View>
+						</TouchableOpacity>
 						<TouchableOpacity activeOpacity={0.6}>
 							<View style={styles.menu}>
 								<Octicons name="lock" size={22} color="black" />
