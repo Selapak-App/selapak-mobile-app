@@ -15,6 +15,7 @@ import { Octicons } from "@expo/vector-icons";
 import CreateTrxForm from "../../components/Transaction/CreateTrxForm";
 import UpdateProfile from "../../components/Profile/UpdateProfile";
 import TransactionDetail from "../../components/TransactionDetail/TransactionDetail";
+import Dealing from "../../components/Dealing";
 
 const Stack = createNativeStackNavigator();
 
@@ -128,6 +129,7 @@ const Router = () => {
 					/>
 					<Stack.Screen name="UpdateProfile" component={UpdateProfile} />
 					<Stack.Screen name="TransactionDetail" component={TransactionDetail} />
+					<Stack.Screen name="Dealing" component={Dealing} />
 				</Stack.Navigator>
 			</NavigationContainer>
 		</>

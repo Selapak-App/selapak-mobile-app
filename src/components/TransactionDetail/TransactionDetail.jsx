@@ -8,7 +8,7 @@ import {
 	Dimensions,
 	FlatList,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, List, Surface, useTheme } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -30,6 +30,8 @@ const TransactionDetail = () => {
 	const insets = useSafeAreaInsets();
 	const { height, width } = Dimensions.get("screen");
 	const [expanded, setExpanded] = useState(null);
+	const navigation = useNavigation();
+
 	const handleAccordionPress = (id) => {
 		setExpanded(expanded === id ? null : id);
 	};
@@ -71,6 +73,10 @@ const TransactionDetail = () => {
 		borderRadius: { borderRadius: theme.roundness },
 		marginLAuto: { marginLeft: "auto" },
 		flex1: { flex: 1 },
+		flexEnd: {
+			flexDirection: "row",
+			justifyContent: "center",
+		}
 	});
 
 	const LayoutComponent = () => (
@@ -200,8 +206,8 @@ const TransactionDetail = () => {
 						</View>
 						<View style={{ flexDirection: "row", gap: 10 }}>
 							<MaterialCommunityIcons
-								name="checkbox-blank-circle-outline"
-								color={theme.colors.dark}
+								name="checkbox-blank-circle"
+								color={theme.colors.primary}
 								size={22}
 							/>
 							<Text style={{ ...styles.text, fontSize: 16 }}>
@@ -266,7 +272,6 @@ const TransactionDetail = () => {
 								</TouchableOpacity>
 							</View>
 						</View>
-						
 					</View>
 				</HeaderWithContent>
 
@@ -308,7 +313,7 @@ const TransactionDetail = () => {
 									titleStyle={styles.text}
 									titleNumberOfLines={10}
 								/>
-								<View>
+								<View style={styles.flexEnd}>
 									<Button
 										icon="whatsapp"
 										mode="contained"
@@ -317,7 +322,7 @@ const TransactionDetail = () => {
 												theme.colors.secondary,
 										}}
 										onPress={() => console.log("Pressed")}
-                                        disabled
+										disabled
 									>
 										Chat Admin
 									</Button>
@@ -329,8 +334,8 @@ const TransactionDetail = () => {
 								left={(props) => (
 									<List.Icon
 										{...props}
-										icon="checkbox-blank-circle-outline"
-										color={theme.colors.dark}
+										icon="checkbox-blank-circle"
+										color={theme.colors.primary}
 									/>
 								)}
 								titleStyle={{ fontFamily: "PoppinsMedium" }}
@@ -340,7 +345,7 @@ const TransactionDetail = () => {
 									titleStyle={styles.text}
 									titleNumberOfLines={5}
 								/>
-								<View>
+								<View style={styles.flexEnd}>
 									<Button
 										icon="file-document-outline"
 										mode="contained"
@@ -348,7 +353,9 @@ const TransactionDetail = () => {
 											backgroundColor:
 												theme.colors.secondary,
 										}}
-										onPress={() => console.log("Pressed")}
+										onPress={() =>
+											navigation.navigate("Dealing")
+										}
 									>
 										Konfirmasi Keputusan
 									</Button>
@@ -371,7 +378,7 @@ const TransactionDetail = () => {
 									titleStyle={styles.text}
 									titleNumberOfLines={5}
 								/>
-								<View>
+								<View style={styles.flexEnd}>
 									<Button
 										icon="file-document-outline"
 										mode="contained"
