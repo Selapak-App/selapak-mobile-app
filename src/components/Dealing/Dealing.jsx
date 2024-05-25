@@ -28,12 +28,14 @@ const Survey = () => {
 		page: {
 			backgroundColor: "white",
 			minHeight: height,
-			paddingTop: insets.top,
-			paddingBottom: insets.bottom,
-			padding: 15,
+			padding: 10,
 		},
 		container: {
-			gap: 15
+			gap: 15,
+			justifyContent: "center",
+			paddingTop: insets.top,
+			paddingBottom: insets.bottom,
+			alignItems: "center",
 		},
 		image: {
 			width: 310,
@@ -51,6 +53,7 @@ const Survey = () => {
 			borderWidth: 1,
 			borderStyle: "dashed",
 			borderColor: theme.colors.primary,
+			backgroundColor: theme.colors.lightGray,
 			padding: 20,
 		},
 		text: {
@@ -61,7 +64,9 @@ const Survey = () => {
 			paddingVertical: 15,
 			paddingHorizontal: 25,
 			borderRadius: theme.roundness,
-			backgroundColor: checked ? theme.colors.secondary : theme.colors.accent,
+			backgroundColor: checked
+				? theme.colors.secondary
+				: theme.colors.accent,
 			borderColor: checked ? theme.colors.secondary : theme.colors.accent,
 			borderWidth: 2,
 		},
@@ -139,11 +144,18 @@ const Survey = () => {
 								activeOpacity={0.9}
 								style={{
 									...styles.button,
-									backgroundColor: theme.colors.error,
+									backgroundColor: "white",
 									borderColor: theme.colors.error,
 								}}
 							>
-								<Text style={styles.buttonText}>Tolak</Text>
+								<Text
+									style={{
+										...styles.buttonText,
+										color: theme.colors.error,
+									}}
+								>
+									Tolak
+								</Text>
 							</TouchableOpacity>
 						</View>
 						<View style={{ flex: 1 }}>

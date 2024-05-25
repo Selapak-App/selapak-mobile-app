@@ -7,6 +7,7 @@ import {
 	Image,
 	Dimensions,
 	FlatList,
+	Linking,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Button, List, Surface, useTheme } from "react-native-paper";
@@ -24,18 +25,14 @@ import HeaderWithContent from "../reusables/HeaderWithContent";
 import TitleContentItem from "../reusables/TitleContentItem/TitleContentItem";
 import Tag from "../reusables/Tag";
 import { StatusBar } from "expo-status-bar";
+import variables from "../../../assets/variables";
 
 const TransactionDetail = () => {
 	const theme = useTheme();
 	const insets = useSafeAreaInsets();
 	const { height, width } = Dimensions.get("screen");
-	const [expanded, setExpanded] = useState(null);
+	const [expanded, setExpanded] = useState("1");
 	const navigation = useNavigation();
-
-	const handleAccordionPress = (id) => {
-		setExpanded(expanded === id ? null : id);
-	};
-
 	const styles = StyleSheet.create({
 		text: {
 			fontFamily: "Poppins",
@@ -76,7 +73,7 @@ const TransactionDetail = () => {
 		flexEnd: {
 			flexDirection: "row",
 			justifyContent: "center",
-		}
+		},
 	});
 
 	const LayoutComponent = () => (
@@ -136,148 +133,7 @@ const TransactionDetail = () => {
 
 				<HeaderWithContent header="Flow Pemesanan">
 					<View style={styles.contentWrapper}>
-						<View style={{ flexDirection: "row", gap: 10 }}>
-							<MaterialCommunityIcons
-								name="checkbox-marked-circle"
-								color={theme.colors.secondary}
-								size={22}
-							/>
-							<Text style={{ ...styles.text, fontSize: 16 }}>
-								Verifikasi admin
-							</Text>
-							<View
-								style={{
-									marginLeft: "auto",
-									backgroundColor: "white",
-								}}
-							>
-								<TouchableOpacity
-									activeOpacity={0.9}
-									style={{
-										backgroundColor: theme.colors.secondary,
-										borderRadius: 20,
-										paddingHorizontal: 10,
-									}}
-								>
-									<Text
-										style={{
-											fontFamily: "PoppinsMedium",
-											color: "white",
-										}}
-									>
-										Action
-									</Text>
-								</TouchableOpacity>
-							</View>
-						</View>
-						<View style={{ flexDirection: "row", gap: 10 }}>
-							<MaterialCommunityIcons
-								name="close-circle"
-								color={theme.colors.error}
-								size={22}
-							/>
-							<Text style={{ ...styles.text, fontSize: 16 }}>
-								Survey
-							</Text>
-							<View
-								style={{
-									marginLeft: "auto",
-									backgroundColor: "white",
-								}}
-							>
-								<TouchableOpacity
-									activeOpacity={0.9}
-									style={{
-										backgroundColor: theme.colors.secondary,
-										borderRadius: 20,
-										paddingHorizontal: 10,
-									}}
-								>
-									<Text
-										style={{
-											fontFamily: "PoppinsMedium",
-											color: "white",
-										}}
-									>
-										Action
-									</Text>
-								</TouchableOpacity>
-							</View>
-						</View>
-						<View style={{ flexDirection: "row", gap: 10 }}>
-							<MaterialCommunityIcons
-								name="checkbox-blank-circle"
-								color={theme.colors.primary}
-								size={22}
-							/>
-							<Text style={{ ...styles.text, fontSize: 16 }}>
-								Dealing
-							</Text>
-							<View
-								style={{
-									marginLeft: "auto",
-									backgroundColor: "white",
-								}}
-							>
-								<TouchableOpacity
-									activeOpacity={0.9}
-									style={{
-										backgroundColor: theme.colors.secondary,
-										borderRadius: 20,
-										paddingHorizontal: 10,
-									}}
-								>
-									<Text
-										style={{
-											fontFamily: "PoppinsMedium",
-											color: "white",
-										}}
-									>
-										Action
-									</Text>
-								</TouchableOpacity>
-							</View>
-						</View>
-						<View style={{ flexDirection: "row", gap: 10 }}>
-							<MaterialCommunityIcons
-								name="checkbox-blank-circle-outline"
-								color={theme.colors.dark}
-								size={22}
-							/>
-							<Text style={{ ...styles.text, fontSize: 16 }}>
-								Payment
-							</Text>
-							<View
-								style={{
-									marginLeft: "auto",
-									backgroundColor: "white",
-								}}
-							>
-								<TouchableOpacity
-									activeOpacity={0.9}
-									style={{
-										backgroundColor: theme.colors.secondary,
-										borderRadius: 20,
-										paddingHorizontal: 10,
-									}}
-								>
-									<Text
-										style={{
-											fontFamily: "PoppinsMedium",
-											color: "white",
-										}}
-									>
-										Action
-									</Text>
-								</TouchableOpacity>
-							</View>
-						</View>
-					</View>
-				</HeaderWithContent>
-
-				<HeaderWithContent header="Flow Pemesanan">
-					<View style={styles.contentWrapper}>
-						<List.AccordionGroup onPress={handleAccordionPress}>
+						<List.AccordionGroup>
 							<List.Accordion
 								id="1"
 								title="Verifikasi Admin"
@@ -321,8 +177,11 @@ const TransactionDetail = () => {
 											backgroundColor:
 												theme.colors.secondary,
 										}}
-										onPress={() => console.log("Pressed")}
-										disabled
+										onPress={() =>
+											Linking.openURL(
+												`https://wa.me/${variables.ADMIN_PHONE}?text=%F0%9F%91%8B%20Halo%2C%20Admin%20Selapak.%20Saya%20ingin%20menjadwalkan%20survey%20lapak.`
+											)
+										}
 									>
 										Chat Admin
 									</Button>
@@ -386,7 +245,9 @@ const TransactionDetail = () => {
 											backgroundColor:
 												theme.colors.secondary,
 										}}
-										onPress={() => console.log("Pressed")}
+										onPress={() =>
+											navigation.navigate("Payment")
+										}
 									>
 										Petunjuk Pembayaran
 									</Button>
