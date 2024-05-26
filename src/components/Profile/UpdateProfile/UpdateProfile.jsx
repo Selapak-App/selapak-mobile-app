@@ -225,7 +225,7 @@ const UpdateProfile = () => {
 			<>
 				<View style={styles.headerArea}>
 					<Header
-						header="Update Profile"
+						header="Perbarui Profil"
 						tagline="Pastikan informasi profil Anda valid dan up-to-date"
 						textAlign="center"
 						textColor="white"

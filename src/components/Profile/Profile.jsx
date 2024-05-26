@@ -348,7 +348,7 @@ const Profile = () => {
 								/>
 							</View>
 						</TouchableOpacity>
-						<TouchableOpacity activeOpacity={0.6}>
+						<TouchableOpacity activeOpacity={0.6} onPress={() => navigation.navigate("UpdatePassword")}>
 							<View style={styles.menu}>
 								<Octicons name="lock" size={22} color="black" />
 								<Text style={{ ...styles.text, fontSize: 16 }}>

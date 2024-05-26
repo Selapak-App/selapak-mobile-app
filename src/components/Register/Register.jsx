@@ -39,8 +39,8 @@ const registerFormSchema = yup
 			.required("Password tidak boleh kosong"),
 		confirmPassword: yup
 			.string()
-			.oneOf([yup.ref("password"), null], "Password tidak cocok")
-			.required("Password tidak boleh kosong"),
+			.oneOf([yup.ref("password"), null], "Konfirmasi Password tidak cocok")
+			.required("Konfirmasi Password tidak boleh kosong"),
 	})
 	.required();
 
@@ -57,8 +57,11 @@ const Register = () => {
 		formState: { errors },
 	} = useForm({
 		defaultValues: {
+			name: "",
+			gender: "MALE",
 			email: "",
 			password: "",
+			confirmPassword: "",
 		},
 		resolver: yupResolver(registerFormSchema),
 	});
@@ -387,7 +390,7 @@ const Register = () => {
 									field: { onChange, onBlur, value },
 								}) => (
 									<TextInput
-										label="Confirm Password"
+										label="Konfirmasi Password"
 										mode="outlined"
 										outlineColor={theme.colors.secondary}
 										left="#000"
@@ -397,7 +400,7 @@ const Register = () => {
 											onChange(event)
 										}
 										value={value}
-										error={errors.password}
+										error={errors.confirmPassword}
 									/>
 								)}
 								name="confirmPassword"

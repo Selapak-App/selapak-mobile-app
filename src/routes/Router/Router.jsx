@@ -18,6 +18,7 @@ import TransactionDetail from "../../components/TransactionDetail/TransactionDet
 import Dealing from "../../components/Dealing";
 import Payment from "../../components/Payment";
 import LandingVerify from "../../components/LandingVerify";
+import UpdatePassword from "../../components/Profile/UpdatePassword";
 
 const Stack = createNativeStackNavigator();
 
@@ -115,7 +116,7 @@ const Router = () => {
 						gestureDirection: "horizontal",
 						gestureEnabled: true,
 					}}
-					initialRouteName="App"
+					initialRouteName="UpdatePassword"
 				>
 					<Stack.Screen name="Login" component={Login} />
 					<Stack.Screen name="Register" component={Register} />
@@ -134,6 +135,7 @@ const Router = () => {
 					<Stack.Screen name="Dealing" component={Dealing} />
 					<Stack.Screen name="Payment" component={Payment} />
 					<Stack.Screen name="LandingVerify" component={LandingVerify} />
+					<Stack.Screen name="UpdatePassword" component={UpdatePassword} />
 				</Stack.Navigator>
 			</NavigationContainer>
 		</>
