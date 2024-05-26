@@ -1,9 +1,8 @@
 import { View, Text } from "react-native";
 import React from "react";
-import animations from "../../../../assets/animations";
 import LottieView from "lottie-react-native";
 
-const ThreeDotLoading = ({ width, height }) => {
+const LottieAnimation = ({ width, height, animation }) => {
 	return (
 		<LottieView
 			autoPlay
@@ -11,9 +10,9 @@ const ThreeDotLoading = ({ width, height }) => {
 				width,
 				height,
 			}}
-			source={animations.threeDots}
+			source={animation}
 		/>
 	);
 };
 
-export default ThreeDotLoading;
+export default LottieAnimation;

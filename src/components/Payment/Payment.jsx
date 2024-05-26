@@ -17,6 +17,8 @@ import images from "../../../assets/images";
 import HeaderWithContent from "../reusables/HeaderWithContent";
 import TitleContentItem from "../reusables/TitleContentItem/TitleContentItem";
 import * as Clipboard from "expo-clipboard";
+import variables from "../../../assets/variables";
+import { StatusBar } from "expo-status-bar";
 
 const spacingFourChar = (input) => {
 	let characters = input.split('');
@@ -45,7 +47,7 @@ const Payment = () => {
 		page: {
 			backgroundColor: "white",
 			minHeight: height,
-			padding: 10,
+			padding: 20,
 		},
 		container: {
 			gap: 15,
@@ -109,9 +111,9 @@ const Payment = () => {
 	const LayoutComponent = () => {
 		return (
 			<>
-				<ScrollView
-					style={styles.page}
-					contentContainerStyle={styles.container}
+				<View
+					style={{...styles.container}}
+					// contentContainerStyle={styles.container}
 				>
 					<Image source={images.payment} style={styles.image} />
 					<Text style={styles.header}>Selesaikan Pembayaran</Text>
@@ -251,13 +253,14 @@ const Payment = () => {
 							</View>
 						</HeaderWithContent>
 					</View>
-				</ScrollView>
+				</View>
 			</>
 		);
 	};
 
 	return (
 		<View>
+			<StatusBar backgroundColor="white" style="dark"/>
 			<FlatList
 				data={[{}]}
 				renderItem={LayoutComponent}

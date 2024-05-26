@@ -14,8 +14,8 @@ import { loginAction } from "../../app/feature/auth/authSlice";
 import LottieView from "lottie-react-native";
 import animations from "../../../assets/animations";
 import Popup from "../reusables/Popup";
-import ThreeDotLoading from "../reusables/ThreeDotLoading/ThreeDotLoading";
 import Header from "../reusables/Header";
+import LottieAnimation from "../reusables/LottieAnimation";
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const loginFormSchema = yup
@@ -263,7 +263,7 @@ const Login = () => {
 						{!isLoading ? (
 							<Text style={styles.buttonText}>Masuk</Text>
 						) : (
-							<ThreeDotLoading width={40} height={40} />
+							<LottieAnimation width={40} height={40} animation={animations.threeDots} />
 						)}
 					</TouchableOpacity>
 					<Text style={styles.textWrapper}>

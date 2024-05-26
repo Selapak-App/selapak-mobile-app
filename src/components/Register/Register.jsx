@@ -21,7 +21,8 @@ import images from "../../../assets/images";
 import { useDispatch, useSelector } from "react-redux";
 import Popup from "../reusables/Popup";
 import { registerAction } from "../../app/feature/auth/authSlice";
-import ThreeDotLoading from "../reusables/ThreeDotLoading/ThreeDotLoading";
+import animations from "../../../assets/animations";
+import LottieAnimation from "../reusables/LottieAnimation";
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const registerFormSchema = yup
@@ -436,7 +437,7 @@ const Register = () => {
 						{!isLoading ? (
 							<Text style={styles.buttonText}>Daftar</Text>
 						) : (
-							<ThreeDotLoading width={40} height={40} />
+							<LottieAnimation width={40} height={40} animation={animations.threeDots} />
 						)}
 					</TouchableOpacity>
 					<Text style={styles.textWrapper}>

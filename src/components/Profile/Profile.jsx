@@ -17,6 +17,7 @@ import {
 	Octicons,
 	MaterialIcons,
 	MaterialCommunityIcons,
+	Foundation,
 } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
@@ -331,8 +332,8 @@ const Profile = () => {
 							onPress={() => navigation.navigate("UpdateProfile")}
 						>
 							<View style={styles.menu}>
-								<Octicons
-									name="file-symlink-file"
+								<MaterialCommunityIcons
+									name="file-document-edit-outline"
 									size={22}
 									color="black"
 								/>

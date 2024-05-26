@@ -458,7 +458,7 @@ const UpdateProfile = () => {
 							{/* {!isLoading ? ( */}
 							<Text style={styles.buttonText}>Simpan</Text>
 							{/* ) : (
-								<ThreeDotLoading width={40} height={40} />
+								<LottieAnimation width={40} height={40} animation={animations.threeDots} />
 							 )} */}
 						</TouchableOpacity>
 					</View>

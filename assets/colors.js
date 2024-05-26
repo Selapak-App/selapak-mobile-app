@@ -1,5 +1,5 @@
-const primary = "#387ADF";
-const secondary = "#FBA834";
+const primary = "#FBA834";
+const secondary = "#387ADF";
 const accent = "#50C4ED";
 const primaryDark = "#333A73";
 const light = "#ffffff";

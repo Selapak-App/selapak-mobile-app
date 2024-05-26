@@ -23,8 +23,9 @@ import Popup from "../../reusables/Popup";
 import { Dropdown } from "react-native-element-dropdown";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
 import { getTypeAction } from "../../../app/feature/businessType/businessTypeSlice";
-import ThreeDotLoading from "../../reusables/ThreeDotLoading/ThreeDotLoading";
 import { getPeriodAction } from "../../../app/feature/rentPeriod/rentPeriodSlice";
+import LottieAnimation from "../../reusables/LottieAnimation/LottieAnimation";
+import animations from "../../../../assets/animations";
 
 const createTrxSchema = yup
 	.object({
@@ -493,7 +494,7 @@ const CreateTrxForm = () => {
 						{!isLoading ? (
 							<Text style={styles.buttonText}>Ajukan Sewa</Text>
 						) : (
-							<ThreeDotLoading width={40} height={40} />
+							<LottieAnimation width={40} height={40} animation={animations.threeDots} />
 						)}
 					</TouchableOpacity>
 				</View>
