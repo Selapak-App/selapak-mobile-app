@@ -26,13 +26,17 @@ import TitleContentItem from "../reusables/TitleContentItem/TitleContentItem";
 import Tag from "../reusables/Tag";
 import { StatusBar } from "expo-status-bar";
 import variables from "../../../assets/variables";
+import { useSelector } from "react-redux";
+import formatAddress from "../../utils/lands/formatAddress";
 
 const TransactionDetail = () => {
 	const theme = useTheme();
 	const insets = useSafeAreaInsets();
 	const { height, width } = Dimensions.get("screen");
-	const [expanded, setExpanded] = useState("1");
 	const navigation = useNavigation();
+	const { transaction } = useSelector((state) => state.transaction);
+	console.log("######## DETAILLLL: ", transaction);
+
 	const styles = StyleSheet.create({
 		text: {
 			fontFamily: "Poppins",
@@ -87,18 +91,20 @@ const TransactionDetail = () => {
 					<View style={styles.contentWrapper}>
 						<TitleContentItem head="Nama Bisnis">
 							<Text style={styles.textBold}>
-								Es Teh Nusantara
+								{transaction.business.businessName}
 							</Text>
 						</TitleContentItem>
 						<TitleContentItem head="Tipe">
 							<View style={styles.tagWrapper}>
-								<Tag text="Food" textSize={14} />
+								<Tag
+									text={transaction.business.businessType}
+									textSize={14}
+								/>
 							</View>
 						</TitleContentItem>
 						<TitleContentItem head="Deskripsi">
 							<Text style={styles.text}>
-								Lorem ipsum dolor sit amet consectetur
-								adipisicing elit.
+								{transaction.business.descripttion}
 							</Text>
 						</TitleContentItem>
 					</View>
@@ -107,26 +113,29 @@ const TransactionDetail = () => {
 				<HeaderWithContent header="Transaksi">
 					<View style={styles.contentWrapper}>
 						<TitleContentItem head="Luas Lapak">
-							<Text style={styles.text}>2 x 5 m2</Text>
+							<Text style={styles.text}>{transaction.landPrice.land.slotArea + " m2"}</Text>
 						</TitleContentItem>
 						<TitleContentItem head="Qty">
-							<Text style={styles.text}>2 Petak</Text>
+							<Text style={styles.text}>{transaction.quantity + " Petak"}</Text>
 						</TitleContentItem>
 						<TitleContentItem head="Periode Sewa">
-							<Text style={styles.text}>12 Bulan</Text>
+							<Text style={styles.text}>{transaction.rentPeriod.period + " Bulan"}</Text>
 						</TitleContentItem>
 						<TitleContentItem head="Alamat Lapak">
 							<Text style={styles.text}>
-								Jl. Topaz 7, Tlogomas, Lowokwaru, Malang, 62282
+								{formatAddress(transaction.landPrice.land)}
 							</Text>
 						</TitleContentItem>
 						<TitleContentItem head="Status">
 							<View style={styles.tagWrapper}>
-								<Tag text="Verify" textSize={14} />
+								<Tag text={transaction.showStatus} textSize={14} />
 							</View>
 						</TitleContentItem>
 						<TitleContentItem head="Total">
-							<Text style={styles.textBold}>Rp. 12.000.000</Text>
+							<Text style={styles.textBold}>Rp.{" "}
+							{new Intl.NumberFormat("ID").format(
+								transaction.landPrice.price
+							)}</Text>
 						</TitleContentItem>
 					</View>
 				</HeaderWithContent>
@@ -177,6 +186,7 @@ const TransactionDetail = () => {
 											backgroundColor:
 												theme.colors.secondary,
 										}}
+										disabled={transaction.showStatus==="VERIFY"}
 										onPress={() =>
 											Linking.openURL(
 												`https://wa.me/${variables.ADMIN_PHONE}?text=%F0%9F%91%8B%20Halo%2C%20Admin%20Selapak.%20Saya%20ingin%20menjadwalkan%20survey%20lapak.`

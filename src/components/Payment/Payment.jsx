@@ -19,25 +19,29 @@ import TitleContentItem from "../reusables/TitleContentItem/TitleContentItem";
 import * as Clipboard from "expo-clipboard";
 import variables from "../../../assets/variables";
 import { StatusBar } from "expo-status-bar";
+import { useSelector } from "react-redux";
+import formatAddress from "../../utils/lands/formatAddress";
 
 const spacingFourChar = (input) => {
-	let characters = input.split('');
-	let result = '';
-  
+	let characters = input.split("");
+	let result = "";
+
 	for (let i = 0; i < characters.length; i++) {
-	  result += characters[i];
-	  if ((i + 1) % 4 === 0 && (i + 1) !== characters.length) {
-		result += ' ';
-	  }
+		result += characters[i];
+		if ((i + 1) % 4 === 0 && i + 1 !== characters.length) {
+			result += " ";
+		}
 	}
-  
+
 	return result;
-}
+};
 
 const Payment = () => {
 	const theme = useTheme();
 	const { height, width } = Dimensions.get("screen");
 	const insets = useSafeAreaInsets();
+	const { transaction } = useSelector((state) => state.transaction);
+
 	const handleCopy = async (item) => {
 		await Clipboard.setStringAsync(item);
 		ToastAndroid.show("Copied to clipboard!", ToastAndroid.SHORT);
@@ -112,8 +116,7 @@ const Payment = () => {
 		return (
 			<>
 				<View
-					style={{...styles.container}}
-					// contentContainerStyle={styles.container}
+					style={{ ...styles.container }}
 				>
 					<Image source={images.payment} style={styles.image} />
 					<Text style={styles.header}>Selesaikan Pembayaran</Text>
@@ -122,18 +125,22 @@ const Payment = () => {
 							<View style={{ gap: 5 }}>
 								<TitleContentItem head="Nama Bisnis">
 									<Text style={styles.textBold}>
-										Es Teh Nusantara
+										{transaction.business.businessName}
 									</Text>
 								</TitleContentItem>
 								<TitleContentItem head="Alamat Lapak">
 									<Text style={styles.text}>
-										Jl. Topaz 7, Tlogomas, Lowokwaru,
-										Malang, 62282
+										{formatAddress(
+											transaction.landPrice.land
+										)}
 									</Text>
 								</TitleContentItem>
 								<TitleContentItem head="Total">
 									<Text style={styles.textBold}>
-										Rp. 12.000.000
+										Rp.{" "}
+										{new Intl.NumberFormat("ID").format(
+											transaction.landPrice.price
+										)}
 									</Text>
 								</TitleContentItem>
 							</View>
@@ -155,7 +162,10 @@ const Payment = () => {
 										}}
 									>
 										{cashPayment.map((item, index) => (
-											<View key={index} style={styles.flexRow5}>
+											<View
+												key={index}
+												style={styles.flexRow5}
+											>
 												<Text style={styles.text16}>
 													{index + 1 + "."}
 												</Text>
@@ -183,7 +193,12 @@ const Payment = () => {
 											dan kirim bukti transaksi ke
 											WhatsApp untuk diproses lebih cepat
 										</Text>
-										<View style={{ marginVertical: 20, gap: 5 }}>
+										<View
+											style={{
+												marginVertical: 20,
+												gap: 5,
+											}}
+										>
 											{creditCard.map((item) => (
 												<View
 													key={item.card}
@@ -217,16 +232,20 @@ const Payment = () => {
 														}}
 													>
 														<Text
-															style={
-																{...styles.text16, fontFamily: "monospace"}
-															}
+															style={{
+																...styles.text16,
+																fontFamily:
+																	"monospace",
+															}}
 															onPress={() =>
 																handleCopy(
 																	item.number
 																)
 															}
 														>
-															{spacingFourChar(item.number)}
+															{spacingFourChar(
+																item.number
+															)}
 														</Text>
 													</View>
 												</View>
@@ -244,7 +263,8 @@ const Payment = () => {
 													Linking.openURL(
 														`https://wa.me/${variables.ADMIN_PHONE}?text=%F0%9F%91%8B%20Halo%2C%20Admin%20Selapak.%20Saya%20ingin%20melakukan%20konfirmasi%20pembayaran.`
 													)
-												}>
+												}
+											>
 												Konfirmasi
 											</Button>
 										</View>
@@ -260,7 +280,7 @@ const Payment = () => {
 
 	return (
 		<View>
-			<StatusBar backgroundColor="white" style="dark"/>
+			<StatusBar backgroundColor="white" style="dark" />
 			<FlatList
 				data={[{}]}
 				renderItem={LayoutComponent}

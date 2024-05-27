@@ -16,12 +16,16 @@ import HeaderWithContent from "../reusables/HeaderWithContent";
 import TitleContentItem from "../reusables/TitleContentItem/TitleContentItem";
 import Tag from "../reusables/Tag";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useSelector } from "react-redux";
+import formatAddress from "../../utils/lands/formatAddress";
 
 const Survey = () => {
 	const theme = useTheme();
 	const { height, width } = Dimensions.get("screen");
 	const [checked, setChecked] = useState(false);
 	const insets = useSafeAreaInsets();
+	const {transaction} = useSelector(state => state.transaction);
+	
 	const handleCheck = () => setChecked(!checked);
 
 	const styles = StyleSheet.create({
@@ -92,27 +96,29 @@ const Survey = () => {
 							<View style={{ gap: 5 }}>
 								<TitleContentItem head="Nama Bisnis">
 									<Text style={styles.textBold}>
-										Es Teh Nusantara
+										{transaction.business.businessName}
 									</Text>
 								</TitleContentItem>
 								<TitleContentItem head="Luas Lapak">
-									<Text style={styles.text}>2 x 5 m2</Text>
+									<Text style={styles.text}>{transaction.landPrice.land.slotArea} m2</Text>
 								</TitleContentItem>
 								<TitleContentItem head="Qty">
-									<Text style={styles.text}>2 Petak</Text>
+									<Text style={styles.text}>{transaction.quantity} Petak</Text>
 								</TitleContentItem>
 								<TitleContentItem head="Periode Sewa">
-									<Text style={styles.text}>12 Bulan</Text>
+									<Text style={styles.text}>{transaction.rentPeriod.period} Bulan</Text>
 								</TitleContentItem>
 								<TitleContentItem head="Alamat Lapak">
 									<Text style={styles.text}>
-										Jl. Topaz 7, Tlogomas, Lowokwaru,
-										Malang, 62282
+										{formatAddress(transaction.landPrice.land)}
 									</Text>
 								</TitleContentItem>
 								<TitleContentItem head="Total">
 									<Text style={styles.textBold}>
-										Rp. 12.000.000
+									Rp.{" "}
+							{new Intl.NumberFormat("ID").format(
+								transaction.landPrice.price
+							)}
 									</Text>
 								</TitleContentItem>
 							</View>
