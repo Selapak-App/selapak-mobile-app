@@ -84,7 +84,6 @@ const CreateTrxForm = () => {
 	const window = Dimensions.get("window");
 
 	const onSubmit = async () => {
-		console.log("####### ", errors);
 		const data = getValues();
 		const payload = {
 			quantity: data.qty,

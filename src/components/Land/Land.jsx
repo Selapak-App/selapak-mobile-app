@@ -27,7 +27,6 @@ const Land = () => {
 
 	useEffect(() => {
 		dispatch(getLandAction());
-		console.log(lands);
 	}, [dispatch]);
 
 	const openDetail = async (data) => {
@@ -89,7 +88,6 @@ const Land = () => {
 	});
 
 	const CardComponent = ({ item }) => {
-		console.log("ITEM _____: ", item);
 		return (
 			<TouchableOpacity
 				onPress={() => openDetail(item)}

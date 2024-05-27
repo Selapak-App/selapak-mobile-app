@@ -35,7 +35,6 @@ const Home = ({ onTabChange }) => {
 
 	useEffect(() => {
 		refresh();
-		console.log("HEYWOOOO ", lands);
 	}, [dispatch]);
 
 	const refresh = async () => {

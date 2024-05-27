@@ -20,7 +20,6 @@ const LandDetail = () => {
 	const theme = useTheme();
 	const navigation = useNavigation();
 	const { land } = useSelector((state) => state.land);
-	console.log(land);
 
 	const styles = StyleSheet.create({
 		wrapper: {
