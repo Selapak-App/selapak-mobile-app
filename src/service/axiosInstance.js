@@ -37,6 +37,10 @@ axiosInstance.interceptors.response.use(
 				return Promise.reject(
 					new Error(error.response.data.message || "Conflict")
 				);
+			} else if (error.response.status === 400) {
+				return Promise.reject(
+					new Error(error.response.data.message || "Bad Request")
+				);
 			}
 		}
 		return Promise.reject(error);

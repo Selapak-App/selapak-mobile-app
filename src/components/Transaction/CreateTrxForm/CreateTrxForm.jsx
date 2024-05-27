@@ -26,6 +26,8 @@ import { getTypeAction } from "../../../app/feature/businessType/businessTypeSli
 import { getPeriodAction } from "../../../app/feature/rentPeriod/rentPeriodSlice";
 import LottieAnimation from "../../reusables/LottieAnimation/LottieAnimation";
 import animations from "../../../../assets/animations";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { createTransactionAction } from "../../../app/feature/transaction/transactionSlice";
 
 const createTrxSchema = yup
 	.object({
@@ -44,8 +46,6 @@ const createTrxSchema = yup
 	.required();
 
 const CreateTrxForm = () => {
-	const periodData = dummyPeriod;
-	const businessTypeData = dummyBusinessType;
 	const theme = useTheme();
 	const insets = useSafeAreaInsets();
 	const navigation = useNavigation();
@@ -71,8 +71,10 @@ const CreateTrxForm = () => {
 	const dispatch = useDispatch();
 	const [isTypeFocus, setIsTypeFocus] = useState(false);
 	const [isPeriodFocus, setIsPeriodFocus] = useState(false);
-	const { isLoading, types } = useSelector((state) => state.type);
+	const { types } = useSelector((state) => state.type);
 	const { periods } = useSelector((state) => state.period);
+	const { isLoading } = useSelector((state) => state.transaction);
+	const { land } = useSelector((state) => state.land);
 
 	useEffect(() => {
 		dispatch(getTypeAction());
@@ -82,9 +84,29 @@ const CreateTrxForm = () => {
 	const window = Dimensions.get("window");
 
 	const onSubmit = async () => {
-		console.log(periods);
-		console.log(types);
-		console.log(getValues());
+		console.log("####### ", errors);
+		const data = getValues();
+		const payload = {
+			quantity: data.qty,
+			customerId: await AsyncStorage.getItem("id"),
+			rentPeriodId: data.period,
+			landPriceId: land.landPrice.id,
+			businessName: data.name,
+			businessDescription: data.description,
+			businessType: data.businessType,
+		};
+
+		const res = await dispatch(createTransactionAction(payload));
+		if (!res.error) {
+			setIsError(false);
+			navigation.navigate("LandingVerify");
+		} else {
+			setIsError(true);
+			setMessage(res.payload.message);
+			setVisibility(true);
+		}
+
+		///////////////////////
 		// if (!errors.email && !errors.password) {
 		// 	try {
 		// 		const data = getValues();
@@ -494,7 +516,11 @@ const CreateTrxForm = () => {
 						{!isLoading ? (
 							<Text style={styles.buttonText}>Ajukan Sewa</Text>
 						) : (
-							<LottieAnimation width={40} height={40} animation={animations.threeDots} />
+							<LottieAnimation
+								width={40}
+								height={40}
+								animation={animations.threeDots}
+							/>
 						)}
 					</TouchableOpacity>
 				</View>
