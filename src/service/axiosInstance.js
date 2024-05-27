@@ -1,12 +1,13 @@
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import variables from "../../assets/variables";
 
 const axiosInstance = axios.create({
-	baseURL: "https://edc4-125-166-12-126.ngrok-free.app/api",
+	baseURL: variables.BASE_API,
 	headers: {
 		"Content-Type": "application/json",
 	},
-    timeout: 5000,
+	timeout: 5000,
 });
 
 axiosInstance.interceptors.request.use(
@@ -18,6 +19,26 @@ axiosInstance.interceptors.request.use(
 		return config;
 	},
 	(error) => {
+		return Promise.reject(error);
+	}
+);
+
+axiosInstance.interceptors.response.use(
+	(response) => response,
+	(error) => {
+		if (error.response) {
+			if (error.response.status === 401) {
+				return Promise.reject(
+					new Error(
+						error.response.data.message || "Unauthorized Access"
+					)
+				);
+			} else if (error.response.status === 409) {
+				return Promise.reject(
+					new Error(error.response.data.message || "Conflict")
+				);
+			}
+		}
 		return Promise.reject(error);
 	}
 );

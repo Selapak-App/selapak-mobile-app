@@ -55,16 +55,12 @@ const Login = () => {
 
 	const onSubmit = async () => {
 		if (!errors.email && !errors.password) {
-			try {
-				const data = await getValues();
-				const res = await dispatch(loginAction(data));
-				if (!res.payload.error) {
-					navigation.navigate("App");
-				} else {
-					throw new Error(res.payload.message);
-				}
-			} catch (error) {
-				setErrorMessage(error.message);
+			const data = getValues();
+			const res = await dispatch(loginAction(data));
+			if (!res.error) {
+				navigation.navigate("App");
+			} else {
+				setErrorMessage(res.payload.message);
 				setErrorVisibility(true);
 			}
 		}
@@ -84,7 +80,6 @@ const Login = () => {
 	};
 
 	const toForgetPassword = () => {
-		console.log("to forget pass");
 		navigation.navigate("ForgetPassword");
 	};
 
@@ -263,7 +258,11 @@ const Login = () => {
 						{!isLoading ? (
 							<Text style={styles.buttonText}>Masuk</Text>
 						) : (
-							<LottieAnimation width={40} height={40} animation={animations.threeDots} />
+							<LottieAnimation
+								width={40}
+								height={40}
+								animation={animations.threeDots}
+							/>
 						)}
 					</TouchableOpacity>
 					<Text style={styles.textWrapper}>

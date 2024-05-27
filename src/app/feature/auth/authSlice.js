@@ -8,37 +8,32 @@ export const loginAction = createAsyncThunk(
 	async (payload, ThunkAPI) => {
 		try {
 			const res = await login(payload);
-			if (res) {
-				return res;
-			} else {
-				throw new Error("Invalid response structure");
-			}
+			return res;
 		} catch (e) {
-            const invalid = e.message.includes("403");
-            const error = {
-                error: true,
-                message: invalid ? "Email/password salah" : e.message,
-            }
-            return error;
+			res = {
+				statusCode: 401,
+				message: e.message,
+			};
+			return ThunkAPI.rejectWithValue(res);
 		}
 	}
 );
 
 export const registerAction = createAsyncThunk(
-    "auth/register",
-    async (payload, ThunkAPI) => {
-        try {
-            const res = await register(payload);
-            if (res) {
-                return res;
-            } else {
-                throw new Error("Invalid response structure");
-            }
-        } catch (e) {
-            return e
-        }
-    }
-)
+	"auth/register",
+	async (payload, ThunkAPI) => {
+		try {
+			const res = await register(payload);
+			return res;
+		} catch (e) {
+			res = {
+				statusCode: 409,
+				message: e.message,
+			};
+			return ThunkAPI.rejectWithValue(res);
+		}
+	}
+);
 
 const authSlice = createSlice({
 	name: "auth",

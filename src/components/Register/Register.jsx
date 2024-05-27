@@ -39,7 +39,10 @@ const registerFormSchema = yup
 			.required("Password tidak boleh kosong"),
 		confirmPassword: yup
 			.string()
-			.oneOf([yup.ref("password"), null], "Konfirmasi Password tidak cocok")
+			.oneOf(
+				[yup.ref("password"), null],
+				"Konfirmasi Password tidak cocok"
+			)
 			.required("Konfirmasi Password tidak boleh kosong"),
 	})
 	.required();
@@ -74,31 +77,26 @@ const Register = () => {
 	const window = Dimensions.get("window");
 
 	const onSubmit = async () => {
-		if (!errors.email && !errors.password) {
-			try {
-				const data = getValues();
-				const reqData = {
-					fullName: data.name,
-					email: data.email,
-					gender: data.gender ? data.gender : "MALE",
-					password: data.password,
-				};
+		const data = getValues();
+		const reqData = {
+			fullName: data.name,
+			email: data.email,
+			gender: data.gender ? data.gender : "MALE",
+			password: data.password,
+		};
 
-				const res = await dispatch(registerAction(reqData));
-				if (!res.payload.error) {
-					setMessage("Berhasil membuat akun");
-					setVisibility(true);
-					setTimeout(() => {
-						navigation.navigate("Login");
-					}, 3000);
-				} else {
-					throw new Error(res.payload.message);
-				}
-			} catch (error) {
-				setIsError(true);
-				setMessage(error.message);
-				setVisibility(true);
-			}
+		const res = await dispatch(registerAction(reqData));
+		if (!res.error) {
+			setMessage("Berhasil membuat akun");
+			setIsError(false);
+			setVisibility(true);
+			setTimeout(() => {
+				navigation.navigate("Login");
+			}, 3000);
+		} else {
+			setMessage(res.payload.message);
+			setIsError(true);
+			setVisibility(true);
 		}
 	};
 
@@ -440,7 +438,11 @@ const Register = () => {
 						{!isLoading ? (
 							<Text style={styles.buttonText}>Daftar</Text>
 						) : (
-							<LottieAnimation width={40} height={40} animation={animations.threeDots} />
+							<LottieAnimation
+								width={40}
+								height={40}
+								animation={animations.threeDots}
+							/>
 						)}
 					</TouchableOpacity>
 					<Text style={styles.textWrapper}>
