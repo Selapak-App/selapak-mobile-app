@@ -26,11 +26,6 @@ const AppManager = () => {
 	const [index, setIndex] = useState(0);
 	const [routes] = useState([
 		{
-			key: "profile",
-			title: "Profile",
-			focusedIcon: "person",
-		},
-		{
 			key: "home",
 			title: "Home",
 			focusedIcon: "home",
@@ -40,6 +35,11 @@ const AppManager = () => {
 			key: "transaction",
 			title: "Transaction",
 			focusedIcon: "code-of-conduct",
+		},
+		{
+			key: "profile",
+			title: "Profile",
+			focusedIcon: "person",
 		},
 	]);
 	const theme = useTheme();

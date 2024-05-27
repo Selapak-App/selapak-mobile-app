@@ -17,6 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getLandAction, selectedLand } from "../../app/feature/land/landSlice";
 import Tag from "../reusables/Tag";
 import Header from "../reusables/Header";
+import { getAllTransactionAction } from "../../app/feature/transaction/transactionSlice";
 
 const refactorDesc = (lands) => {
 	return lands.map((item) => ({
@@ -29,22 +30,24 @@ const Home = ({ onTabChange }) => {
 	const theme = useTheme();
 	const insets = useSafeAreaInsets();
 	const navigation = useNavigation();
-	const { lands } = useSelector((state) => state.land);
+	const { lands, isLoading } = useSelector((state) => state.land);
 	const dispatch = useDispatch();
 	const [isRefreshing, setIsrefreshing] = useState(false);
 
 	useEffect(() => {
-		refresh();
+		dispatch(getLandAction());
+		dispatch(getAllTransactionAction());
 	}, [dispatch]);
 
 	const refresh = async () => {
 		await dispatch(getLandAction());
+		dispatch(getAllTransactionAction());
 	};
 
 	const openDetail = async (data) => {
 		dispatch(selectedLand(data));
 		navigation.navigate("LandDetail");
-	}
+	};
 
 	const styles = StyleSheet.create({
 		wrapper: {
@@ -180,7 +183,10 @@ const Home = ({ onTabChange }) => {
 				onPress={() => openDetail(item)}
 				style={styles.landCardContainer}
 			>
-				<Image source={{ uri: item.landPhotos[0].imageURL }} style={styles.landImage} />
+				<Image
+					source={{ uri: item.landPhotos[0].imageURL }}
+					style={styles.landImage}
+				/>
 				<View style={styles.cardContent}>
 					<Text style={styles.landCardTitle}>{item.district}</Text>
 					<View style={styles.landCardBottom}>
@@ -200,9 +206,13 @@ const Home = ({ onTabChange }) => {
 		return (
 			<View>
 				<View style={styles.head}>
-					<Header header="Selamat Datang" tagline="Dapatkan pengalaman baik di setiap langkah" textColor="white" />
+					<Header
+						header="Selamat Datang"
+						tagline="Dapatkan pengalaman baik di setiap langkah"
+						textColor="white"
+					/>
 				</View>
-				
+
 				<FlatList
 					data={[
 						{
@@ -286,15 +296,15 @@ const Home = ({ onTabChange }) => {
 									</Text>
 								</View>
 							</View>
-							{lands.length === 0 ? (
+							{isLoading ? (
+								<Text>Loading ...</Text>
+							) : !lands || lands.length === 0 ? (
 								<Text>No Data</Text>
 							) : (
 								<FlatList
 									data={
 										lands.length > 5
-											? refactorDesc(
-													lands.slice(0, 5)
-											  )
+											? refactorDesc(lands.slice(0, 5))
 											: refactorDesc(lands)
 									}
 									// data={dummyData}

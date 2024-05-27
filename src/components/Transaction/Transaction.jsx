@@ -105,7 +105,7 @@ const DoneComp = () => {
 					}}
 				>
 					<View style={styles.cardContent}>
-						{/* <Surface
+						<Surface
 							style={{
 								width: 100,
 								height: 100,
@@ -113,10 +113,10 @@ const DoneComp = () => {
 							}}
 						>
 							<Image
-								source={{ uri: item.imageURL }}
+								source={{ uri: item.landPrice.land.landPhotos[0].imageURL }}
 								style={styles.cardCover}
 							/>
-						</Surface> */}
+						</Surface>
 						<View style={styles.cardContainer}>
 							<Text style={styles.cardTitle}>
 								{item.business.businessName}
@@ -141,9 +141,7 @@ const DoneComp = () => {
 				flex: 1,
 			}}
 		>
-			{isLoading ? (
-				<Text>LOADING ...</Text>
-			) : doneTrx.length === 0 ? (
+			{doneTrx.length === 0 ? (
 				<Text>No Data</Text>
 			) : (
 				<FlatList
@@ -167,6 +165,7 @@ const OnProcessComp = () => {
 
 	useEffect(() => {
 		dispatch(getAllTransactionAction());
+		console.log("ON PROGRESS", onProgressTrx);
 	}, [dispatch]);
 
 	const CardComponent = ({ item }) => {
@@ -242,7 +241,7 @@ const OnProcessComp = () => {
 					}}
 				>
 					<View style={styles.cardContent}>
-						{/* <Surface
+						<Surface
 							style={{
 								width: 100,
 								height: 100,
@@ -250,10 +249,10 @@ const OnProcessComp = () => {
 							}}
 						>
 							<Image
-								source={{ uri: item.imageURL }}
+								source={{ uri: item.landPrice.land.landPhotos[0].imageURL }}
 								style={styles.cardCover}
 							/>
-						</Surface> */}
+						</Surface> 
 						<View style={styles.cardContainer}>
 							<Text style={styles.cardTitle}>
 								{item.business.businessName}
@@ -278,9 +277,12 @@ const OnProcessComp = () => {
 				flex: 1,
 			}}
 		>
-			{isLoading ? (
+			{/* {isLoading ? (
 				<Text>LOADING ...</Text>
-			) : onProgressTrx.length === 0 ? (
+			) :  */}
+
+
+			{onProgressTrx.length === 0 ? (
 				<Text>No Data</Text>
 			) : (
 				<FlatList
@@ -298,11 +300,11 @@ const OnProcessComp = () => {
 const Transaction = () => {
 	const theme = useTheme();
 	const insets = useSafeAreaInsets();
-	const dispatch = useDispatch();
+	// const dispatch = useDispatch();
 
-	useEffect(() => {
-		dispatch(getAllTransactionAction());
-	}, [dispatch]);
+	// useEffect(() => {
+	// 	dispatch(getAllTransactionAction());
+	// }, [dispatch]);
 
 	const styles = StyleSheet.create({
 		container: {

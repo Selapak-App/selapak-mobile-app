@@ -113,13 +113,19 @@ const TransactionDetail = () => {
 				<HeaderWithContent header="Transaksi">
 					<View style={styles.contentWrapper}>
 						<TitleContentItem head="Luas Lapak">
-							<Text style={styles.text}>{transaction.landPrice.land.slotArea + " m2"}</Text>
+							<Text style={styles.text}>
+								{transaction.landPrice.land.slotArea + " m2"}
+							</Text>
 						</TitleContentItem>
 						<TitleContentItem head="Qty">
-							<Text style={styles.text}>{transaction.quantity + " Petak"}</Text>
+							<Text style={styles.text}>
+								{transaction.quantity + " Petak"}
+							</Text>
 						</TitleContentItem>
 						<TitleContentItem head="Periode Sewa">
-							<Text style={styles.text}>{transaction.rentPeriod.period + " Bulan"}</Text>
+							<Text style={styles.text}>
+								{transaction.rentPeriod.period + " Bulan"}
+							</Text>
 						</TitleContentItem>
 						<TitleContentItem head="Alamat Lapak">
 							<Text style={styles.text}>
@@ -128,14 +134,19 @@ const TransactionDetail = () => {
 						</TitleContentItem>
 						<TitleContentItem head="Status">
 							<View style={styles.tagWrapper}>
-								<Tag text={transaction.showStatus} textSize={14} />
+								<Tag
+									text={transaction.showStatus}
+									textSize={14}
+								/>
 							</View>
 						</TitleContentItem>
 						<TitleContentItem head="Total">
-							<Text style={styles.textBold}>Rp.{" "}
-							{new Intl.NumberFormat("ID").format(
-								transaction.landPrice.price
-							)}</Text>
+							<Text style={styles.textBold}>
+								Rp.{" "}
+								{new Intl.NumberFormat("ID").format(
+									transaction.totalPayment
+								)}
+							</Text>
 						</TitleContentItem>
 					</View>
 				</HeaderWithContent>
@@ -149,8 +160,24 @@ const TransactionDetail = () => {
 								left={(props) => (
 									<List.Icon
 										{...props}
-										icon="checkbox-marked-circle"
-										color={theme.colors.secondary}
+										icon={
+											transaction.verifyStatus ===
+											"APPROVED"
+												? "checkbox-marked-circle"
+												: transaction.verifyStatus ===
+												  "REJECTED"
+												? "close-circle"
+												: "checkbox-blank-circle-outline"
+										}
+										color={
+											transaction.verifyStatus ===
+											"APPROVED"
+												? theme.colors.secondary
+												: transaction.verifyStatus ===
+												  "REJECTED"
+												? theme.colors.error
+												: theme.colors.dark
+										}
 									/>
 								)}
 								titleStyle={{ fontFamily: "PoppinsMedium" }}
@@ -167,8 +194,16 @@ const TransactionDetail = () => {
 								left={(props) => (
 									<List.Icon
 										{...props}
-										icon="close-circle"
-										color={theme.colors.error}
+										icon={
+											transaction.isSurveyed
+												? "checkbox-marked-circle"
+												: "checkbox-blank-circle-outline"
+										}
+										color={
+											transaction.isSurveyed
+												? theme.colors.secondary
+												: theme.colors.dark
+										}
 									/>
 								)}
 								titleStyle={{ fontFamily: "PoppinsMedium" }}
@@ -186,7 +221,9 @@ const TransactionDetail = () => {
 											backgroundColor:
 												theme.colors.secondary,
 										}}
-										disabled={transaction.showStatus==="VERIFY"}
+										disabled={
+											transaction.showStatus === "VERIFY"
+										}
 										onPress={() =>
 											Linking.openURL(
 												`https://wa.me/${variables.ADMIN_PHONE}?text=%F0%9F%91%8B%20Halo%2C%20Admin%20Selapak.%20Saya%20ingin%20menjadwalkan%20survey%20lapak.`
@@ -203,8 +240,24 @@ const TransactionDetail = () => {
 								left={(props) => (
 									<List.Icon
 										{...props}
-										icon="checkbox-blank-circle"
-										color={theme.colors.primary}
+										icon={
+											transaction.surveyStatus ===
+											"ACCEPTED"
+												? "checkbox-marked-circle"
+												: transaction.surveyStatus ===
+												  "DECLINED"
+												? "close-circle"
+												: "checkbox-blank-circle-outline"
+										}
+										color={
+											transaction.surveyStatus ===
+											"ACCEPTED"
+												? theme.colors.secondary
+												: transaction.surveyStatus ===
+												  "DECLINED"
+												? theme.colors.error
+												: theme.colors.dark
+										}
 									/>
 								)}
 								titleStyle={{ fontFamily: "PoppinsMedium" }}
@@ -236,8 +289,16 @@ const TransactionDetail = () => {
 								left={(props) => (
 									<List.Icon
 										{...props}
-										icon="checkbox-blank-circle-outline"
-										color={theme.colors.dark}
+										icon={
+											transaction.surveyStatus === "PAID"
+												? "checkbox-marked-circle"
+												: "checkbox-blank-circle-outline"
+										}
+										color={
+											transaction.surveyStatus === "PAID"
+												? theme.colors.secondary
+												: theme.colors.dark
+										}
 									/>
 								)}
 								titleStyle={{ fontFamily: "PoppinsMedium" }}

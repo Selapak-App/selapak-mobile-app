@@ -139,7 +139,7 @@ const Payment = () => {
 									<Text style={styles.textBold}>
 										Rp.{" "}
 										{new Intl.NumberFormat("ID").format(
-											transaction.landPrice.price
+											transaction.totalPayment
 										)}
 									</Text>
 								</TitleContentItem>

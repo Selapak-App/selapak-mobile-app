@@ -6,13 +6,20 @@ import {
 	TouchableOpacity,
 	Image,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Surface, useTheme } from "react-native-paper";
 import { StatusBar } from "expo-status-bar";
 import { useDispatch, useSelector } from "react-redux";
 import Tag from "../reusables/Tag";
+import {
+	getAllTransactionAction,
+	isOnProgressTrx,
+} from "../../app/feature/transaction/transactionSlice";
+import Popup from "../reusables/Popup";
+import LottieAnimation from "../reusables/LottieAnimation";
+import animations from "../../../assets/animations";
 
 const LandDetail = () => {
 	const route = useRoute();
@@ -20,6 +27,30 @@ const LandDetail = () => {
 	const theme = useTheme();
 	const navigation = useNavigation();
 	const { land } = useSelector((state) => state.land);
+	const dispatch = useDispatch();
+	const { transactions } = useSelector((state) => state.transaction);
+
+	// Popup
+	const [message, setMessage] = useState(null);
+	const [visibility, setVisibility] = useState(false);
+	const [isError, setIsError] = useState(false);
+	const { isLoading } = useSelector((state) => state.transaction);
+
+	useEffect(() => {
+		dispatch(getAllTransactionAction());
+	}, [dispatch]);
+
+	const handleSubmission = async () => {
+		const res = await dispatch(isOnProgressTrx(land.id));
+		if (!res.error) {
+			setIsError(false);
+			navigation.navigate("CreateTrxForm");
+		} else {
+			setIsError(true);
+			setMessage(res.payload.message);
+			setVisibility(true);
+		}
+	};
 
 	const styles = StyleSheet.create({
 		wrapper: {
@@ -106,14 +137,18 @@ const LandDetail = () => {
 			height: 1,
 		},
 		slotArea: {
-			marginStart: "auto"
+			marginStart: "auto",
 		},
 	});
 
 	const ImageComponent = ({ item }) => {
 		return (
 			<Surface
-				style={{ borderRadius: theme.roundness, marginVertical: 10, backgroundColor: "white" }}
+				style={{
+					borderRadius: theme.roundness,
+					marginVertical: 10,
+					backgroundColor: "white",
+				}}
 			>
 				<Image source={{ uri: item.imageURL }} style={styles.image} />
 			</Surface>
@@ -198,6 +233,15 @@ const LandDetail = () => {
 						</Text>
 					</View>
 				</View>
+
+				<Popup
+					message={message}
+					visibility={visibility}
+					setVisibility={setVisibility}
+					bgColor={
+						isError ? theme.colors.error : theme.colors.secondary
+					}
+				/>
 			</View>
 		);
 	};
@@ -211,10 +255,19 @@ const LandDetail = () => {
 				<Surface style={styles.buttonBg} elevation={3}>
 					<TouchableOpacity
 						activeOpacity={0.9}
-						style={styles.button}
-						onPress={() => navigation.navigate("CreateTrxForm")}
+						style={{...styles.button, padding: isLoading ? 11 : 15}}
+						onPress={handleSubmission}
 					>
-						<Text style={styles.buttonText}>Ajukan Sewa</Text>
+						{!isLoading ? (
+							<Text style={styles.buttonText}>Masuk</Text>
+						) : (
+							<LottieAnimation
+								width={40}
+								height={40}
+								animation={animations.threeDots}
+							/>
+						)}
+						{/* <Text style={styles.buttonText}>Ajukan Sewa</Text> */}
 					</TouchableOpacity>
 				</Surface>
 			</View>

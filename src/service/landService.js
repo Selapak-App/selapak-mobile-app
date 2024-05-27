@@ -3,16 +3,8 @@ import axiosInstance from "./axiosInstance";
 
 export const LandService = () => {
 	const getAll = async () => {
-		try {
-			const res = await axiosInstance.get("/lands");
-			if (res.status == 200) {
-				return res.data.data;
-			} else {
-				throw new Error("Unexpected response status: " + res.status);
-			}
-		} catch (e) {
-			throw e;
-		}
+		const res = await axiosInstance.get("/lands/available");
+		return res.data.data;
 	};
 
 	return { getAll };

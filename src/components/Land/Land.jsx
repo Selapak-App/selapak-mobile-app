@@ -22,7 +22,7 @@ const Land = () => {
 	const theme = useTheme();
 	const insets = useSafeAreaInsets();
 	const navigation = useNavigation();
-	const { lands } = useSelector((state) => state.land);
+	const { lands, isLoading } = useSelector((state) => state.land);
 	const dispatch = useDispatch();
 
 	useEffect(() => {
@@ -147,7 +147,7 @@ const Land = () => {
 						Sewa lahan sesuai kebutuhanmu dengan mudah
 					</Text>
 				</View> */}
-				{lands.length === 0 ? (
+				{isLoading ? (<Text>Loading...</Text>) : !lands || lands.length === 0 ? (
 					<Text>No Data</Text>
 				) : (
 					<FlatList

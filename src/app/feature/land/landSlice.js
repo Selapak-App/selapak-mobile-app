@@ -3,16 +3,17 @@ import { LandService } from "../../../service/landService";
 
 const { getAll } = LandService();
 
-export const getLandAction = createAsyncThunk("land/getAll", async () => {
+export const getLandAction = createAsyncThunk("land/getAll", async (payload, ThunkAPI) => {
 	try {
-		return await getAll();
+		const res = await getAll();
+		return res;
 	} catch (e) {
 		const invalid = e.message.includes("403");
 		const error = {
 			error: true,
 			message: invalid ? "Please re-login" : e.message,
 		};
-		return error;
+		return ThunkAPI.rejectWithValue(error);
 	}
 });
 
@@ -33,7 +34,8 @@ const landSlice = createSlice({
 			state.isLoading = true;
 		});
 		builder.addCase(getLandAction.fulfilled, (state, { payload }) => {
-			state.lands = payload.content;
+			state.lands = payload;
+			console.log("-----------------###", state.lands);
 			state.isLoading = false;
 		});
 		builder.addCase(getLandAction.rejected, (state) => {
