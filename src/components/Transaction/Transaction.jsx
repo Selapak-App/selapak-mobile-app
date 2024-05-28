@@ -28,19 +28,19 @@ const DoneComp = () => {
 	const dispatch = useDispatch();
 	const { doneTrx, isLoading } = useSelector((state) => state.transaction);
 
-	useEffect(() => {
-		dispatch(getAllTransactionAction());
-	}, [dispatch]);
+	// useEffect(() => {
+	// 	dispatch(getAllTransactionAction());
+	// }, [dispatch]);
 
 	const CardComponent = ({ item }) => {
 		const address = formatAddress(item.landPrice.land);
 		const color =
 			item.showStatus === "VERIFY"
 				? colors.accent
-				: item.status === "SURVEY"
-				? colors.primary
-				: item.status === "CONFIRMATION"
+				: item.showStatus === "SURVEY"
 				? colors.secondary
+				: item.showStatus === "CONFIRMATION"
+				? colors.primary
 				: colors.primaryDark;
 
 		const openDetail = () => {
@@ -93,10 +93,7 @@ const DoneComp = () => {
 		});
 
 		return (
-			<TouchableOpacity
-				onPress={openDetail}
-				activeOpacity={0.9}
-			>
+			<TouchableOpacity onPress={openDetail} activeOpacity={0.9}>
 				<Surface
 					style={{
 						...styles.card,
@@ -113,7 +110,10 @@ const DoneComp = () => {
 							}}
 						>
 							<Image
-								source={{ uri: item.landPrice.land.landPhotos[0].imageURL }}
+								source={{
+									uri: item.landPrice.land.landPhotos[0]
+										.imageURL,
+								}}
 								style={styles.cardCover}
 							/>
 						</Surface>
@@ -163,20 +163,20 @@ const OnProcessComp = () => {
 		(state) => state.transaction
 	);
 
-	useEffect(() => {
-		dispatch(getAllTransactionAction());
-		console.log("ON PROGRESS", onProgressTrx);
-	}, [dispatch]);
+	// useEffect(() => {
+	// 	dispatch(getAllTransactionAction());
+	// 	console.log("ON PROGRESS", onProgressTrx);
+	// }, [dispatch]);
 
 	const CardComponent = ({ item }) => {
 		const address = formatAddress(item.landPrice.land);
 		const color =
 			item.showStatus === "VERIFY"
 				? colors.accent
-				: item.status === "SURVEY"
-				? colors.primary
-				: item.status === "CONFIRMATION"
+				: item.showStatus === "SURVEY"
 				? colors.secondary
+				: item.showStatus === "CONFIRMATION"
+				? colors.primary
 				: colors.primaryDark;
 
 		const openDetail = () => {
@@ -229,10 +229,7 @@ const OnProcessComp = () => {
 		});
 
 		return (
-			<TouchableOpacity
-				onPress={openDetail}
-				activeOpacity={0.9}
-			>
+			<TouchableOpacity onPress={openDetail} activeOpacity={0.9}>
 				<Surface
 					style={{
 						...styles.card,
@@ -249,10 +246,13 @@ const OnProcessComp = () => {
 							}}
 						>
 							<Image
-								source={{ uri: item.landPrice.land.landPhotos[0].imageURL }}
+								source={{
+									uri: item.landPrice.land.landPhotos[0]
+										.imageURL,
+								}}
 								style={styles.cardCover}
 							/>
-						</Surface> 
+						</Surface>
 						<View style={styles.cardContainer}>
 							<Text style={styles.cardTitle}>
 								{item.business.businessName}
@@ -281,7 +281,6 @@ const OnProcessComp = () => {
 				<Text>LOADING ...</Text>
 			) :  */}
 
-
 			{onProgressTrx.length === 0 ? (
 				<Text>No Data</Text>
 			) : (
@@ -300,11 +299,11 @@ const OnProcessComp = () => {
 const Transaction = () => {
 	const theme = useTheme();
 	const insets = useSafeAreaInsets();
-	// const dispatch = useDispatch();
+	const dispatch = useDispatch();
 
-	// useEffect(() => {
-	// 	dispatch(getAllTransactionAction());
-	// }, [dispatch]);
+	useEffect(() => {
+		dispatch(getAllTransactionAction());
+	}, [dispatch]);
 
 	const styles = StyleSheet.create({
 		container: {

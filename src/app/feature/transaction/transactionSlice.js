@@ -4,7 +4,7 @@ import separateTrxByStatus, {
 	refactorTrx,
 } from "../../../utils/transactions/separateTrxByStatus";
 
-const { create, getAll } = transactionService();
+const { create, getAll, acceptDealing, declineDealing } = transactionService();
 
 export const createTransactionAction = createAsyncThunk(
 	"transaction/create",
@@ -46,10 +46,8 @@ export const isOnProgressTrx = createAsyncThunk(
 			await ThunkAPI.dispatch(getAllTransactionAction());
 			const state = ThunkAPI.getState();
 			const { transactions } = state.transaction;
-			// console.log("PAYLOADDDD: ", payload);
 
 			transactions.map((trx) => {
-				// console.log(trx.landPrice.land.id);
 				if (trx.landPrice.land.id === payload) {
 					const { isDone, showStatus } = refactorTrx(trx);
 					const res = {
@@ -60,13 +58,17 @@ export const isOnProgressTrx = createAsyncThunk(
 						res.statusCode = 401;
 
 						if (showStatus === "VERIFY") {
-							res.message = "masih verify";
+							res.message =
+								"Proses pengajuan anda masih dalam tahap verifikasi";
 						} else if (showStatus === "SURVEY") {
-							res.message = "masih survey";
+							res.message =
+								"Proses pengajuan anda masih dalam tahap survey";
 						} else if (showStatus === "CONFIRMATION") {
-							res.message = "masih confirmation";
+							res.message =
+								"Silahkan konfirmasi transaksi ini di halaman transaksi";
 						} else {
-							res.message = "masih payment";
+							res.message =
+								"Silahkan selesaikan proses pembayaran transaksi ini di halaman transaksi";
 						}
 
 						throw new Error(res.message);
@@ -78,6 +80,38 @@ export const isOnProgressTrx = createAsyncThunk(
 		} catch (e) {
 			const res = {
 				statusCode: 401,
+				message: e.message,
+			};
+			return ThunkAPI.rejectWithValue(res);
+		}
+	}
+);
+
+export const acceptDealingAction = createAsyncThunk(
+	"transaction/acceptDealing",
+	async (payload, ThunkAPI) => {
+		try {
+			const res = await acceptDealing(payload);
+			return res;
+		} catch (e) {
+			const res = {
+				statusCode: 400,
+				message: e.message,
+			};
+			return ThunkAPI.rejectWithValue(res);
+		}
+	}
+);
+
+export const declineDealingAction = createAsyncThunk(
+	"transaction/declineDealing",
+	async (payload, ThunkAPI) => {
+		try {
+			const res = await declineDealing(payload);
+			return res;
+		} catch (e) {
+			const res = {
+				statusCode: 400,
 				message: e.message,
 			};
 			return ThunkAPI.rejectWithValue(res);
@@ -107,6 +141,26 @@ const transactionSlice = createSlice({
 			state.isLoading = false;
 		});
 		builder.addCase(createTransactionAction.rejected, (state) => {
+			state.isLoading = false;
+		});
+
+		builder.addCase(acceptDealingAction.pending, (state) => {
+			state.isLoading = true;
+		});
+		builder.addCase(acceptDealingAction.fulfilled, (state) => {
+			state.isLoading = false;
+		});
+		builder.addCase(acceptDealingAction.rejected, (state) => {
+			state.isLoading = false;
+		});
+
+		builder.addCase(declineDealingAction.pending, (state) => {
+			state.isLoading = true;
+		});
+		builder.addCase(declineDealingAction.fulfilled, (state) => {
+			state.isLoading = false;
+		});
+		builder.addCase(declineDealingAction.rejected, (state) => {
 			state.isLoading = false;
 		});
 

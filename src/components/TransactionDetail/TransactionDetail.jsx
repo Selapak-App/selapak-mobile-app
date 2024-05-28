@@ -222,7 +222,7 @@ const TransactionDetail = () => {
 												theme.colors.secondary,
 										}}
 										disabled={
-											transaction.showStatus === "VERIFY"
+											!(!transaction.isSurveyed && transaction.verifyStatus === "APPROVED")
 										}
 										onPress={() =>
 											Linking.openURL(
@@ -278,6 +278,9 @@ const TransactionDetail = () => {
 										onPress={() =>
 											navigation.navigate("Dealing")
 										}
+										disabled={
+											!(transaction.surveyStatus === "PENDING" && transaction.isSurveyed )
+										}
 									>
 										Konfirmasi Keputusan
 									</Button>
@@ -318,6 +321,9 @@ const TransactionDetail = () => {
 										}}
 										onPress={() =>
 											navigation.navigate("Payment")
+										}
+										disabled={
+											!(transaction.paymentStatus === "UNPAID" && transaction.surveyStatus === "ACCEPTED")
 										}
 									>
 										Petunjuk Pembayaran

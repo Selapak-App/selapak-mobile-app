@@ -9,24 +9,66 @@ import {
 	FlatList,
 } from "react-native";
 import React, { useState } from "react";
-import { Checkbox, useTheme } from "react-native-paper";
+import { Checkbox, Surface, useTheme } from "react-native-paper";
 import { StatusBar } from "expo-status-bar";
 import images from "../../../assets/images";
 import HeaderWithContent from "../reusables/HeaderWithContent";
 import TitleContentItem from "../reusables/TitleContentItem/TitleContentItem";
 import Tag from "../reusables/Tag";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import formatAddress from "../../utils/lands/formatAddress";
+import {
+	acceptDealingAction,
+	declineDealingAction,
+} from "../../app/feature/transaction/transactionSlice";
+import LottieAnimation from "../reusables/LottieAnimation";
+import animations from "../../../assets/animations";
+import Popup from "../reusables/Popup";
+import { useNavigation } from "@react-navigation/native";
 
 const Survey = () => {
 	const theme = useTheme();
 	const { height, width } = Dimensions.get("screen");
 	const [checked, setChecked] = useState(false);
 	const insets = useSafeAreaInsets();
-	const {transaction} = useSelector(state => state.transaction);
-	
+	const [isError, setIsError] = useState(false);
+	const [message, setMessage] = useState(null);
+	const [visibility, setVisibility] = useState(false);
+	const navigation = useNavigation();
+
+	const { transaction, isLoading } = useSelector(
+		(state) => state.transaction
+	);
+	const dispatch = useDispatch();
+
 	const handleCheck = () => setChecked(!checked);
+
+	const handleAccept = async () => {
+		const res = await dispatch(acceptDealingAction(transaction.id));
+		if (!res.error) {
+			setIsError(false);
+			setVisibility(true);
+			navigation.navigate("App");
+		} else {
+			setMessage(res.payload.message);
+			setIsError(true);
+			setVisibility(true);
+		}
+	};
+
+	const handleDecline = async () => {
+		const res = await dispatch(declineDealingAction(transaction.id));
+		if (!res.error) {
+			setIsError(false);
+			setVisibility(true);
+			navigation.navigate("App");
+		} else {
+			setMessage(res.payload.message);
+			setIsError(true);
+			setVisibility(true);
+		}
+	};
 
 	const styles = StyleSheet.create({
 		page: {
@@ -100,25 +142,33 @@ const Survey = () => {
 									</Text>
 								</TitleContentItem>
 								<TitleContentItem head="Luas Lapak">
-									<Text style={styles.text}>{transaction.landPrice.land.slotArea} m2</Text>
+									<Text style={styles.text}>
+										{transaction.landPrice.land.slotArea} m2
+									</Text>
 								</TitleContentItem>
 								<TitleContentItem head="Qty">
-									<Text style={styles.text}>{transaction.quantity} Petak</Text>
+									<Text style={styles.text}>
+										{transaction.quantity} Petak
+									</Text>
 								</TitleContentItem>
 								<TitleContentItem head="Periode Sewa">
-									<Text style={styles.text}>{transaction.rentPeriod.period} Bulan</Text>
+									<Text style={styles.text}>
+										{transaction.rentPeriod.period} Bulan
+									</Text>
 								</TitleContentItem>
 								<TitleContentItem head="Alamat Lapak">
 									<Text style={styles.text}>
-										{formatAddress(transaction.landPrice.land)}
+										{formatAddress(
+											transaction.landPrice.land
+										)}
 									</Text>
 								</TitleContentItem>
 								<TitleContentItem head="Total">
 									<Text style={styles.textBold}>
-									Rp.{" "}
-							{new Intl.NumberFormat("ID").format(
-								transaction.totalPayment
-							)}
+										Rp.{" "}
+										{new Intl.NumberFormat("ID").format(
+											transaction.totalPayment
+										)}
 									</Text>
 								</TitleContentItem>
 							</View>
@@ -143,37 +193,68 @@ const Survey = () => {
 						</Text>
 					</View>
 					<View
-						style={{ flexDirection: "row", gap: 10, marginTop: 20 }}
+						style={{
+							flexDirection: "row",
+							gap: 10,
+							marginTop: 20,
+							justifyContent: "center",
+						}}
 					>
-						<View style={{ flex: 1 }}>
-							<TouchableOpacity
-								activeOpacity={0.9}
-								style={{
-									...styles.button,
-									backgroundColor: "white",
-									borderColor: theme.colors.error,
-								}}
-							>
-								<Text
-									style={{
-										...styles.buttonText,
-										color: theme.colors.error,
-									}}
-								>
-									Tolak
-								</Text>
-							</TouchableOpacity>
-						</View>
-						<View style={{ flex: 1 }}>
-							<TouchableOpacity
-								activeOpacity={0.9}
-								style={styles.button}
-								disabled={!checked}
-							>
-								<Text style={styles.buttonText}>Terima</Text>
-							</TouchableOpacity>
-						</View>
+						{isLoading ? (
+							<Surface style={{...styles.button, flex: 1, alignItems: "center", backgroundColor: theme.colors.primary, borderColor: theme.colors.primary}}>
+								<LottieAnimation
+									width={40}
+									height={40}
+									animation={animations.threeDots}
+								/>
+							</Surface>
+						) : (
+							<>
+								<View style={{ flex: 1 }}>
+									<TouchableOpacity
+										onPress={handleDecline}
+										activeOpacity={0.9}
+										style={{
+											...styles.button,
+											backgroundColor: "white",
+											borderColor: theme.colors.error,
+										}}
+									>
+										<Text
+											style={{
+												...styles.buttonText,
+												color: theme.colors.error,
+											}}
+										>
+											Tolak
+										</Text>
+									</TouchableOpacity>
+								</View>
+								<View style={{ flex: 1 }}>
+									<TouchableOpacity
+										onPress={handleAccept}
+										activeOpacity={0.9}
+										style={styles.button}
+										disabled={!checked}
+									>
+										<Text style={styles.buttonText}>
+											Terima
+										</Text>
+									</TouchableOpacity>
+								</View>
+							</>
+						)}
 					</View>
+					<Popup
+						message={message}
+						visibility={visibility}
+						setVisibility={setVisibility}
+						bgColor={
+							isError
+								? theme.colors.error
+								: theme.colors.secondary
+						}
+					/>
 				</ScrollView>
 			</>
 		);

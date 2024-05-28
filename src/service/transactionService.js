@@ -8,10 +8,20 @@ export const transactionService = () => {
 	};
 
 	const getAll = async () => {
-        const id = await AsyncStorage.getItem("id");
+		const id = await AsyncStorage.getItem("id");
 		const res = await axiosInstance.get(`/transactions/customer/${id}`);
 		return res.data.data;
 	};
 
-	return { create, getAll };
+	const acceptDealing = async (payload) => {
+		const res = await axiosInstance.put(`/transactions/accept/${payload}`);
+		return res.data.data;
+	};
+
+	const declineDealing = async (payload) => {
+		const res = await axiosInstance.put(`/transactions/decline/${payload}`);
+		return res.data.data;
+	};
+
+	return { create, getAll, acceptDealing, declineDealing };
 };
