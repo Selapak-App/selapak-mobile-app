@@ -15,6 +15,9 @@ import Header from "../../reusables/Header";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { AntDesign, Feather } from "@expo/vector-icons";
+import { useDispatch, useSelector } from "react-redux";
+import { updatePasswordAction } from "../../../app/feature/auth/authSlice";
+import Popup from "../../reusables/Popup";
 
 const schema = yup
 	.object({
@@ -24,7 +27,10 @@ const schema = yup
 			.required("Password tidak boleh kosong"),
 		confirmNewPassword: yup
 			.string()
-			.oneOf([yup.ref("newPassword"), null], "Konfirmasi Password tidak cocok")
+			.oneOf(
+				[yup.ref("newPassword"), null],
+				"Konfirmasi Password tidak cocok"
+			)
 			.required("Konfirmasi Password tidak boleh kosong"),
 	})
 	.required();
@@ -33,8 +39,12 @@ const UpdatePassword = () => {
 	const theme = useTheme();
 	const navigation = useNavigation();
 	const insets = useSafeAreaInsets();
-    const [showPassword, setShowPassword] = useState(false);
-    const [showConfPassword, setShowConfPassword] = useState(false);
+	const [showPassword, setShowPassword] = useState(false);
+	const [showConfPassword, setShowConfPassword] = useState(false);
+	const dispatch = useDispatch();
+	const { isLoading } = useSelector((state) => state.auth);
+	const [message, setMessage] = useState("");
+	const [visibility, setVisibility] = useState(false);
 
 	const { height, width } = Dimensions.get("window");
 
@@ -46,45 +56,20 @@ const UpdatePassword = () => {
 	} = useForm({
 		defaultValues: {
 			newPassword: "",
-            confirmNewPassword: "",
+			confirmNewPassword: "",
 		},
 		resolver: yupResolver(schema),
 	});
 
 	const onSubmit = async () => {
-		if (
-			!errors.fullName &&
-			!errors.phoneNumber &&
-			!errors.address &&
-			!errors.gender &&
-			!errors.nik
-		) {
-			const data = getValues();
-			console.log(data);
-			// try {
-			// 	const data = getValues();
-			// 	const reqData = {
-			// 		fullName: data.name,
-			// 		email: data.email,
-			// 		gender: data.gender ? data.gender : "MALE",
-			// 		password: data.password,
-			// 	};
+		const data = getValues();
 
-			// 	const res = await dispatch(registerAction(reqData));
-			// 	if (!res.payload.error) {
-			// 		setMessage("Berhasil membuat akun");
-			// 		setVisibility(true);
-			// 		setTimeout(() => {
-			// 			navigation.navigate("Login");
-			// 		}, 3000);
-			// 	} else {
-			// 		throw new Error(res.payload.message);
-			// 	}
-			// } catch (error) {
-			// 	setIsError(true);
-			// 	setMessage(error.message);
-			// 	setVisibility(true);
-			// }
+		const res = await dispatch(updatePasswordAction(data));
+		if (!res.error) {
+			navigation.navigate("App");
+		} else {
+			setMessage(res.payload.message);
+			setVisibility(true);
 		}
 	};
 
@@ -171,107 +156,115 @@ const UpdatePassword = () => {
 				</View>
 				<View style={styles.main}>
 					<View style={styles.form}>
-                    <View>
-						<View
-							style={{
-								justifyContent: "center",
-							}}
-						>
-							<Controller
-								control={control}
-								rules={{
-									required: true,
+						<View>
+							<View
+								style={{
+									justifyContent: "center",
 								}}
-								render={({
-									field: { onChange, onBlur, value },
-								}) => (
-									<TextInput
-										label="Password Baru"
-										mode="outlined"
-										outlineColor={theme.colors.secondary}
-										left="#000"
-										secureTextEntry={!showPassword}
-										onBlur={onBlur}
-										onChangeText={(event) =>
-											onChange(event)
-										}
-										value={value}
-										error={errors.newPassword}
-									/>
-								)}
-								name="newPassword"
-							/>
-
-							<TouchableOpacity
-								activeOpacity={0.9}
-								onPress={() => setShowPassword(!showPassword)}
-								style={styles.showPassword}
 							>
-								<Feather
-									name={showPassword ? "eye-off" : "eye"}
-									size={24}
-									color={theme.colors.dark}
+								<Controller
+									control={control}
+									rules={{
+										required: true,
+									}}
+									render={({
+										field: { onChange, onBlur, value },
+									}) => (
+										<TextInput
+											label="Password Baru"
+											mode="outlined"
+											outlineColor={
+												theme.colors.secondary
+											}
+											left="#000"
+											secureTextEntry={!showPassword}
+											onBlur={onBlur}
+											onChangeText={(event) =>
+												onChange(event)
+											}
+											value={value}
+											error={errors.newPassword}
+										/>
+									)}
+									name="newPassword"
 								/>
-							</TouchableOpacity>
+
+								<TouchableOpacity
+									activeOpacity={0.9}
+									onPress={() =>
+										setShowPassword(!showPassword)
+									}
+									style={styles.showPassword}
+								>
+									<Feather
+										name={showPassword ? "eye-off" : "eye"}
+										size={24}
+										color={theme.colors.dark}
+									/>
+								</TouchableOpacity>
+							</View>
+							{errors.newPassword && (
+								<Text style={styles.textError}>
+									* {errors.newPassword.message}
+								</Text>
+							)}
 						</View>
-						{errors.newPassword && (
-							<Text style={styles.textError}>
-								* {errors.newPassword.message}
-							</Text>
-						)}
-					</View>
-					<View>
-						<View
-							style={{
-								justifyContent: "center",
-							}}
-						>
-							<Controller
-								control={control}
-								rules={{
-									required: true,
+						<View>
+							<View
+								style={{
+									justifyContent: "center",
 								}}
-								render={({
-									field,
-									field: { onChange, onBlur, value },
-								}) => (
-									<TextInput
-										label="Konfirmasi Password Baru"
-										mode="outlined"
-										outlineColor={theme.colors.secondary}
-										left="#000"
-										secureTextEntry={!showConfPassword}
-										onBlur={onBlur}
-										onChangeText={(event) =>
-											onChange(event)
-										}
-										value={value}
-										error={errors.confirmNewPassword}
-									/>
-								)}
-								name="confirmNewPassword"
-							/>
-
-							<TouchableOpacity
-								activeOpacity={0.9}
-								onPress={() =>
-									setShowConfPassword(!showConfPassword)
-								}
-								style={styles.showPassword}
 							>
-								<Feather
-									name={showConfPassword ? "eye-off" : "eye"}
-									size={24}
-									color={theme.colors.dark}
+								<Controller
+									control={control}
+									rules={{
+										required: true,
+									}}
+									render={({
+										field,
+										field: { onChange, onBlur, value },
+									}) => (
+										<TextInput
+											label="Konfirmasi Password Baru"
+											mode="outlined"
+											outlineColor={
+												theme.colors.secondary
+											}
+											left="#000"
+											secureTextEntry={!showConfPassword}
+											onBlur={onBlur}
+											onChangeText={(event) =>
+												onChange(event)
+											}
+											value={value}
+											error={errors.confirmNewPassword}
+										/>
+									)}
+									name="confirmNewPassword"
 								/>
-							</TouchableOpacity>
+
+								<TouchableOpacity
+									activeOpacity={0.9}
+									onPress={() =>
+										setShowConfPassword(!showConfPassword)
+									}
+									style={styles.showPassword}
+								>
+									<Feather
+										name={
+											showConfPassword ? "eye-off" : "eye"
+										}
+										size={24}
+										color={theme.colors.dark}
+									/>
+								</TouchableOpacity>
+							</View>
+							{errors.confirmNewPassword && (
+								<Text style={styles.textError}>
+									* {errors.confirmNewPassword.message}
+								</Text>
+							)}
 						</View>
-						{errors.confirmNewPassword && (
-							<Text style={styles.textError}>
-								* {errors.confirmNewPassword.message}
-							</Text>
-						)}
-					</View>
 					</View>
 
 					<View style={styles.buttonWraper}>
@@ -307,12 +300,20 @@ const UpdatePassword = () => {
 	};
 
 	return (
-		<FlatList
-			data={[{}]}
-			renderItem={LayoutComponent}
-			style={styles.page}
-			contentContainerStyle={styles.scrollView}
-		/>
+		<>
+			<FlatList
+				data={[{}]}
+				renderItem={LayoutComponent}
+				style={styles.page}
+				contentContainerStyle={styles.scrollView}
+			/>
+			<Popup
+				bgColor={theme.colors.error}
+				message={message}
+				setVisibility={setVisibility}
+				visibility={visibility}
+			/>
+		</>
 	);
 };
 

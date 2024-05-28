@@ -1,4 +1,4 @@
 const ADMIN_PHONE = "6287857065429";
-const BASE_API = "https://1c76-180-248-39-106.ngrok-free.app/api";
+const BASE_API = "https://e5ae-118-99-126-251.ngrok-free.app/api";
 
 export default { ADMIN_PHONE, BASE_API };

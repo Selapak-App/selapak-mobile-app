@@ -1,10 +1,10 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList, Dimensions } from "react-native";
 import React, { useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { TextInput, useTheme } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import images from "../../../assets/images";
-import { Feather } from "@expo/vector-icons";
+import { Octicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -53,6 +53,8 @@ const Login = () => {
 	const [errorVisibility, setErrorVisibility] = useState(false);
 	const [errorMessage, setErrorMessage] = useState("Network Error");
 
+	const {height, width} = Dimensions.get("window");
+
 	const onSubmit = async () => {
 		if (!errors.email && !errors.password) {
 			const data = getValues();
@@ -87,11 +89,12 @@ const Login = () => {
 		page: {
 			backgroundColor: theme.colors.primary,
 			flex: 1,
-			paddingTop: insets.top + 20,
 			justifyContent: "flex-end",
 		},
 		wrapper: {
-			flex: 0.8,
+			marginTop: insets.top + height * 0.2,
+			minHeight: height * 0.8,
+			flex: 1,
 			backgroundColor: "white",
 			paddingBottom: insets.bottom + 20,
 			paddingHorizontal: 20,
@@ -152,9 +155,8 @@ const Login = () => {
 		textToRegister: { fontFamily: "PoppinsSemiBold" },
 	});
 
-	return (
-		<View style={styles.page}>
-			<StatusBar style="dark" />
+	const LayoutComponent = () => {
+		return (
 			<View style={styles.wrapper}>
 				<View style={styles.thumbnail}>
 					<Image source={images.icon} style={styles.imgThumbnail} />
@@ -224,8 +226,8 @@ const Login = () => {
 							onPress={() => setShowPassword(!showPassword)}
 							style={styles.showPassword}
 						>
-							<Feather
-								name={showPassword ? "eye-off" : "eye"}
+							<Octicons
+								name={showPassword ? "eye-closed" : "eye"}
 								size={24}
 								color={theme.colors.dark}
 							/>
@@ -276,6 +278,19 @@ const Login = () => {
 					</Text>
 				</View>
 			</View>
+		)
+	}
+
+	return (
+		<View style={styles.page}>
+			<StatusBar style="dark" />
+			<FlatList
+				data={[{}]}
+				renderItem={LayoutComponent}
+				contentContainerStyle={{ flexGrow: 1 }}
+				style={{ flex: 1 }}
+				showsVerticalScrollIndicator={false}
+			/>
 			<Popup
 				message={errorMessage}
 				visibility={errorVisibility}

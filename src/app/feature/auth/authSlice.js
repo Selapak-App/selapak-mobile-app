@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { AuthService } from "../../../service/authService";
 
-const { login, register } = AuthService();
+const { login, register, updatePassword } = AuthService();
 
 export const loginAction = createAsyncThunk(
 	"auth/login",
@@ -35,6 +35,24 @@ export const registerAction = createAsyncThunk(
 	}
 );
 
+export const updatePasswordAction = createAsyncThunk(
+	"auth/updatePassword",
+	async (payload, ThunkAPI) => {
+		try {
+			console.log("FROM SLICE: ", payload);
+			const res = await updatePassword(payload);
+			return res;
+		} catch (e) {
+			console.log(e)
+			res = {
+				statusCode: 404,
+				message: e.message,
+			};
+			return ThunkAPI.rejectWithValue(res);
+		}
+	}
+);
+
 const authSlice = createSlice({
 	name: "auth",
 	initialState: {
@@ -57,6 +75,15 @@ const authSlice = createSlice({
 			state.isLoading = false;
 		});
 		builder.addCase(registerAction.rejected, (state) => {
+			state.isLoading = false;
+		});
+		builder.addCase(updatePasswordAction.pending, (state) => {
+			state.isLoading = true;
+		});
+		builder.addCase(updatePasswordAction.fulfilled, (state, { payload }) => {
+			state.isLoading = false;
+		});
+		builder.addCase(updatePasswordAction.rejected, (state) => {
 			state.isLoading = false;
 		});
 	},

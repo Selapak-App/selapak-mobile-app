@@ -474,6 +474,7 @@ const Register = () => {
 				data={[{}]}
 				renderItem={LayoutComponent}
 				contentContainerStyle={{ flexGrow: 1 }}
+				showsVerticalScrollIndicator={false}
 				style={{ flex: 1 }}
 			/>
 		</View>

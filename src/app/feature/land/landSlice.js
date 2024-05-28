@@ -35,7 +35,6 @@ const landSlice = createSlice({
 		});
 		builder.addCase(getLandAction.fulfilled, (state, { payload }) => {
 			state.lands = payload;
-			// console.log("-----------------###", state.lands);
 			state.isLoading = false;
 		});
 		builder.addCase(getLandAction.rejected, (state) => {
