@@ -8,7 +8,7 @@ import {
 	Dimensions,
 	TouchableOpacity,
 } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { Button, List, Surface, useTheme } from "react-native-paper";
 import Header from "../reusables/Header";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -20,12 +20,22 @@ import {
 	Foundation,
 } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { useDispatch, useSelector } from "react-redux";
+import { getProfileAction } from "../../app/feature/profile/profileSlice";
+import {capitalizeEachWords, separateFourChar} from "../../utils/profile/formatString"
+import { StatusBar } from "expo-status-bar";
 
 const Profile = () => {
 	const theme = useTheme();
 	const insets = useSafeAreaInsets();
 	const { width, height } = Dimensions.get("window");
 	const navigation = useNavigation();
+	const dispatch = useDispatch();
+	const { profile, isLoading } = useSelector((state) => state.profile);
+
+	useEffect(() => {
+		dispatch(getProfileAction());console.log("PROFILLL ", profile);
+	}, [dispatch]);
 
 	const data = [
 		{
@@ -141,6 +151,7 @@ const Profile = () => {
 
 	return (
 		<>
+		<StatusBar backgroundColor={theme.colors.primary} style="light" />
 			<ScrollView
 				style={styles.scrollView}
 				showsVerticalScrollIndicator={false}
@@ -149,9 +160,11 @@ const Profile = () => {
 					<Surface style={styles.imgContainer}>
 						<Image source={images.icon} style={styles.img} />
 					</Surface>
-					<Text style={styles.headerName}>Akhmad Rizaldi Irvana</Text>
+					<Text style={styles.headerName}>{capitalizeEachWords(profile.fullName) || "-"}</Text>
+					{/* <Text style={styles.headerName}>{}</Text> */}
 					<View style={styles.headerDivider} />
-					<Text style={styles.headerNik}>1234 1234 1234 1234</Text>
+					<Text style={styles.headerNik}>{profile.nik ? separateFourChar(profile.nik) : "-"}</Text>
+					{/* <Text style={styles.headerNik}>{"-"}</Text> */}
 				</View>
 				<View style={styles.main}>
 					<View style={{ flexDirection: "row", gap: 20 }}>
@@ -221,7 +234,7 @@ const Profile = () => {
 							rippleColor="white"
 						>
 							<List.Item
-								title="akuzaldi@gmail.com"
+								title={profile.email}
 								titleStyle={styles.text}
 								style={{ borderRadius: theme.roundness }}
 								left={(props) => (
@@ -233,7 +246,8 @@ const Profile = () => {
 								)}
 							/>
 							<List.Item
-								title="0812 1212 1212 1212"
+								title={profile.phoneNumber ? separateFourChar(profile.phoneNumber) : "-"}
+								// title={"-"}
 								titleStyle={styles.text}
 								style={{ borderRadius: theme.roundness }}
 								left={(props) => (
@@ -245,19 +259,19 @@ const Profile = () => {
 								)}
 							/>
 							<List.Item
-								title="Laki-laki"
+								title={profile.gender === "MALE" ? "Laki-laki" : profile.gender === "FEMALE" ? "Perempuan" : "Tidak Teridentifikasi"}
 								titleStyle={styles.text}
 								style={{ borderRadius: theme.roundness }}
 								left={(props) => (
 									<List.Icon
 										{...props}
 										style={styles.marginL30}
-										icon="gender-male"
+										icon={profile.gender === "MALE" ? "gender-male" : profile.gender === "FEMALE" ? "gender-female" : "circle-outline"}
 									/>
 								)}
 							/>
 							<List.Item
-								title="Jl. Address, Village, District, Postal Code"
+								title={profile.address || "-"}
 								titleStyle={styles.text}
 								titleNumberOfLines={5}
 								style={{ borderRadius: theme.roundness }}
@@ -348,7 +362,12 @@ const Profile = () => {
 								/>
 							</View>
 						</TouchableOpacity>
-						<TouchableOpacity activeOpacity={0.6} onPress={() => navigation.navigate("UpdatePassword")}>
+						<TouchableOpacity
+							activeOpacity={0.6}
+							onPress={() =>
+								navigation.navigate("UpdatePassword")
+							}
+						>
 							<View style={styles.menu}>
 								<Octicons name="lock" size={22} color="black" />
 								<Text style={{ ...styles.text, fontSize: 16 }}>

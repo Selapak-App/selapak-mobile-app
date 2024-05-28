@@ -174,9 +174,6 @@ const transactionSlice = createSlice({
 				state.doneTrx = done;
 				state.onProgressTrx = onProgress;
 				state.transactions = [...done, ...onProgress];
-				console.log("TRANSACTIONSSS = ", state.transactions);
-				console.log("ON PRGESS = ", state.onProgressTrx);
-				console.log("DONEEE = ", state.doneTrx);
 				state.isLoading = false;
 			}
 		);

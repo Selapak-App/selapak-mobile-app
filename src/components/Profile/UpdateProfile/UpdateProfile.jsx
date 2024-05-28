@@ -8,7 +8,7 @@ import {
 	Image,
 	Dimensions,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { RadioButton, TextInput, useTheme } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
@@ -24,6 +24,12 @@ import Header from "../../reusables/Header";
 import * as yup from "yup";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useDispatch, useSelector } from "react-redux";
+import { formatPhoneNumber } from "../../../utils/profile/formatString";
+import { updateProfileAction } from "../../../app/feature/profile/profileSlice";
+import Popup from "../../reusables/Popup";
+import LottieAnimation from "../../reusables/LottieAnimation";
+import animations from "../../../../assets/animations";
 
 const schema = yup
 	.object({
@@ -43,23 +49,15 @@ const schema = yup
 	})
 	.required();
 
-const formatPhoneNumber = (number) => {
-	const digits = number.replace(/\D/g, "");
-
-	if (digits.startsWith("62")) {
-		return `+${digits}`;
-	} else if (digits.startsWith("0")) {
-		return `+62${digits.substring(1)}`;
-	} else {
-		return `+62${digits}`;
-	}
-};
-
 const UpdateProfile = () => {
 	const theme = useTheme();
 	const navigation = useNavigation();
 	const insets = useSafeAreaInsets();
 	const { height, width } = Dimensions.get("window");
+	const { profile, isLoading } = useSelector((state) => state.profile);
+	const dispatch = useDispatch();
+	const [message, setMessage] = useState("");
+	const [visibility, setVisibility] = useState(false);
 
 	const {
 		control,
@@ -68,49 +66,26 @@ const UpdateProfile = () => {
 		formState: { errors },
 	} = useForm({
 		defaultValues: {
-			fullName: "",
-			gender: "",
-			phoneNumber: "",
-			nik: "",
-			address: "",
+			fullName: profile.fullName || "",
+			gender: profile.gender || "",
+			phoneNumber: profile.phoneNumber
+				? formatPhoneNumber(profile.phoneNumber)
+				: "",
+			nik: profile.nik || "",
+			address: profile.address || "",
 		},
 		resolver: yupResolver(schema),
 	});
 
 	const onSubmit = async () => {
-		if (
-			!errors.fullName &&
-			!errors.phoneNumber &&
-			!errors.address &&
-			!errors.gender &&
-			!errors.nik
-		) {
-			const data = getValues();
-			console.log(data);
-			// try {
-			// 	const data = getValues();
-			// 	const reqData = {
-			// 		fullName: data.name,
-			// 		email: data.email,
-			// 		gender: data.gender ? data.gender : "MALE",
-			// 		password: data.password,
-			// 	};
+		const data = getValues();
+		const res = await dispatch(updateProfileAction(data));
 
-			// 	const res = await dispatch(registerAction(reqData));
-			// 	if (!res.payload.error) {
-			// 		setMessage("Berhasil membuat akun");
-			// 		setVisibility(true);
-			// 		setTimeout(() => {
-			// 			navigation.navigate("Login");
-			// 		}, 3000);
-			// 	} else {
-			// 		throw new Error(res.payload.message);
-			// 	}
-			// } catch (error) {
-			// 	setIsError(true);
-			// 	setMessage(error.message);
-			// 	setVisibility(true);
-			// }
+		if (!res.error) {
+			navigation.navigate("App");
+		} else {
+			setMessage(res.payload.message);
+			setVisibility(true);
 		}
 	};
 
@@ -301,7 +276,7 @@ const UpdateProfile = () => {
 								label="Email"
 								mode="outlined"
 								outlineColor={theme.colors.secondary}
-								value="akuzaldi@gmail.com"
+								value={profile.email}
 								disabled
 							/>
 						</View>
@@ -389,7 +364,7 @@ const UpdateProfile = () => {
 											onChange(formatPhoneNumber(event))
 										}
 										error={errors.phoneNumber}
-                                        keyboardType="numeric"
+										keyboardType="numeric"
 									/>
 								)}
 								name="phoneNumber"
@@ -436,7 +411,7 @@ const UpdateProfile = () => {
 
 					<View style={styles.buttonWraper}>
 						<TouchableOpacity
-                        onPress={() => navigation.goBack()}
+							onPress={() => navigation.goBack()}
 							activeOpacity={0.9}
 							style={styles.btnBack}
 						>
@@ -451,18 +426,24 @@ const UpdateProfile = () => {
 							activeOpacity={0.9}
 							style={{
 								...styles.buttonContainer,
-								// padding: isLoading ? 6 : 12,
+								padding: isLoading ? 6 : 12,
 							}}
 							// onPress={handleSubmit(onSubmit)}
 						>
-							{/* {!isLoading ? ( */}
+							{!isLoading ? (
 							<Text style={styles.buttonText}>Simpan</Text>
-							{/* ) : (
+							) : (
 								<LottieAnimation width={40} height={40} animation={animations.threeDots} />
-							 )} */}
+							 )}
 						</TouchableOpacity>
 					</View>
 				</View>
+				<Popup
+					bgColor={theme.colors.error}
+					message={message}
+					setVisibility={setVisibility}
+					visibility={visibility}
+				/>
 			</>
 		);
 	};

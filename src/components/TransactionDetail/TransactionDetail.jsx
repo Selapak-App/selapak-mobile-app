@@ -35,7 +35,6 @@ const TransactionDetail = () => {
 	const { height, width } = Dimensions.get("screen");
 	const navigation = useNavigation();
 	const { transaction } = useSelector((state) => state.transaction);
-	console.log("######## DETAILLLL: ", transaction);
 
 	const styles = StyleSheet.create({
 		text: {

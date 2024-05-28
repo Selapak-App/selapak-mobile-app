@@ -18,6 +18,7 @@ import { getLandAction, selectedLand } from "../../app/feature/land/landSlice";
 import Tag from "../reusables/Tag";
 import Header from "../reusables/Header";
 import { getAllTransactionAction } from "../../app/feature/transaction/transactionSlice";
+import { getProfileAction } from "../../app/feature/profile/profileSlice";
 
 const refactorDesc = (lands) => {
 	return lands.map((item) => ({
@@ -37,6 +38,7 @@ const Home = ({ onTabChange }) => {
 	useEffect(() => {
 		dispatch(getLandAction());
 		dispatch(getAllTransactionAction());
+		dispatch(getProfileAction());
 	}, [dispatch]);
 
 	const refresh = async () => {

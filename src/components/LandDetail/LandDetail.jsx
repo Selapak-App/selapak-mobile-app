@@ -20,36 +20,53 @@ import {
 import Popup from "../reusables/Popup";
 import LottieAnimation from "../reusables/LottieAnimation";
 import animations from "../../../assets/animations";
+import { checkAllFilled } from "../../app/feature/profile/profileSlice";
 
 const LandDetail = () => {
-	const route = useRoute();
 	const insets = useSafeAreaInsets();
 	const theme = useTheme();
 	const navigation = useNavigation();
 	const { land } = useSelector((state) => state.land);
 	const dispatch = useDispatch();
-	const { transactions } = useSelector((state) => state.transaction);
 
 	// Popup
 	const [message, setMessage] = useState(null);
 	const [visibility, setVisibility] = useState(false);
 	const [isError, setIsError] = useState(false);
-	const { isLoading } = useSelector((state) => state.transaction);
+	// const { isLoading } = useSelector((state) => state.transaction);
+	const [isLoading, setIsLoading] = useState(false);
 
 	useEffect(() => {
 		dispatch(getAllTransactionAction());
 	}, [dispatch]);
 
 	const handleSubmission = async () => {
-		const res = await dispatch(isOnProgressTrx(land.id));
-		if (!res.error) {
-			setIsError(false);
-			navigation.navigate("CreateTrxForm");
+		console.log("KEPANGGILL");
+		setIsLoading(true);
+		const profileRes = await dispatch(checkAllFilled());
+		console.log("profileRes --- ", profileRes);
+
+		if (!profileRes.error) {
+			const trxRes = await dispatch(isOnProgressTrx(land.id));
+
+			console.log("trxRes --- ", trxRes);
+			if (!trxRes.error) {
+				setIsLoading(false);
+				setIsError(false);
+				navigation.navigate("CreateTrxForm");
+			} else {
+				setIsError(true);
+				setMessage(trxRes.payload.message);
+				setVisibility(true);
+				setIsLoading(false);
+			}
 		} else {
 			setIsError(true);
-			setMessage(res.payload.message);
+			setMessage(profileRes.payload.message);
 			setVisibility(true);
+			setIsLoading(false);
 		}
+		setIsLoading(false);
 	};
 
 	const styles = StyleSheet.create({
@@ -183,7 +200,7 @@ const LandDetail = () => {
 							{land.slotAvailable} Slot tersedia
 						</Text>
 						<View style={styles.slotArea}>
-							<Tag text={`${land.slotArea} m2`} />
+							<Tag text={`${land.slotArea}`} />
 						</View>
 					</View>
 					<Text style={styles.price}>
@@ -233,15 +250,6 @@ const LandDetail = () => {
 						</Text>
 					</View>
 				</View>
-
-				<Popup
-					message={message}
-					visibility={visibility}
-					setVisibility={setVisibility}
-					bgColor={
-						isError ? theme.colors.error : theme.colors.secondary
-					}
-				/>
 			</View>
 		);
 	};
@@ -255,11 +263,14 @@ const LandDetail = () => {
 				<Surface style={styles.buttonBg} elevation={3}>
 					<TouchableOpacity
 						activeOpacity={0.9}
-						style={{...styles.button, padding: isLoading ? 11 : 15}}
+						style={{
+							...styles.button,
+							padding: isLoading ? 11 : 15,
+						}}
 						onPress={handleSubmission}
 					>
 						{!isLoading ? (
-							<Text style={styles.buttonText}>Masuk</Text>
+							<Text style={styles.buttonText}>Ajukan Sewa</Text>
 						) : (
 							<LottieAnimation
 								width={40}
@@ -271,6 +282,13 @@ const LandDetail = () => {
 					</TouchableOpacity>
 				</Surface>
 			</View>
+
+			<Popup
+				message={message}
+				visibility={visibility}
+				setVisibility={setVisibility}
+				bgColor={isError ? theme.colors.error : theme.colors.secondary}
+			/>
 		</View>
 	);
 };
