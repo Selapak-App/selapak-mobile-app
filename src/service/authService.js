@@ -17,14 +17,11 @@ export const AuthService = () => {
 
 	const updatePassword = async (payload) => {
 		const id = await AsyncStorage.getItem("id");
-		console.log("FROM SERVICE: ", payload);
-		console.log("FROM SERVICE: ", id);
 		const res = await axiosInstance.put(`/update-password/${id}`, payload);
 		return res.data;
 	}
 
 	const forgetPassword = async (payload) => {
-		console.log("FROM SERVICE: ", payload);
 		const res = await axiosInstance.put("/send-email", payload);
 		return res.data;
 	}

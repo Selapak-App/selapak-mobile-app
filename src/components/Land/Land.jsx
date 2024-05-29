@@ -5,8 +5,9 @@ import {
 	FlatList,
 	Image,
 	TouchableOpacity,
+	RefreshControl,
 } from "react-native";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useTheme } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { FontAwesome6, Octicons } from "@expo/vector-icons";
@@ -23,8 +24,18 @@ const Land = () => {
 	const theme = useTheme();
 	const insets = useSafeAreaInsets();
 	const navigation = useNavigation();
-	const { lands, isLoading } = useSelector((state) => state.land);
+	const { lands } = useSelector((state) => state.land);
 	const dispatch = useDispatch();
+	const [isRefreshing, setIsrefreshing] = useState(false);
+	const [isLoading, setIsLoading] = useState(false);
+
+	const refresh = async () => {
+		setIsrefreshing(true);
+		setIsLoading(true);
+		await dispatch(getLandAction());
+		setIsLoading(false);
+		setIsrefreshing(false);
+	};
 
 	useEffect(() => {
 		dispatch(getLandAction());
@@ -145,15 +156,7 @@ const Land = () => {
 					header={"Temukan Lapakmu!"}
 					tagline={"Sewa lahan sesuai kebutuhanmu dengan mudah"}
 				/>
-				{/* <View style={styles.head}>
-					<Text style={styles.h1}>Temukan Lapakmu!</Text>
-					<Text style={styles.tagline}>
-						Sewa lahan sesuai kebutuhanmu dengan mudah
-					</Text>
-				</View> */}
-				{isLoading ? (
-					<Text>Loading...</Text>
-				) : !lands || lands.length === 0 ? (
+				{lands.length === 0 ? (
 					<NoData message={"Tidak Ada Lahan Tersedia"} />
 				) : (
 					<FlatList
@@ -174,11 +177,18 @@ const Land = () => {
 
 	return (
 		<>
+			<StatusBar backgroundColor="white" style="dark" />
 			<FlatList
 				data={[{}]}
 				renderItem={ComponentLayout}
 				contentContainerStyle={styles.container}
 				style={{ flex: 1 }}
+				refreshControl={
+					<RefreshControl
+						refreshing={isRefreshing}
+						onRefresh={refresh}
+					/>
+				}
 			/>
 		</>
 	);

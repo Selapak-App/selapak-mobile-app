@@ -1,6 +1,6 @@
 import { View, Text } from "react-native";
 import React from "react";
-import { Snackbar, useTheme } from "react-native-paper";
+import { Snackbar, Surface, useTheme } from "react-native-paper";
 import Modal from "react-native-modal";
 import { AntDesign } from "@expo/vector-icons";
 
@@ -26,7 +26,7 @@ const Popup = ({ visibility, setVisibility, message, type }) => {
 			animationInTiming={500}
 			animationOutTiming={500}
 		>
-			<View
+			<Surface
 				style={{
 					backgroundColor: theme.colors.lightGray,
 					borderRadius: theme.roundness,
@@ -58,7 +58,7 @@ const Popup = ({ visibility, setVisibility, message, type }) => {
 				>
 					{message}
 				</Text>
-			</View>
+			</Surface>
 		</Modal>
 	);
 };

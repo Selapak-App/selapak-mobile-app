@@ -55,11 +55,9 @@ export const updatePasswordAction = createAsyncThunk(
 	"auth/updatePassword",
 	async (payload, ThunkAPI) => {
 		try {
-			console.log("FROM SLICE: ", payload);
 			const res = await updatePassword(payload);
 			return res;
 		} catch (e) {
-			console.log(e)
 			res = {
 				statusCode: 404,
 				message: e.message,
@@ -73,11 +71,9 @@ export const forgetPasswordAction = createAsyncThunk(
 	"auth/forgetPassword",
 	async (payload, ThunkAPI) => {
 		try {
-			console.log("FROM SLICE: ", payload);
 			const res = await forgetPassword(payload);
 			return res;
 		} catch (e) {
-			console.log(e)
 			res = {
 				statusCode: 404,
 				message: e.message,

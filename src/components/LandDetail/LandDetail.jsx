@@ -41,15 +41,11 @@ const LandDetail = () => {
 	}, [dispatch]);
 
 	const handleSubmission = async () => {
-		console.log("KEPANGGILL");
 		setIsLoading(true);
 		const profileRes = await dispatch(checkAllFilled());
-		console.log("profileRes --- ", profileRes);
 
 		if (!profileRes.error) {
 			const trxRes = await dispatch(isOnProgressTrx(land.id));
-
-			console.log("trxRes --- ", trxRes);
 			if (!trxRes.error) {
 				setIsLoading(false);
 				setIsError(false);

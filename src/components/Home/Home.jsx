@@ -8,7 +8,7 @@ import {
 	RefreshControl,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { Paragraph, useTheme } from "react-native-paper";
+import { Button, Paragraph, useTheme } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import images from "../../../assets/images";
@@ -20,6 +20,7 @@ import Header from "../reusables/Header";
 import { getAllTransactionAction } from "../../app/feature/transaction/transactionSlice";
 import { getProfileAction } from "../../app/feature/profile/profileSlice";
 import NoData from "../reusables/NoData/NoData";
+import { StatusBar } from "expo-status-bar";
 
 const refactorDesc = (lands) => {
 	return lands.map((item) => ({
@@ -36,16 +37,19 @@ const Home = ({ onTabChange }) => {
 	const dispatch = useDispatch();
 	const [isRefreshing, setIsrefreshing] = useState(false);
 
+	const refresh = async () => {
+		setIsrefreshing(true);
+		await dispatch(getAllTransactionAction());
+		await dispatch(getProfileAction());
+		await dispatch(getLandAction());
+		setIsrefreshing(false);
+	};
+
 	useEffect(() => {
 		dispatch(getLandAction());
 		dispatch(getAllTransactionAction());
 		dispatch(getProfileAction());
 	}, [dispatch]);
-
-	const refresh = async () => {
-		await dispatch(getLandAction());
-		dispatch(getAllTransactionAction());
-	};
 
 	const openDetail = async (data) => {
 		dispatch(selectedLand(data));
@@ -98,6 +102,9 @@ const Home = ({ onTabChange }) => {
 		cardTitle: {
 			fontFamily: "PoppinsSemiBold",
 			fontSize: 24,
+		},
+		cardBody: {
+			fontFamily: "Poppins",
 		},
 		cardImage: {
 			position: "absolute",
@@ -171,7 +178,7 @@ const Home = ({ onTabChange }) => {
 				<View style={styles.cardSlider}>
 					<View style={styles.width70}>
 						<Text style={styles.cardTitle}>{item.title}</Text>
-						<Text>{item.body}</Text>
+						<Text style={styles.cardBody}>{item.body}</Text>
 					</View>
 				</View>
 				<Image source={item.img} style={styles.cardImage} />
@@ -302,8 +309,12 @@ const Home = ({ onTabChange }) => {
 								</View>
 							</View>
 							{isLoading ? (
-								<Text>Loading ...</Text>
-							) : !lands || lands.length === 0 ? (
+								<Button
+									loading={true}
+									labelStyle={{ fontSize: 40, marginVertical: 20 }}
+								/>
+							) :
+							!lands || lands.length === 0 ? (
 								<NoData message={"Tidak Ada Lahan Tersedia"} />
 							) : (
 								<FlatList
@@ -312,7 +323,6 @@ const Home = ({ onTabChange }) => {
 											? refactorDesc(lands.slice(0, 5))
 											: refactorDesc(lands)
 									}
-									// data={dummyData}
 									keyExtractor={(item) => item.id}
 									renderItem={LandCardComponent}
 									style={{ gap: 10, marginTop: 10 }}
@@ -327,6 +337,7 @@ const Home = ({ onTabChange }) => {
 
 	return (
 		<>
+			<StatusBar backgroundColor={theme.colors.primary} style="light" />
 			<FlatList
 				data={[{}]}
 				renderItem={ComponentLayout}

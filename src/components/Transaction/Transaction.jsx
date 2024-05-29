@@ -5,8 +5,9 @@ import {
 	FlatList,
 	TouchableOpacity,
 	Image,
+	RefreshControl,
 } from "react-native";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Surface, useTheme } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
@@ -21,6 +22,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import formatAddress from "../../utils/lands/formatAddress";
 import NoData from "../reusables/NoData/NoData";
+import { StatusBar } from "expo-status-bar";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -28,20 +30,23 @@ const DoneComp = () => {
 	const navigation = useNavigation();
 	const dispatch = useDispatch();
 	const { doneTrx } = useSelector((state) => state.transaction);
+	const [isRefreshing, setIsrefreshing] = useState(false);
+
+	const refresh = async () => {
+		setIsrefreshing(true);
+		await dispatch(getAllTransactionAction());
+		setIsrefreshing(false);
+	};
 
 	const CardComponent = ({ item }) => {
 		const address = formatAddress(item.landPrice.land);
 		const color =
-			item.paymentStatus === "PAID"
-				? colors.secondary
-				: colors.error;
+			item.paymentStatus === "PAID" ? colors.secondary : colors.error;
 
 		const openDetail = () => {
 			dispatch(selectedTrx(item));
 			navigation.navigate("TransactionDetail");
 		};
-
-		console.log(item);
 
 		const styles = StyleSheet.create({
 			card: {
@@ -121,7 +126,9 @@ const DoneComp = () => {
 					</View>
 					<View style={styles.cardFooter}>
 						<Text style={{ ...styles.textMedWhite, marginTop: 2 }}>
-							{item.paymentStatus === "PAID" ? "BERHASIL" : "GAGAL"}
+							{item.paymentStatus === "PAID"
+								? "BERHASIL"
+								: "GAGAL"}
 						</Text>
 					</View>
 				</Surface>
@@ -145,6 +152,12 @@ const DoneComp = () => {
 					renderItem={CardComponent}
 					showsVerticalScrollIndicator={false}
 					style={{ flex: 1, padding: 20 }}
+					refreshControl={
+						<RefreshControl
+							refreshing={isRefreshing}
+							onRefresh={refresh}
+						/>
+					}
 				/>
 			)}
 		</View>
@@ -157,11 +170,13 @@ const OnProcessComp = () => {
 	const { onProgressTrx, isLoading } = useSelector(
 		(state) => state.transaction
 	);
+	const [isRefreshing, setIsrefreshing] = useState(false);
 
-	// useEffect(() => {
-	// 	dispatch(getAllTransactionAction());
-	// 	console.log("ON PROGRESS", onProgressTrx);
-	// }, [dispatch]);
+	const refresh = async () => {
+		setIsrefreshing(true);
+		await dispatch(getAllTransactionAction());
+		setIsrefreshing(false);
+	};
 
 	const CardComponent = ({ item }) => {
 		const address = formatAddress(item.landPrice.land);
@@ -272,10 +287,6 @@ const OnProcessComp = () => {
 				flex: 1,
 			}}
 		>
-			{/* {isLoading ? (
-				<Text>LOADING ...</Text>
-			) :  */}
-
 			{onProgressTrx.length === 0 ? (
 				<NoData message={"Tidak Ada Transaksi"} />
 			) : (
@@ -285,6 +296,12 @@ const OnProcessComp = () => {
 					renderItem={CardComponent}
 					showsVerticalScrollIndicator={false}
 					style={{ flex: 1, padding: 20 }}
+					refreshControl={
+						<RefreshControl
+							refreshing={isRefreshing}
+							onRefresh={refresh}
+						/>
+					}
 				/>
 			)}
 		</View>
@@ -335,6 +352,7 @@ const Transaction = () => {
 
 	return (
 		<>
+			<StatusBar backgroundColor="white" style="dark" />
 			<View style={styles.head}>
 				<Header
 					header="Transaksi Anda"
