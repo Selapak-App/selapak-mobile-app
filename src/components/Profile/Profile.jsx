@@ -427,7 +427,7 @@ const Profile = () => {
 				</View>
 			</ScrollView>
 			<Popup
-				bgColor={theme.colors.error}
+				type={"warning"}
 				message={message}
 				setVisibility={setVisibility}
 				visibility={visibility}

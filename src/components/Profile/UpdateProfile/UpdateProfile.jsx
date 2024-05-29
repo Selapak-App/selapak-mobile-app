@@ -439,7 +439,7 @@ const UpdateProfile = () => {
 					</View>
 				</View>
 				<Popup
-					bgColor={theme.colors.error}
+					type={"warning"}
 					message={message}
 					setVisibility={setVisibility}
 					visibility={visibility}

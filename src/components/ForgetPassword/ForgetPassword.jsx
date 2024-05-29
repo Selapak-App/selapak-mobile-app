@@ -204,7 +204,7 @@ const ForgetPassword = () => {
 				message={message}
 				visibility={visibility}
 				setVisibility={setVisibility}
-				bgColor={isError ? theme.colors.error : theme.colors.secondary}
+				type={isError ? "error" : "success"}
 			/>
 		</View>
 	);

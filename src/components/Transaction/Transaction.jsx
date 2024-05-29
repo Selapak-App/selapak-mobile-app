@@ -54,7 +54,7 @@ const DoneComp = () => {
 				aspectRatio: 1,
 				width: 100,
 				height: 100,
-				borderRadius: 20,
+				borderRadius: 12,
 			},
 			text: { fontFamily: "Poppins", fontSize: 14 },
 			textMedWhite: {
@@ -137,7 +137,7 @@ const DoneComp = () => {
 			}}
 		>
 			{doneTrx.length === 0 ? (
-				<NoData />
+				<NoData message={"Tidak Ada Transaksi"} />
 			) : (
 				<FlatList
 					data={doneTrx}
@@ -190,7 +190,7 @@ const OnProcessComp = () => {
 				aspectRatio: 1,
 				width: 100,
 				height: 100,
-				borderRadius: 20,
+				borderRadius: 12,
 			},
 			text: { fontFamily: "Poppins", fontSize: 14 },
 			textMedWhite: {
@@ -277,7 +277,7 @@ const OnProcessComp = () => {
 			) :  */}
 
 			{onProgressTrx.length === 0 ? (
-				<NoData />
+				<NoData message={"Tidak Ada Transaksi"} />
 			) : (
 				<FlatList
 					data={onProgressTrx}

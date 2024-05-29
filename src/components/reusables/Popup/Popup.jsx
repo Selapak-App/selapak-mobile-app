@@ -1,25 +1,65 @@
 import { View, Text } from "react-native";
 import React from "react";
 import { Snackbar, useTheme } from "react-native-paper";
+import Modal from "react-native-modal";
+import { AntDesign } from "@expo/vector-icons";
 
-const Popup = ({visibility, setVisibility, message, bgColor}) => {
+const Popup = ({ visibility, setVisibility, message, type }) => {
+	const theme = useTheme();
+
+	const handleCloseModal = () => setVisibility(false);
+	const color =
+		type === "success"
+			? theme.colors.secondary
+			: type === "warning"
+			? theme.colors.primary
+			: theme.colors.error;
+
 	return (
-		<Snackbar
-			visible={visibility}
-			onDismiss={() => setVisibility(false)}
-			style={{ marginBottom: 30, marginHorizontal: 20, backgroundColor: bgColor || "black"  }}
-			action={{
-				label: "Close",
-				style: {
-					backgroundColor: "rgba(255,255,255,0.1)",
-				},
-				onPress: () => {
-					setVisibility(false);
-				},
-			}}
+		<Modal
+			isVisible={visibility}
+			style={{ alignItems: "center" }}
+			onBackdropPress={handleCloseModal}
+			onBackButtonPress={handleCloseModal}
+			animationIn={"fadeInUpBig"}
+			animationOut={"fadeOutUpBig"}
+			animationInTiming={500}
+			animationOutTiming={500}
 		>
-			{message}
-		</Snackbar>
+			<View
+				style={{
+					backgroundColor: theme.colors.lightGray,
+					borderRadius: theme.roundness,
+					padding: 30,
+					maxWidth: 320,
+					justifyContent: "center",
+					alignItems: "center",
+					gap: 20,
+				}}
+			>
+				<AntDesign
+					name={
+						type === "success"
+							? "checkcircleo"
+							: type === "warning"
+							? "warning"
+							: "closecircleo"
+					}
+					size={72}
+					color={color}
+				/>
+				<Text
+					style={{
+						color: color,
+						fontSize: 16,
+						fontFamily: "Poppins",
+						textAlign: "center",
+					}}
+				>
+					{message}
+				</Text>
+			</View>
+		</Modal>
 	);
 };
 

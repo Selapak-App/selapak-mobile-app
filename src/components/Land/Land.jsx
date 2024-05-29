@@ -154,7 +154,7 @@ const Land = () => {
 				{isLoading ? (
 					<Text>Loading...</Text>
 				) : !lands || lands.length === 0 ? (
-					<NoData />
+					<NoData message={"Tidak Ada Lahan Tersedia"} />
 				) : (
 					<FlatList
 						data={lands.map((item) => ({

@@ -287,7 +287,7 @@ const LandDetail = () => {
 				message={message}
 				visibility={visibility}
 				setVisibility={setVisibility}
-				bgColor={isError ? theme.colors.error : theme.colors.secondary}
+				type={isError ? "warning" : "success"}
 			/>
 		</View>
 	);

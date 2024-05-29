@@ -297,7 +297,7 @@ const Login = () => {
 				message={errorMessage}
 				visibility={errorVisibility}
 				setVisibility={setErrorVisibility}
-				bgColor={theme.colors.error}
+				type={"warning"}
 			/>
 		</View>
 	);

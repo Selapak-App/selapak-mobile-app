@@ -304,7 +304,7 @@ const Home = ({ onTabChange }) => {
 							{isLoading ? (
 								<Text>Loading ...</Text>
 							) : !lands || lands.length === 0 ? (
-								<NoData />
+								<NoData message={"Tidak Ada Lahan Tersedia"} />
 							) : (
 								<FlatList
 									data={
