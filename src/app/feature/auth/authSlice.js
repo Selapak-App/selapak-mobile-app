@@ -1,13 +1,29 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { AuthService } from "../../../service/authService";
 
-const { login, register, updatePassword } = AuthService();
+const { login, register, logout, updatePassword, forgetPassword } = AuthService();
 
 export const loginAction = createAsyncThunk(
 	"auth/login",
 	async (payload, ThunkAPI) => {
 		try {
 			const res = await login(payload);
+			return res;
+		} catch (e) {
+			res = {
+				statusCode: 401,
+				message: e.message,
+			};
+			return ThunkAPI.rejectWithValue(res);
+		}
+	}
+);
+
+export const logoutAction = createAsyncThunk(
+	"auth/logout",
+	async (payload, ThunkAPI) => {
+		try {
+			const res = await logout();
 			return res;
 		} catch (e) {
 			res = {
@@ -53,6 +69,24 @@ export const updatePasswordAction = createAsyncThunk(
 	}
 );
 
+export const forgetPasswordAction = createAsyncThunk(
+	"auth/forgetPassword",
+	async (payload, ThunkAPI) => {
+		try {
+			console.log("FROM SLICE: ", payload);
+			const res = await forgetPassword(payload);
+			return res;
+		} catch (e) {
+			console.log(e)
+			res = {
+				statusCode: 404,
+				message: e.message,
+			};
+			return ThunkAPI.rejectWithValue(res);
+		}
+	}
+);
+
 const authSlice = createSlice({
 	name: "auth",
 	initialState: {
@@ -62,7 +96,7 @@ const authSlice = createSlice({
 		builder.addCase(loginAction.pending, (state) => {
 			state.isLoading = true;
 		});
-		builder.addCase(loginAction.fulfilled, (state, { payload }) => {
+		builder.addCase(loginAction.fulfilled, (state) => {
 			state.isLoading = false;
 		});
 		builder.addCase(loginAction.rejected, (state) => {
@@ -71,7 +105,7 @@ const authSlice = createSlice({
 		builder.addCase(registerAction.pending, (state) => {
 			state.isLoading = true;
 		});
-		builder.addCase(registerAction.fulfilled, (state, { payload }) => {
+		builder.addCase(registerAction.fulfilled, (state) => {
 			state.isLoading = false;
 		});
 		builder.addCase(registerAction.rejected, (state) => {
@@ -80,10 +114,28 @@ const authSlice = createSlice({
 		builder.addCase(updatePasswordAction.pending, (state) => {
 			state.isLoading = true;
 		});
-		builder.addCase(updatePasswordAction.fulfilled, (state, { payload }) => {
+		builder.addCase(updatePasswordAction.fulfilled, (state) => {
 			state.isLoading = false;
 		});
 		builder.addCase(updatePasswordAction.rejected, (state) => {
+			state.isLoading = false;
+		});
+		builder.addCase(forgetPasswordAction.pending, (state) => {
+			state.isLoading = true;
+		});
+		builder.addCase(forgetPasswordAction.fulfilled, (state) => {
+			state.isLoading = false;
+		});
+		builder.addCase(forgetPasswordAction.rejected, (state) => {
+			state.isLoading = false;
+		});
+		builder.addCase(logoutAction.pending, (state) => {
+			state.isLoading = true;
+		});
+		builder.addCase(logoutAction.fulfilled, (state) => {
+			state.isLoading = false;
+		});
+		builder.addCase(logoutAction.rejected, (state) => {
 			state.isLoading = false;
 		});
 	},

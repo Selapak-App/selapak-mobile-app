@@ -57,6 +57,7 @@ const Register = () => {
 		control,
 		handleSubmit,
 		getValues,
+		reset,
 		formState: { errors },
 	} = useForm({
 		defaultValues: {
@@ -91,6 +92,7 @@ const Register = () => {
 			setIsError(false);
 			setVisibility(true);
 			setTimeout(() => {
+				reset();
 				navigation.navigate("Login");
 			}, 3000);
 		} else {

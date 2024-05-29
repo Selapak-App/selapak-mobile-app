@@ -23,5 +23,15 @@ export const AuthService = () => {
 		return res.data;
 	}
 
-	return { login, register, updatePassword };
+	const forgetPassword = async (payload) => {
+		console.log("FROM SERVICE: ", payload);
+		const res = await axiosInstance.put("/send-email", payload);
+		return res.data;
+	}
+
+	const logout = async () => {
+		await AsyncStorage.clear();
+	}
+
+	return { login, register, updatePassword, forgetPassword, logout };
 };

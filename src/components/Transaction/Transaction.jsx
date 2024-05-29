@@ -26,27 +26,21 @@ const Tab = createMaterialTopTabNavigator();
 const DoneComp = () => {
 	const navigation = useNavigation();
 	const dispatch = useDispatch();
-	const { doneTrx, isLoading } = useSelector((state) => state.transaction);
-
-	// useEffect(() => {
-	// 	dispatch(getAllTransactionAction());
-	// }, [dispatch]);
+	const { doneTrx } = useSelector((state) => state.transaction);
 
 	const CardComponent = ({ item }) => {
 		const address = formatAddress(item.landPrice.land);
 		const color =
-			item.showStatus === "VERIFY"
-				? colors.accent
-				: item.showStatus === "SURVEY"
+			item.paymentStatus === "PAID"
 				? colors.secondary
-				: item.showStatus === "CONFIRMATION"
-				? colors.primary
-				: colors.primaryDark;
+				: colors.error;
 
 		const openDetail = () => {
 			dispatch(selectedTrx(item));
 			navigation.navigate("TransactionDetail");
 		};
+
+		console.log(item);
 
 		const styles = StyleSheet.create({
 			card: {
@@ -126,7 +120,7 @@ const DoneComp = () => {
 					</View>
 					<View style={styles.cardFooter}>
 						<Text style={{ ...styles.textMedWhite, marginTop: 2 }}>
-							{item.showStatus}
+							{item.paymentStatus === "PAID" ? "BERHASIL" : "GAGAL"}
 						</Text>
 					</View>
 				</Surface>

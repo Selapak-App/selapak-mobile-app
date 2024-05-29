@@ -241,6 +241,7 @@ const Home = ({ onTabChange }) => {
 							<TouchableOpacity
 								activeOpacity={0.9}
 								style={styles.mainButton}
+								onPress={() => onTabChange(1)}
 							>
 								<View style={styles.mainButtonIcon}>
 									<FontAwesome5
@@ -256,6 +257,7 @@ const Home = ({ onTabChange }) => {
 							<TouchableOpacity
 								activeOpacity={0.9}
 								style={styles.mainButton}
+								onPress={() => onTabChange(2)}
 							>
 								<View style={styles.mainButtonIcon}>
 									<FontAwesome5

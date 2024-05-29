@@ -8,7 +8,7 @@ import {
 	Dimensions,
 	TouchableOpacity,
 } from "react-native";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, List, Surface, useTheme } from "react-native-paper";
 import Header from "../reusables/Header";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -22,8 +22,13 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
 import { getProfileAction } from "../../app/feature/profile/profileSlice";
-import {capitalizeEachWords, separateFourChar} from "../../utils/profile/formatString"
+import {
+	capitalizeEachWords,
+	separateFourChar,
+} from "../../utils/profile/formatString";
 import { StatusBar } from "expo-status-bar";
+import { logoutAction } from "../../app/feature/auth/authSlice";
+import Popup from "../reusables/Popup";
 
 const Profile = () => {
 	const theme = useTheme();
@@ -31,30 +36,26 @@ const Profile = () => {
 	const { width, height } = Dimensions.get("window");
 	const navigation = useNavigation();
 	const dispatch = useDispatch();
-	const { profile, isLoading } = useSelector((state) => state.profile);
+	const { profile } = useSelector((state) => state.profile);
+	const [message, setMessage] = useState("");
+	const [visibility, setVisibility] = useState(false);
+	const { isLoading } = useSelector((state) => state.auth);
+	const { doneTrx, onProgressTrx } = useSelector(state => state.transaction)
 
 	useEffect(() => {
-		dispatch(getProfileAction());console.log("PROFILLL ", profile);
+		dispatch(getProfileAction());
 	}, [dispatch]);
 
-	const data = [
-		{
-			title: "Email",
-			content: "akuzaldi@gmail.com",
-		},
-		{
-			title: "No. Telepon",
-			content: "0812 1222 1222 1222",
-		},
-		{
-			title: "Jenis Kelamin",
-			content: "Laki-laki",
-		},
-		{
-			title: "Alamat",
-			content: "Jl. Address, Village, District, Postal Code",
-		},
-	];
+	const handleLogout = async () => {
+		const res = await dispatch(logoutAction());
+
+		if (!res.error) {
+			navigation.navigate("Login");
+		} else {
+			setMessage(res.payload.message);
+			setVisibility(true);
+		}
+	};
 
 	const styles = StyleSheet.create({
 		page: {
@@ -151,7 +152,7 @@ const Profile = () => {
 
 	return (
 		<>
-		<StatusBar backgroundColor={theme.colors.primary} style="light" />
+			<StatusBar backgroundColor={theme.colors.primary} style="light" />
 			<ScrollView
 				style={styles.scrollView}
 				showsVerticalScrollIndicator={false}
@@ -160,10 +161,14 @@ const Profile = () => {
 					<Surface style={styles.imgContainer}>
 						<Image source={images.icon} style={styles.img} />
 					</Surface>
-					<Text style={styles.headerName}>{capitalizeEachWords(profile.fullName) || "-"}</Text>
+					<Text style={styles.headerName}>
+						{capitalizeEachWords(profile.fullName) || "-"}
+					</Text>
 					{/* <Text style={styles.headerName}>{}</Text> */}
 					<View style={styles.headerDivider} />
-					<Text style={styles.headerNik}>{profile.nik ? separateFourChar(profile.nik) : "-"}</Text>
+					<Text style={styles.headerNik}>
+						{profile.nik ? separateFourChar(profile.nik) : "-"}
+					</Text>
 					{/* <Text style={styles.headerNik}>{"-"}</Text> */}
 				</View>
 				<View style={styles.main}>
@@ -173,7 +178,7 @@ const Profile = () => {
 							style={styles.flex1}
 						>
 							<View style={styles.card}>
-								<Text style={styles.cardCount}>8</Text>
+								<Text style={styles.cardCount}>{doneTrx.length || "0"}</Text>
 								<View style={styles.cardContent}>
 									<MaterialCommunityIcons
 										name="file-check-outline"
@@ -202,7 +207,7 @@ const Profile = () => {
 									backgroundColor: theme.colors.primary,
 								}}
 							>
-								<Text style={styles.cardCount}>8</Text>
+								<Text style={styles.cardCount}>{onProgressTrx.length || 0}</Text>
 								<View style={styles.cardContent}>
 									<MaterialCommunityIcons
 										name="file-clock-outline"
@@ -246,7 +251,11 @@ const Profile = () => {
 								)}
 							/>
 							<List.Item
-								title={profile.phoneNumber ? separateFourChar(profile.phoneNumber) : "-"}
+								title={
+									profile.phoneNumber
+										? separateFourChar(profile.phoneNumber)
+										: "-"
+								}
 								// title={"-"}
 								titleStyle={styles.text}
 								style={{ borderRadius: theme.roundness }}
@@ -259,14 +268,26 @@ const Profile = () => {
 								)}
 							/>
 							<List.Item
-								title={profile.gender === "MALE" ? "Laki-laki" : profile.gender === "FEMALE" ? "Perempuan" : "Tidak Teridentifikasi"}
+								title={
+									profile.gender === "MALE"
+										? "Laki-laki"
+										: profile.gender === "FEMALE"
+										? "Perempuan"
+										: "Tidak Teridentifikasi"
+								}
 								titleStyle={styles.text}
 								style={{ borderRadius: theme.roundness }}
 								left={(props) => (
 									<List.Icon
 										{...props}
 										style={styles.marginL30}
-										icon={profile.gender === "MALE" ? "gender-male" : profile.gender === "FEMALE" ? "gender-female" : "circle-outline"}
+										icon={
+											profile.gender === "MALE"
+												? "gender-male"
+												: profile.gender === "FEMALE"
+												? "gender-female"
+												: "circle-outline"
+										}
 									/>
 								)}
 							/>
@@ -381,20 +402,23 @@ const Profile = () => {
 								/>
 							</View>
 						</TouchableOpacity>
-						<TouchableOpacity activeOpacity={0.6}>
+						<TouchableOpacity
+							onPress={handleLogout}
+							activeOpacity={0.6}
+						>
 							<View style={styles.menu}>
 								<Octicons
 									name="sign-out"
 									size={22}
-									color="black"
+									color={theme.colors.error}
 								/>
-								<Text style={{ ...styles.text, fontSize: 16 }}>
+								<Text style={{ ...styles.text, color: theme.colors.error, fontSize: 16 }}>
 									Keluar
 								</Text>
 								<MaterialIcons
 									name="keyboard-arrow-right"
 									size={22}
-									color="black"
+									color={theme.colors.error}
 									style={styles.marginLAuto}
 								/>
 							</View>
@@ -402,6 +426,12 @@ const Profile = () => {
 					</View>
 				</View>
 			</ScrollView>
+			<Popup
+				bgColor={theme.colors.error}
+				message={message}
+				setVisibility={setVisibility}
+				visibility={visibility}
+			/>
 		</>
 	);
 };

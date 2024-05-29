@@ -40,6 +40,7 @@ const Login = () => {
 		control,
 		handleSubmit,
 		getValues,
+		reset,
 		formState: { errors },
 	} = useForm({
 		defaultValues: {
@@ -60,6 +61,7 @@ const Login = () => {
 			const data = getValues();
 			const res = await dispatch(loginAction(data));
 			if (!res.error) {
+				reset();
 				navigation.navigate("App");
 			} else {
 				setErrorMessage(res.payload.message);

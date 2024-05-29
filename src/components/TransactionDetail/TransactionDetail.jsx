@@ -28,6 +28,8 @@ import { StatusBar } from "expo-status-bar";
 import variables from "../../../assets/variables";
 import { useSelector } from "react-redux";
 import formatAddress from "../../utils/lands/formatAddress";
+import { formatAddMonth, formatDate } from "../../utils/transactions/formatDate";
+import { capitalizeEachWords } from "../../utils/profile/formatString";
 
 const TransactionDetail = () => {
 	const theme = useTheme();
@@ -82,8 +84,8 @@ const TransactionDetail = () => {
 	const LayoutComponent = () => (
 		<>
 			<Header
-				header="Nama Bisnis"
-				tagline="Jl. Address 111, Village, District, Postal Code"
+				header={capitalizeEachWords(transaction.business.businessName)}
+				tagline={formatAddress(transaction.landPrice.land)}
 			/>
 			<View style={styles.main}>
 				<HeaderWithContent header="Bisnis">
@@ -126,6 +128,22 @@ const TransactionDetail = () => {
 								{transaction.rentPeriod.period + " Bulan"}
 							</Text>
 						</TitleContentItem>
+						{
+							transaction.paymentStatus === "PAID" && (
+								<>
+									<TitleContentItem head="Mulai Sewa">
+										<Text style={styles.text}>
+											{formatDate(transaction.createdAt)}
+										</Text>
+									</TitleContentItem>
+									<TitleContentItem head="Akhir Sewa">
+										<Text style={styles.text}>
+											{formatAddMonth(transaction.updatedAt, transaction.rentPeriod.period)}
+										</Text>
+									</TitleContentItem>
+								</>
+							)
+						}
 						<TitleContentItem head="Alamat Lapak">
 							<Text style={styles.text}>
 								{formatAddress(transaction.landPrice.land)}
@@ -292,12 +310,12 @@ const TransactionDetail = () => {
 									<List.Icon
 										{...props}
 										icon={
-											transaction.surveyStatus === "PAID"
+											transaction.paymentStatus === "PAID"
 												? "checkbox-marked-circle"
 												: "checkbox-blank-circle-outline"
 										}
 										color={
-											transaction.surveyStatus === "PAID"
+											transaction.paymentStatus === "PAID"
 												? theme.colors.secondary
 												: theme.colors.dark
 										}

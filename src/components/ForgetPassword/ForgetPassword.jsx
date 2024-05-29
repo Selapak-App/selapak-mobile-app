@@ -7,6 +7,10 @@ import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { StatusBar } from "expo-status-bar";
 import images from "../../../assets/images";
+import { useDispatch, useSelector } from "react-redux";
+import { forgetPasswordAction } from "../../app/feature/auth/authSlice";
+import { useState } from "react";
+import Popup from "../reusables/Popup";
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const loginFormSchema = yup
@@ -22,23 +26,42 @@ const ForgetPassword = () => {
 	const theme = useTheme();
 	const insets = useSafeAreaInsets();
 	const navigation = useNavigation();
+	const dispatch = useDispatch();
+	const { isLoading } = useSelector((state) => state.auth);
+	const [visibility, setVisibility] = useState(false);
+	const [message, setMessage] = useState(null);
+	const [isError, setIsError] = useState(false);
+
 	const {
 		control,
 		handleSubmit,
 		getValues,
+		reset,
 		formState: { errors },
 	} = useForm({
 		defaultValues: {
 			email: "",
-			password: "",
 		},
 		resolver: yupResolver(loginFormSchema),
 	});
 
 	const onSubmit = async () => {
-		if (!errors.email) {
-			const data = getValues();
-			console.log(data);
+		const data = getValues();
+		const res = await dispatch(forgetPasswordAction(data));
+		if (!res.error) {
+			setMessage(
+				"Berhasil mengirimkan password baru, pastikan untuk mengubahnya nanti."
+			);
+			setIsError(false);
+			setVisibility(true);
+			setTimeout(() => {
+				reset();
+				navigation.navigate("Login");
+			}, 5000);
+		} else {
+			setMessage(res.payload.message);
+			setIsError(true);
+			setVisibility(true);
 		}
 	};
 
@@ -128,7 +151,8 @@ const ForgetPassword = () => {
 				<View style={{ marginTop: -20 }}>
 					<Text style={styles.h1}>Lupa Password</Text>
 					<Text style={styles.tagline}>
-                    Jangan khawatir, isi emailmu untuk menerima password baru
+						Jangan khawatir, isi emailmu untuk menerima password
+						baru
 					</Text>
 				</View>
 				<View style={styles.form}>
@@ -175,6 +199,13 @@ const ForgetPassword = () => {
 					</Text>
 				</View>
 			</View>
+
+			<Popup
+				message={message}
+				visibility={visibility}
+				setVisibility={setVisibility}
+				bgColor={isError ? theme.colors.error : theme.colors.secondary}
+			/>
 		</View>
 	);
 };
