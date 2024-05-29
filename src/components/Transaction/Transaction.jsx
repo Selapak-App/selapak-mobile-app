@@ -20,6 +20,7 @@ import {
 } from "../../app/feature/transaction/transactionSlice";
 import { useDispatch, useSelector } from "react-redux";
 import formatAddress from "../../utils/lands/formatAddress";
+import NoData from "../reusables/NoData/NoData";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -136,7 +137,7 @@ const DoneComp = () => {
 			}}
 		>
 			{doneTrx.length === 0 ? (
-				<Text>No Data</Text>
+				<NoData />
 			) : (
 				<FlatList
 					data={doneTrx}
@@ -276,7 +277,7 @@ const OnProcessComp = () => {
 			) :  */}
 
 			{onProgressTrx.length === 0 ? (
-				<Text>No Data</Text>
+				<NoData />
 			) : (
 				<FlatList
 					data={onProgressTrx}

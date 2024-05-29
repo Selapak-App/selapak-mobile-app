@@ -17,6 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getLandAction, selectedLand } from "../../app/feature/land/landSlice";
 import Tag from "../reusables/Tag";
 import Header from "../reusables/Header";
+import NoData from "../reusables/NoData/NoData";
 
 const Land = () => {
 	const theme = useTheme();
@@ -140,15 +141,20 @@ const Land = () => {
 	const ComponentLayout = () => {
 		return (
 			<>
-				<Header header={"Temukan Lapakmu!"} tagline={"Sewa lahan sesuai kebutuhanmu dengan mudah"} />
+				<Header
+					header={"Temukan Lapakmu!"}
+					tagline={"Sewa lahan sesuai kebutuhanmu dengan mudah"}
+				/>
 				{/* <View style={styles.head}>
 					<Text style={styles.h1}>Temukan Lapakmu!</Text>
 					<Text style={styles.tagline}>
 						Sewa lahan sesuai kebutuhanmu dengan mudah
 					</Text>
 				</View> */}
-				{isLoading ? (<Text>Loading...</Text>) : !lands || lands.length === 0 ? (
-					<Text>No Data</Text>
+				{isLoading ? (
+					<Text>Loading...</Text>
+				) : !lands || lands.length === 0 ? (
+					<NoData />
 				) : (
 					<FlatList
 						data={lands.map((item) => ({

@@ -19,6 +19,7 @@ import Tag from "../reusables/Tag";
 import Header from "../reusables/Header";
 import { getAllTransactionAction } from "../../app/feature/transaction/transactionSlice";
 import { getProfileAction } from "../../app/feature/profile/profileSlice";
+import NoData from "../reusables/NoData/NoData";
 
 const refactorDesc = (lands) => {
 	return lands.map((item) => ({
@@ -303,7 +304,7 @@ const Home = ({ onTabChange }) => {
 							{isLoading ? (
 								<Text>Loading ...</Text>
 							) : !lands || lands.length === 0 ? (
-								<Text>No Data</Text>
+								<NoData />
 							) : (
 								<FlatList
 									data={
