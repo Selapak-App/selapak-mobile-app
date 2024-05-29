@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList, Dimensions } from "react-native";
 import * as yup from "yup";
 import { TextInput, useTheme } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -11,6 +11,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { forgetPasswordAction } from "../../app/feature/auth/authSlice";
 import { useState } from "react";
 import Popup from "../reusables/Popup";
+import LottieAnimation from "../reusables/LottieAnimation";
+import animations from "../../../assets/animations";
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const loginFormSchema = yup
@@ -31,6 +33,7 @@ const ForgetPassword = () => {
 	const [visibility, setVisibility] = useState(false);
 	const [message, setMessage] = useState(null);
 	const [isError, setIsError] = useState(false);
+	const {height, width} = Dimensions.get("window");
 
 	const {
 		control,
@@ -82,11 +85,12 @@ const ForgetPassword = () => {
 		page: {
 			backgroundColor: theme.colors.primary,
 			flex: 1,
-			paddingTop: insets.top + 20,
 			justifyContent: "flex-end",
 		},
 		wrapper: {
-			flex: 0.8,
+			marginTop: insets.top + height * 0.2,
+			minHeight: height * 0.8,
+			flex: 1,
 			backgroundColor: "white",
 			paddingBottom: insets.bottom + 20,
 			paddingHorizontal: 20,
@@ -94,7 +98,7 @@ const ForgetPassword = () => {
 			borderTopRightRadius: theme.roundness * 2,
 			borderTopLeftRadius: theme.roundness * 2,
 			alignItems: "center",
-			gap: 20,
+			gap: 40,
 			...shadowPropStyle,
 		},
 		thumbnail: {
@@ -141,9 +145,8 @@ const ForgetPassword = () => {
 		textToRegister: { fontFamily: "PoppinsSemiBold" },
 	});
 
-	return (
-		<View style={styles.page}>
-			<StatusBar style="dark" />
+	const LayoutComponent = () => {
+		return (
 			<View style={styles.wrapper}>
 				<View style={styles.thumbnail}>
 					<Image source={images.icon} style={styles.imgThumbnail} />
@@ -183,10 +186,21 @@ const ForgetPassword = () => {
 				<View style={styles.buttonWraper}>
 					<TouchableOpacity
 						activeOpacity={0.9}
-						style={styles.buttonContainer}
+						style={{
+							...styles.buttonContainer,
+							padding: isLoading ? 6 : 12,
+						}}
 						onPress={handleSubmit(onSubmit)}
 					>
-						<Text style={styles.buttonText}>Kirim</Text>
+						{!isLoading ? (
+							<Text style={styles.buttonText}>Kirim</Text>
+						) : (
+							<LottieAnimation
+								width={40}
+								height={40}
+								animation={animations.threeDots}
+							/>
+						)}
 					</TouchableOpacity>
 					<Text style={styles.textWrapper}>
 						Sudah ingat password kamu?{" "}
@@ -199,6 +213,20 @@ const ForgetPassword = () => {
 					</Text>
 				</View>
 			</View>
+		)
+	}
+
+	return (
+		<View style={styles.page}>
+			<StatusBar style="dark" />
+			
+			<FlatList
+				data={[{}]}
+				renderItem={LayoutComponent}
+				contentContainerStyle={{ flexGrow: 1 }}
+				style={{ flex: 1 }}
+				showsVerticalScrollIndicator={false}
+			/>
 
 			<Popup
 				message={message}

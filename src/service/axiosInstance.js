@@ -41,6 +41,10 @@ axiosInstance.interceptors.response.use(
 				return Promise.reject(
 					new Error(error.response.data.message || "Bad Request")
 				);
+			} else if (error.response.status === 404) {
+				return Promise.reject(
+					new Error(error.response.data.message || "Not Found")
+				);
 			}
 		}
 		return Promise.reject(error);

@@ -16,7 +16,7 @@ import * as yup from "yup";
 import { useNavigation } from "@react-navigation/native";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Feather } from "@expo/vector-icons";
+import { Feather, Octicons } from "@expo/vector-icons";
 import images from "../../../assets/images";
 import { useDispatch, useSelector } from "react-redux";
 import Popup from "../reusables/Popup";
@@ -361,8 +361,8 @@ const Register = () => {
 								onPress={() => setShowPassword(!showPassword)}
 								style={styles.showPassword}
 							>
-								<Feather
-									name={showPassword ? "eye-off" : "eye"}
+								<Octicons
+									name={showPassword ? "eye-closed" : "eye"}
 									size={24}
 									color={theme.colors.dark}
 								/>
@@ -413,8 +413,8 @@ const Register = () => {
 								}
 								style={styles.showPassword}
 							>
-								<Feather
-									name={showConfPassword ? "eye-off" : "eye"}
+								<Octicons
+									name={showConfPassword ? "eye-closed" : "eye"}
 									size={24}
 									color={theme.colors.dark}
 								/>

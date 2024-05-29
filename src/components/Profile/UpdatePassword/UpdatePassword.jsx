@@ -14,10 +14,12 @@ import { Controller, useForm } from "react-hook-form";
 import Header from "../../reusables/Header";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { AntDesign, Feather } from "@expo/vector-icons";
+import { AntDesign, Feather, Octicons } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { updatePasswordAction } from "../../../app/feature/auth/authSlice";
 import Popup from "../../reusables/Popup";
+import LottieAnimation from "../../reusables/LottieAnimation";
+import animations from "../../../../assets/animations";
 
 const schema = yup
 	.object({
@@ -45,6 +47,7 @@ const UpdatePassword = () => {
 	const { isLoading } = useSelector((state) => state.auth);
 	const [message, setMessage] = useState("");
 	const [visibility, setVisibility] = useState(false);
+	const [isError, setIsError] = useState(false);
 
 	const { height, width } = Dimensions.get("window");
 
@@ -66,8 +69,14 @@ const UpdatePassword = () => {
 
 		const res = await dispatch(updatePasswordAction(data));
 		if (!res.error) {
-			navigation.navigate("App");
+			setMessage("Berhasil mengubah password");
+			setIsError(false);
+			setVisibility(true);
+			setTimeout(() => {
+				navigation.navigate("App");
+			}, 3000)
 		} else {
+			setIsError(true);
 			setMessage(res.payload.message);
 			setVisibility(true);
 		}
@@ -196,8 +205,10 @@ const UpdatePassword = () => {
 									}
 									style={styles.showPassword}
 								>
-									<Feather
-										name={showPassword ? "eye-off" : "eye"}
+									<Octicons
+										name={
+											showPassword ? "eye-closed" : "eye"
+										}
 										size={24}
 										color={theme.colors.dark}
 									/>
@@ -250,9 +261,11 @@ const UpdatePassword = () => {
 									}
 									style={styles.showPassword}
 								>
-									<Feather
+									<Octicons
 										name={
-											showConfPassword ? "eye-off" : "eye"
+											showConfPassword
+												? "eye-closed"
+												: "eye"
 										}
 										size={24}
 										color={theme.colors.dark}
@@ -284,14 +297,18 @@ const UpdatePassword = () => {
 							activeOpacity={0.9}
 							style={{
 								...styles.buttonContainer,
-								// padding: isLoading ? 6 : 12,
+								padding: isLoading ? 7 : 15,
 							}}
 						>
-							{/* {!isLoading ? ( */}
-							<Text style={styles.buttonText}>Simpan</Text>
-							{/* ) : (
-								<LottieAnimation width={40} height={40} animation={animations.threeDots} />
-							 )} */}
+							{!isLoading ? (
+								<Text style={styles.buttonText}>Simpan</Text>
+							) : (
+								<LottieAnimation
+									width={40}
+									height={40}
+									animation={animations.threeDots}
+								/>
+							)}
 						</TouchableOpacity>
 					</View>
 				</View>
@@ -308,7 +325,7 @@ const UpdatePassword = () => {
 				contentContainerStyle={styles.scrollView}
 			/>
 			<Popup
-				type={"warning"}
+				type={isError ? "error" : "success"}
 				message={message}
 				setVisibility={setVisibility}
 				visibility={visibility}
