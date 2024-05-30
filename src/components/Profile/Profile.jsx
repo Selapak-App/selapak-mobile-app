@@ -228,7 +228,7 @@ const Profile = () => {
 
 					<View style={styles.accordionContainer}>
 						<List.Accordion
-							title="Profil Customer"
+							title="Biodata Pengguna"
 							left={(props) => (
 								<List.Icon {...props} icon="account" />
 							)}
@@ -254,7 +254,6 @@ const Profile = () => {
 										? separateFourChar(profile.phoneNumber)
 										: "-"
 								}
-								// title={"-"}
 								titleStyle={styles.text}
 								style={{ borderRadius: theme.roundness }}
 								left={(props) => (
