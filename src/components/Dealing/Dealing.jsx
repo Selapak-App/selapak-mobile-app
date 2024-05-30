@@ -9,7 +9,7 @@ import {
 	FlatList,
 } from "react-native";
 import React, { useState } from "react";
-import { Checkbox, Surface, useTheme } from "react-native-paper";
+import { Button, Checkbox, Surface, useTheme } from "react-native-paper";
 import { StatusBar } from "expo-status-bar";
 import images from "../../../assets/images";
 import HeaderWithContent from "../reusables/HeaderWithContent";
@@ -201,13 +201,13 @@ const Survey = () => {
 						}}
 					>
 						{isLoading ? (
-							<Surface style={{...styles.button, flex: 1, alignItems: "center", backgroundColor: theme.colors.primary, borderColor: theme.colors.primary}}>
-								<LottieAnimation
-									width={40}
-									height={40}
-									animation={animations.threeDots}
-								/>
-							</Surface>
+							<Button
+								loading={true}
+								labelStyle={{
+									fontSize: 40,
+									marginVertical: 20,
+								}}
+							/>
 						) : (
 							<>
 								<View style={{ flex: 1 }}>

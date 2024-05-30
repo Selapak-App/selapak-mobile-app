@@ -22,7 +22,7 @@ export const AuthService = () => {
 	}
 
 	const forgetPassword = async (payload) => {
-		const res = await axiosInstance.post("/send-email", payload);
+		const res = await axiosInstance.post("/auth/send-email", payload);
 		return res.data;
 	}
 

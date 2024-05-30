@@ -162,14 +162,12 @@ const Profile = () => {
 						<Image source={images.icon} style={styles.img} />
 					</Surface>
 					<Text style={styles.headerName}>
-						{capitalizeEachWords(profile.fullName) || "-"}
+						{profile.fullName ? capitalizeEachWords(profile.fullName) : "-"}
 					</Text>
-					{/* <Text style={styles.headerName}>{}</Text> */}
 					<View style={styles.headerDivider} />
 					<Text style={styles.headerNik}>
 						{profile.nik ? separateFourChar(profile.nik) : "-"}
 					</Text>
-					{/* <Text style={styles.headerNik}>{"-"}</Text> */}
 				</View>
 				<View style={styles.main}>
 					<View style={{ flexDirection: "row", gap: 20 }}>

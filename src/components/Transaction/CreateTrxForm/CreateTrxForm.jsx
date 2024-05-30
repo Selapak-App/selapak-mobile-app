@@ -101,37 +101,9 @@ const CreateTrxForm = () => {
 			navigation.navigate("LandingVerify");
 		} else {
 			setIsError(true);
-			setMessage(res.payload.message);
+			setMessage(res.payload.message + ` (Slot tersedia: ${land.slotAvailable})`);
 			setVisibility(true);
 		}
-
-		///////////////////////
-		// if (!errors.email && !errors.password) {
-		// 	try {
-		// 		const data = getValues();
-		// 		const reqData = {
-		// 			fullName: data.name,
-		// 			email: data.email,
-		// 			gender: data.gender ? data.gender : "MALE",
-		// 			password: data.password,
-		// 		};
-
-		// 		const res = await dispatch(registerAction(reqData));
-		// 		if (!res.payload.error) {
-		// 			setMessage("Berhasil membuat akun");
-		// 			setVisibility(true);
-		// 			setTimeout(() => {
-		// 				navigation.navigate("Login");
-		// 			}, 3000);
-		// 		} else {
-		// 			throw new Error(res.payload.message);
-		// 		}
-		// 	} catch (error) {
-		// 		setIsError(true);
-		// 		setMessage(error.message);
-		// 		setVisibility(true);
-		// 	}
-		// }
 	};
 
 	const shadowPropStyle = {
